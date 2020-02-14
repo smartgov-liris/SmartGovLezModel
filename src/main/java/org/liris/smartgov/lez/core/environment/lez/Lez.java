@@ -8,10 +8,12 @@ import org.locationtech.jts.geom.LinearRing;
 import org.locationtech.jts.geom.Location;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
+import java.util.Hashtable;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
 import org.liris.smartgov.lez.core.environment.lez.criteria.AllAllowedCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCosts;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCriteria;
+import org.liris.smartgov.lez.urban.LatLonId;
 import org.liris.smartgov.simulator.core.environment.graph.astar.Costs;
 import org.liris.smartgov.simulator.urban.geo.environment.graph.DistanceCosts;
 import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
@@ -24,7 +26,7 @@ import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
  */
 public class Lez {
 	
-	private LatLon[] perimeter;
+	private Hashtable<Integer, LatLonId> perimeter;
 	private PointOnGeometryLocator locator;
 	private LezCriteria lezCriteria;
 	
@@ -37,7 +39,10 @@ public class Lez {
 	 * vehicles are allowed or not
 	 */
 	public Lez(LatLon[] perimeter, LezCriteria lezCriteria) {
-		this.perimeter = perimeter;
+		for (LatLon coordinate : perimeter) {
+			LatLonId tmp = new LatLonId ( coordinate );
+			this.perimeter.put(tmp.getId(), tmp);
+		}
 		this.lezCriteria = lezCriteria;
 		
 		GeometryFactory factory = new GeometryFactory();
@@ -73,10 +78,19 @@ public class Lez {
 					));
 	}
 	
-	public LatLon[] getPerimeter() {
-		return perimeter;
+	public LatLon[] getPerimeterArray() {
+		return (LatLon[]) perimeter.values().toArray();
 	}
 
+	/**
+	 * Allows political agents to change the border of the LEZ
+	 * 
+	 * @param id
+	 */
+	public void setLatLon(int id, LatLonId value) {
+		perimeter.replace(id, value);
+	}
+	
 	/**
 	 * Return the LEZ criteria associated to this LEZ, that determines
 	 * which vehicles are allowed or not.

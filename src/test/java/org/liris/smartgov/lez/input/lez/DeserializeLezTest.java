@@ -43,7 +43,7 @@ public class DeserializeLezTest {
 			);
 		
 		assertThat(
-			Arrays.asList(lez.getPerimeter()),
+			Arrays.asList(lez.getPerimeterArray()),
 			contains(
 				new LatLon(45.75450753345595, 4.866525973987469),
 				new LatLon(45.755629494110565, 4.876427708999188),
