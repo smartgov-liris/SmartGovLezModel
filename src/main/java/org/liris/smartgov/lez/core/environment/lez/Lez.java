@@ -8,12 +8,13 @@ import org.locationtech.jts.geom.LinearRing;
 import org.locationtech.jts.geom.Location;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
+
 import java.util.Hashtable;
+import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
 import org.liris.smartgov.lez.core.environment.lez.criteria.AllAllowedCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCosts;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCriteria;
-import org.liris.smartgov.lez.urban.LatLonId;
 import org.liris.smartgov.simulator.core.environment.graph.astar.Costs;
 import org.liris.smartgov.simulator.urban.geo.environment.graph.DistanceCosts;
 import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
@@ -26,7 +27,7 @@ import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
  */
 public class Lez {
 	
-	private Hashtable<Integer, LatLonId> perimeter;
+	private Hashtable<Integer, LatLon> perimeter;
 	private PointOnGeometryLocator locator;
 	private LezCriteria lezCriteria;
 	
@@ -39,10 +40,7 @@ public class Lez {
 	 * vehicles are allowed or not
 	 */
 	public Lez(LatLon[] perimeter, LezCriteria lezCriteria) {
-		for (LatLon coordinate : perimeter) {
-			LatLonId tmp = new LatLonId ( coordinate );
-			this.perimeter.put(tmp.getId(), tmp);
-		}
+		this.perimeter = createTable(perimeter);
 		this.lezCriteria = lezCriteria;
 		
 		GeometryFactory factory = new GeometryFactory();
@@ -79,7 +77,12 @@ public class Lez {
 	}
 	
 	public LatLon[] getPerimeterArray() {
-		return (LatLon[]) perimeter.values().toArray();
+		LatLon[] sortie = (LatLon[]) perimeter.values().toArray(new LatLon[perimeter.size()]);
+		return sortie;
+	}
+	
+	public Hashtable<Integer, LatLon> getPerimeter() {
+		return perimeter;
 	}
 
 	/**
@@ -87,7 +90,7 @@ public class Lez {
 	 * 
 	 * @param id
 	 */
-	public void setLatLon(int id, LatLonId value) {
+	public void setLatLon(int id, LatLon value) {
 		perimeter.replace(id, value);
 	}
 	
@@ -153,6 +156,17 @@ public class Lez {
 		return new NoLez();
 	}
 	
+	public Hashtable<Integer, LatLon> createTable(LatLon[] coordinates) {
+		
+		Hashtable<Integer, LatLon> perimeter = new Hashtable<Integer, LatLon>();		
+		int id = 0;
+		for (LatLon coordinate : coordinates) {
+			perimeter.put(id, coordinate);
+			id++;
+		}
+		return perimeter;
+	}
+	
 	private static class NoLez extends Lez {
 		
 		/*
@@ -163,6 +177,7 @@ public class Lez {
 		public boolean contains(OsmNode node) {
 			return false;
 		}
+		
 
 	}
 

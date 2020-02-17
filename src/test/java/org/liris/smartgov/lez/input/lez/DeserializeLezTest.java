@@ -12,6 +12,7 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.core.environment.lez.Lez;
 import org.liris.smartgov.lez.core.environment.lez.criteria.CritAir;
 import org.liris.smartgov.lez.core.environment.lez.criteria.CritAirCriteria;
@@ -27,6 +28,7 @@ public class DeserializeLezTest {
 				new File(this.getClass().getResource("lez.json").getFile())
 				);
 		
+		
 		assertThat(
 			lez.getLezCriteria() instanceof CritAirCriteria,
 			is(true)
@@ -41,10 +43,10 @@ public class DeserializeLezTest {
 				CritAir.CRITAIR_4
 				)
 			);
-		
+				
 		assertThat(
 			Arrays.asList(lez.getPerimeterArray()),
-			contains(
+			containsInAnyOrder(
 				new LatLon(45.75450753345595, 4.866525973987469),
 				new LatLon(45.755629494110565, 4.876427708999188),
 				new LatLon(45.75275316593465, 4.869610199661563)
