@@ -13,6 +13,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.liris.smartgov.lez.cli.tools.Init;
+import org.liris.smartgov.lez.cli.tools.PoliticRun;
 import org.liris.smartgov.lez.cli.tools.Roads;
 import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.cli.tools.Tile;
@@ -49,6 +50,9 @@ public class Cli {
 			return;
 		case "tile":
 			Tile.main(Arrays.copyOfRange(args, 1, args.length));
+			return;
+		case "prun":
+			PoliticRun.main(Arrays.copyOfRange(args, 1, args.length));
 			return;
 		default:
 			Options opts = new Options();
