@@ -14,7 +14,7 @@ public class ExtendedSimulationRuntime extends SimulationRuntime {
 	private final Logger logger = LogManager.getLogger(ExtendedSimulationRuntime.class);
 	public ExtendedSimulationRuntime (SmartGovContext context) {
 		super(context);
-		clock = new ExtendedClock();
+		clock = new Clock();
 	}
 	
 	@Override
@@ -23,7 +23,7 @@ public class ExtendedSimulationRuntime extends SimulationRuntime {
 			throw new IllegalStateException("A Simulation is already running in this SmartGovRuntime.");
 		}
 		this.context = context;
-		clock = new ExtendedClock();
+		clock = new Clock();
 		run = true;
 		pause = false;
 		tickCount = 0;
