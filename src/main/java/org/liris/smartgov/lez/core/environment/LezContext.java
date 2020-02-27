@@ -32,6 +32,11 @@ public class LezContext extends OsmContext {
 	public void setEstablishments(Map<String, Establishment> establishments) {
 		this.establishments = establishments;
 	}
+	
+	public void reload() {
+		agents = new TreeMap<>();
+		ongoingRounds = new TreeMap<>();
+	}
 
 	
 	@Override

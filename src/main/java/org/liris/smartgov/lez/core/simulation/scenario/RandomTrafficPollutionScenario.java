@@ -26,7 +26,6 @@ public class RandomTrafficPollutionScenario extends PollutionScenario {
 		super(lez);
 	}
 
-
 	public static final String name = "Pollution";
 
 
@@ -54,5 +53,12 @@ public class RandomTrafficPollutionScenario extends PollutionScenario {
 			drivers.add(OsmAgent.randomTrafficOsmAgent(String.valueOf(i), (OsmContext) context, deliveryDriver));
 		}
 		return drivers;
+	}
+
+
+	@Override
+	public void reloadWorld(SmartGovContext context) {
+		// TODO Auto-generated method stub
+		
 	}
 }

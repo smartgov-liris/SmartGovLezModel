@@ -195,6 +195,12 @@ public class DeliveryDriverBehaviorTest {
 
 			return Arrays.asList(agent);
 		}
+
+		@Override
+		public void reloadWorld(SmartGovContext context) {
+			// TODO Auto-generated method stub
+			
+		}
 		
 	}
 }

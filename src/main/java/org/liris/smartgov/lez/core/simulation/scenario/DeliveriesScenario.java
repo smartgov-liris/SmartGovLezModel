@@ -83,6 +83,71 @@ public class DeliveriesScenario extends PollutionScenario {
 	}
 	
 	@Override
+	public void reloadWorld(SmartGovContext context) {
+		for (Agent<?> agent : rebuildAgents(context)) {
+			context.agents.put(agent.getId(), agent);
+		}
+	}
+	
+	public Collection<? extends Agent<?>> rebuildAgents(SmartGovContext context) {
+		CopertParser parser = loadParser(context);
+		LezPreprocessor preprocessor = new LezPreprocessor(getLez(), parser);
+
+		int establishmentsInLez = 0;
+		int totalVehiclesReplaced = 0;
+		for( Establishment establishment : ((LezContext) context).getEstablishments().values() ) {
+			if(getLez().contains(establishment.getClosestOsmNode())) {
+				//Run.logger.info("[LEZ] " + establishment.getId() + " - " + establishment.getName());
+				int replacedVehiclesCount = preprocessor.preprocess(establishment);
+				totalVehiclesReplaced += replacedVehiclesCount;
+				//Run.logger.info("[LEZ] Number of vehicles replaced : " + replacedVehiclesCount);
+				establishmentsInLez++;
+			}
+		}
+		Run.logger.info("[LEZ] Number of establishments in lez : " + establishmentsInLez);
+		Run.logger.info("[LEZ] Total number of vehicles replaced : " + totalVehiclesReplaced);
+		
+		int agentId = 0;
+		Collection<OsmAgent> agents = new ArrayList<>();
+		Collection<BuildAgentThread> threads = new ArrayList<>();
+		
+		
+		
+		for ( Establishment establishment : ((LezContext) context).getEstablishments().values() ) {
+			for(String vehicleId : establishment.getRounds().keySet()) {
+				BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context);
+				threads.add(thread);
+				thread.start();
+			}
+		}
+		for(BuildAgentThread thread : threads) {
+			try {
+				thread.join();
+				agents.add(thread.getBuiltAgent());
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		for( Establishment establishment : ((LezContext) context).getEstablishments().values() ) {
+			if(!establishment.getFleet().isEmpty()) {
+				List<EuroNorm> euroNorms = new ArrayList<>();
+				for(DeliveryVehicle vehicle : establishment.getFleet().values()) {
+					euroNorms.add(vehicle.getEuroNorm());
+				}
+				Run.logger.info(
+						"[" + establishment.getId() + "] " + establishment.getName()
+						+ " - fleet norms : " + euroNorms
+						);
+			}
+		}
+		
+		return agents;
+	}
+	
+	@Override
 	public Collection<? extends Agent<?>> buildAgents(SmartGovContext context) {
 		int deadEnds = 0;
 		for(Node node : context.nodes.values()) {
@@ -135,10 +200,10 @@ public class DeliveriesScenario extends PollutionScenario {
 		int totalVehiclesReplaced = 0;
 		for(Establishment establishment : establishments.values()) {
 			if(getLez().contains(establishment.getClosestOsmNode())) {
-				Run.logger.info("[LEZ] " + establishment.getId() + " - " + establishment.getName());
+				//Run.logger.info("[LEZ] " + establishment.getId() + " - " + establishment.getName());
 				int replacedVehiclesCount = preprocessor.preprocess(establishment);
 				totalVehiclesReplaced += replacedVehiclesCount;
-				Run.logger.info("[LEZ] Number of vehicles replaced : " + replacedVehiclesCount);
+				//Run.logger.info("[LEZ] Number of vehicles replaced : " + replacedVehiclesCount);
 				establishmentsInLez++;
 			}
 		}
@@ -272,5 +337,7 @@ public class DeliveriesScenario extends PollutionScenario {
 		}
 		
 	}
+
+
 
 }
