@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 public enum VehicleCategory implements CopertField {
 	LIGHT_WEIGHT("Light Commercial Vehicles"),
 	HEAVY_DUTY_TRUCK ("Heavy Duty Trucks"),
+	PASSENGER_CAR ("Passenger Cars"),
 	RANDOM ("Random");
 	
 	private final String matcher;

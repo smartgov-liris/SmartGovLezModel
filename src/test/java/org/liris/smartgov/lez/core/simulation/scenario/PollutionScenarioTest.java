@@ -1,6 +1,6 @@
 package org.liris.smartgov.lez.core.simulation.scenario;
 
-import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverBody;
+import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.environment.LezContext;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
 import org.liris.smartgov.lez.core.simulation.scenario.PollutionScenario;
@@ -33,7 +33,7 @@ public class PollutionScenarioTest {
 		SmartGov smartGov = loadSmartGov();
 		for(Agent<?> agent : smartGov.getContext().agents.values()) {
 			assertThat(
-					agent.getBody() instanceof DeliveryDriverBody,
+					agent.getBody() instanceof DriverBody,
 					equalTo(true)
 					);
 		}

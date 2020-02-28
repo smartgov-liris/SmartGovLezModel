@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
-import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverBody;
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
+import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicleFactory;
 import org.liris.smartgov.lez.core.copert.inputParser.CopertInputReader;
 import org.liris.smartgov.lez.core.copert.inputParser.CopertProfile;
@@ -41,7 +41,7 @@ public class RandomTrafficPollutionScenario extends PollutionScenario {
 		// Create a vehicle factory
 		DeliveryVehicleFactory vehicleFactory = new DeliveryVehicleFactory(copertProfile, copertParser);
 		
-		Queue<DeliveryVehicle> vehiclesStock = new LinkedList<>();
+		Queue<Vehicle> vehiclesStock = new LinkedList<>();
 		
 		// Feed the stock with delivery vehicles
 		int vehicleNumber = Integer.parseInt((String) context.getConfig().get("AgentNumber"));
@@ -49,7 +49,7 @@ public class RandomTrafficPollutionScenario extends PollutionScenario {
 		
 		Collection<OsmAgent> drivers = new ArrayList<>();
 		for(int i = 0; i < vehicleNumber; i++) {
-			OsmAgentBody deliveryDriver = new DeliveryDriverBody(vehiclesStock.poll());
+			OsmAgentBody deliveryDriver = new DriverBody(vehiclesStock.poll());
 			drivers.add(OsmAgent.randomTrafficOsmAgent(String.valueOf(i), (OsmContext) context, deliveryDriver));
 		}
 		return drivers;

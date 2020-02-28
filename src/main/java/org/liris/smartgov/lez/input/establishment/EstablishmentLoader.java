@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicleFactory;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
@@ -99,8 +99,8 @@ public class EstablishmentLoader {
 					parser
 					);
 
-			List<DeliveryVehicle> fleet = vehicleFactory.create(fleetSize, random);
-			for(DeliveryVehicle vehicle : fleet) {
+			List<Vehicle> fleet = vehicleFactory.create(fleetSize, random);
+			for(Vehicle vehicle : fleet) {
 				establishment.addVehicleToFleet(vehicle);
 			}
 		}
@@ -137,13 +137,13 @@ public class EstablishmentLoader {
 			return 0;
 		});
 		
-		TreeMap<VehicleCapacity, LinkedList<DeliveryVehicle>> availableVehicles = new TreeMap<>();
+		TreeMap<VehicleCapacity, LinkedList<Vehicle>> availableVehicles = new TreeMap<>();
 		for(VehicleCapacity capacity : establishment.getFleetByCapacity().keySet()) {
 			availableVehicles.put(capacity, new LinkedList<>(establishment.getFleetByCapacity().get(capacity)));
 		}
 		
 		for(Round round : rounds) {
-			DeliveryVehicle selectedVehicle = availableVehicles.firstEntry().getValue().pollFirst();
+			Vehicle selectedVehicle = availableVehicles.firstEntry().getValue().pollFirst();
 			if(availableVehicles.firstEntry().getValue().isEmpty()) {
 				availableVehicles.pollFirstEntry();
 			}

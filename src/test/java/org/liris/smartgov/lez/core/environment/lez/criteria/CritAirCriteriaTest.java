@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.environment.lez.criteria.CritAir;
 import org.liris.smartgov.lez.core.environment.lez.criteria.CritAirCriteria;
 
@@ -28,7 +28,7 @@ public class CritAirCriteriaTest {
 				);
 		
 		for (CritAir critair : CritAir.values()) {
-			DeliveryVehicle vehicle = mock(DeliveryVehicle.class);
+			Vehicle vehicle = mock(Vehicle.class);
 			when(vehicle.getCritAir()).thenReturn(critair);
 			
 			if(allowed.contains(critair)) {

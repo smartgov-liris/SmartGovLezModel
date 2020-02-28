@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 public enum Fuel implements CopertField {
 	PETROL ("Petrol"),
 	DIESEL ("Diesel"),
+	PETROL_HYBRID ("Petrol Hybrid"),
 	RANDOM ("Random");
 	
 	private final String matcher;

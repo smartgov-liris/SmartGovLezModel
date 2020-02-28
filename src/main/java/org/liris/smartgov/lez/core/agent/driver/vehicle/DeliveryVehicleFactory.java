@@ -65,8 +65,8 @@ public class DeliveryVehicleFactory {
 	 * than the required number of vehicles because of ceiling approximations.
 	 * @return generated vehicles
 	 */
-	public List<DeliveryVehicle> create(int vehicleCount, Random random) {
-		List<DeliveryVehicle> vehicles = new ArrayList<>();
+	public List<Vehicle> create(int vehicleCount, Random random) {
+		List<Vehicle> vehicles = new ArrayList<>();
 		LinkedList<CopertSelector> selectors = new LinkedList<>();
 		selectors.add(new CopertSelector()); // Behaves as a seed
 		
@@ -93,7 +93,7 @@ public class DeliveryVehicleFactory {
 	 * @param vehicleCount number of vehicle to generate
 	 * @return generated vehicles
 	 */
-	public List<DeliveryVehicle> create(int vehicleCount) {
+	public List<Vehicle> create(int vehicleCount) {
 		return create(vehicleCount, new Random());
 	}
 	
@@ -188,7 +188,7 @@ public class DeliveryVehicleFactory {
 	
 	
 	
-	public static DeliveryVehicle generateVehicle(CopertSelector copertSelector, CopertParser copertParser, String id) {
+	public static Vehicle generateVehicle(CopertSelector copertSelector, CopertParser copertParser, String id) {
 		/*
 		 * The previously generated CopertSelectors are initialized with fixed values from 
 		 * the input file.
@@ -201,7 +201,7 @@ public class DeliveryVehicleFactory {
 		 * Copert Tree to fix ALL the fields until the Copert parameters.
 		 * 
 		 * The final selector is returned by completeTree.getPath().
-		 */
+		 */		
 		CopertTree completeTree = copertParser.getCopertTree()
 				.select(copertSelector.get(CopertHeader.CATEGORY).matcher()) // "Category"
 				.select(copertSelector.get(CopertHeader.FUEL).matcher()) // "Fuel"
@@ -214,7 +214,7 @@ public class DeliveryVehicleFactory {
 		
 		Copert copert = new Copert(completeTree);
 
-		return new DeliveryVehicle(
+		return new Vehicle(
 				id,
 				(VehicleCategory) finalSelector.get(CopertHeader.CATEGORY),
 				(Fuel) finalSelector.get(CopertHeader.FUEL),

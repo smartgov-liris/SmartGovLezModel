@@ -11,7 +11,7 @@ import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 
 import java.util.Hashtable;
 import org.liris.smartgov.lez.cli.tools.Run;
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.environment.lez.criteria.AllAllowedCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCosts;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCriteria;
@@ -116,7 +116,7 @@ public class Lez {
 	 * @param deliveryVehicle vehicle
 	 * @return cost function associated to the specified vehicle in the current urban area
 	 */
-	public Costs costs(DeliveryVehicle deliveryVehicle) {
+	public Costs costs(Vehicle deliveryVehicle) {
 		if(lezCriteria.isAllowed(deliveryVehicle))
 			return new DistanceCosts();
 		return new LezCosts();

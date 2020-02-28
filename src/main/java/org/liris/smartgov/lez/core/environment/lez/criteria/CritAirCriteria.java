@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 
 public class CritAirCriteria implements LezCriteria {
 	
@@ -24,7 +24,7 @@ public class CritAirCriteria implements LezCriteria {
 	}
 
 	@Override
-	public boolean isAllowed(DeliveryVehicle vehicle) {
+	public boolean isAllowed(Vehicle vehicle) {
 		return allowedIndex.get(vehicle.getCritAir());
 	}
 	

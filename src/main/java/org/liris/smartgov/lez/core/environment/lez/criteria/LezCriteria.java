@@ -1,6 +1,6 @@
 package org.liris.smartgov.lez.core.environment.lez.criteria;
 
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 
 /**
  * Interface used to determines if a vehicle is allowed or not in a Low Emission Zone.
@@ -15,6 +15,6 @@ public interface LezCriteria {
 	 * @param vehicle vehicle
 	 * @return vehicle permission
 	 */
-	public boolean isAllowed(DeliveryVehicle vehicle);
+	public boolean isAllowed(Vehicle vehicle);
 
 }

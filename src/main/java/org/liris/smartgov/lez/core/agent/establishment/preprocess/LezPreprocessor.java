@@ -3,7 +3,7 @@ package org.liris.smartgov.lez.core.agent.establishment.preprocess;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicleFactory;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
@@ -25,10 +25,10 @@ public class LezPreprocessor {
 	}
 
 	public int preprocess(Establishment establishment) {
-		Collection<DeliveryVehicle> allowedVehicles = new ArrayList<>();
-		Collection<DeliveryVehicle> forbiddenVehicles = new ArrayList<>();
+		Collection<Vehicle> allowedVehicles = new ArrayList<>();
+		Collection<Vehicle> forbiddenVehicles = new ArrayList<>();
 		
-		for(DeliveryVehicle vehicle : establishment.getFleet().values()) {
+		for(Vehicle vehicle : establishment.getFleet().values()) {
 			if(lez.getLezCriteria().isAllowed(vehicle)) {
 				allowedVehicles.add(vehicle);
 			}
@@ -39,7 +39,7 @@ public class LezPreprocessor {
 		
 		int replacedVehicles = 0;
 		
-		for(DeliveryVehicle vehicle : forbiddenVehicles) {
+		for(Vehicle vehicle : forbiddenVehicles) {
 			Round round = establishment.getRounds().get(vehicle.getId());
 			boolean roundInLez = false;
 			int i = 0;
@@ -63,7 +63,7 @@ public class LezPreprocessor {
 				
 				selector.put(CopertHeader.EURO_STANDARD, EuroNorm.EURO6);
 				
-				DeliveryVehicle newVehicle =
+				Vehicle newVehicle =
 					DeliveryVehicleFactory.generateVehicle(
 						selector,
 						parser,

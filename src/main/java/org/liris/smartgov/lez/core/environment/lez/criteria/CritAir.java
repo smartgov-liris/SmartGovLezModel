@@ -1,6 +1,6 @@
 package org.liris.smartgov.lez.core.environment.lez.criteria;
 
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 
 /**
  * <i>CritAir</i> categories are used in France, and more particularly by the LEZ
@@ -25,7 +25,7 @@ public enum CritAir {
 	 * @param vehicle vehicle
 	 * @return associated CritAir category
 	 */
-	public static CritAir compute(DeliveryVehicle vehicle) {
+	public static CritAir compute(Vehicle vehicle) {
 		switch(vehicle.getCategory()) {
 		case HEAVY_DUTY_TRUCK:
 			switch(vehicle.getFuel()) {

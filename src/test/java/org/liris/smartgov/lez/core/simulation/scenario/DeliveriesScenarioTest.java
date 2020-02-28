@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverBody;
+import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.driver.behavior.DeliveryDriverBehavior;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.environment.LezContext;
@@ -78,7 +78,7 @@ public class DeliveriesScenarioTest {
 		
 		for(Establishment establishment : context.getEstablishments().values()) {
 			for(OsmAgent agent : establishment.getAgents()) {
-				DeliveryDriverBody driver = (DeliveryDriverBody) agent.getBody();
+				DriverBody driver = (DriverBody) agent.getBody();
 				
 				destinationReached.put(agent.getId(), new ArrayList<>());
 				driver.addOnDestinationReachedListener(

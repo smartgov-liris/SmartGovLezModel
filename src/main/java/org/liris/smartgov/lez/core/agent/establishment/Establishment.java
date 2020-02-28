@@ -9,11 +9,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverAgent;
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.simulator.core.agent.moving.MovingAgent;
 import org.liris.smartgov.simulator.core.agent.moving.ParkingArea;
 import org.liris.smartgov.simulator.core.output.node.NodeIdSerializer;
 import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
+import org.liris.smartgov.simulator.urban.osm.agent.OsmAgent;
 import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
 
 /**
@@ -33,14 +34,14 @@ public class Establishment implements ParkingArea {
 	@JsonSerialize(using = NodeIdSerializer.class)
 	private OsmNode closestOsmNode;
 	
-	private Map<String, DeliveryVehicle> fleet;
+	private Map<String, Vehicle> fleet;
 	
 	@JsonIgnore
-	private Map<VehicleCapacity, Collection<DeliveryVehicle>> fleetByCapacity;
+	private Map<VehicleCapacity, Collection<Vehicle>> fleetByCapacity;
 	
 	private Map<String, Round> rounds;
 	@JsonIgnore
-	private Collection<DeliveryDriverAgent> agents;
+	private Collection<OsmAgent> agents;
 	
 	
 	/**
@@ -133,7 +134,7 @@ public class Establishment implements ParkingArea {
 	 *
 	 * @param vehicle vehicle to add to the fleet
 	 */
-	public void addVehicleToFleet(DeliveryVehicle vehicle) {
+	public void addVehicleToFleet(Vehicle vehicle) {
 		VehicleCapacity capacity = new VehicleCapacity(vehicle.getCategory(),  vehicle.getSegment());
 		if (!fleetByCapacity.containsKey(capacity)) {
 			fleetByCapacity.put(capacity, new ArrayList<>());
@@ -152,7 +153,7 @@ public class Establishment implements ParkingArea {
 	 * @param vehicle vehicle that can perform this round
 	 * @param round round to perform
 	 */
-	public void addRound(DeliveryVehicle vehicle, Round round) {
+	public void addRound(Vehicle vehicle, Round round) {
 		rounds.put(vehicle.getId(), round);
 	}
 
@@ -161,7 +162,7 @@ public class Establishment implements ParkingArea {
 	 *
 	 * @return estalishment's fleet
 	 */
-	public Map<String, DeliveryVehicle> getFleet() {
+	public Map<String, Vehicle> getFleet() {
 		return fleet;
 	}
 
@@ -176,7 +177,7 @@ public class Establishment implements ParkingArea {
 	 *
 	 * @return fleet representation, indexed by vehicle capacities
 	 */
-	public Map<VehicleCapacity, Collection<DeliveryVehicle>> getFleetByCapacity() {
+	public Map<VehicleCapacity, Collection<Vehicle>> getFleetByCapacity() {
 		return fleetByCapacity;
 	}
 
@@ -203,7 +204,7 @@ public class Establishment implements ParkingArea {
 	 *
 	 * @param agent agent to add to this establishment
 	 */
-	public void addAgent(DeliveryDriverAgent agent) {
+	public void addAgent(OsmAgent agent) {
 		agents.add(agent);
 	}
 	
@@ -217,7 +218,7 @@ public class Establishment implements ParkingArea {
 	 *
 	 * @return establishment's agents
 	 */
-	public Collection<DeliveryDriverAgent> getAgents() {
+	public Collection<OsmAgent> getAgents() {
 		return agents;
 	}
 

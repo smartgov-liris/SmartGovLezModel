@@ -10,9 +10,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
-import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverBody;
+import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.driver.behavior.LezBehavior;
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.environment.LezContext;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
 import org.liris.smartgov.lez.core.environment.lez.Lez;
@@ -82,7 +82,7 @@ public class LezCostsTest {
 		TestLezScenario scenario = ((TestLezScenario) smartGov.getContext().getScenario());
 		assertThat(
 				scenario.getLez().getLezCriteria().isAllowed(
-						((DeliveryDriverBody) smartGov.getContext().agents.get("0").getBody()).getVehicle()
+						((DriverBody) smartGov.getContext().agents.get("0").getBody()).getVehicle()
 					),
 				is(false)
 				);
@@ -145,7 +145,7 @@ public class LezCostsTest {
 		
 		@Override
 		public Collection<? extends Agent<?>> buildAgents(SmartGovContext context) {
-			DeliveryDriverBody body = new DeliveryDriverBody(mock(DeliveryVehicle.class));
+			DriverBody body = new DriverBody(mock(Vehicle.class));
 			body.addOnNodeReachedListener((event) -> crossedNodes.add(event.getNode().getId()));
 			
 			OsmAgent agent = new OsmAgent(
@@ -167,7 +167,7 @@ public class LezCostsTest {
 	private static class TestLezBehavior extends LezBehavior {
 
 		public TestLezBehavior(
-				DeliveryDriverBody agentBody,
+				DriverBody agentBody,
 				SmartGovContext context,
 				Lez lez) {
 			super(agentBody, context.nodes.get("0"), context.nodes.get("2"), context, lez);

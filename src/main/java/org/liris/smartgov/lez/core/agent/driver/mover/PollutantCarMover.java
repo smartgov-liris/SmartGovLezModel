@@ -2,7 +2,7 @@ package org.liris.smartgov.lez.core.agent.driver.mover;
 
 import java.util.ArrayList;
 
-import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverBody;
+import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
 import org.liris.smartgov.lez.core.environment.graph.PollutionIncreasedEvent;
@@ -88,7 +88,7 @@ public class PollutantCarMover extends CarMover {
 	private void polluteArcs() {
 		for(Pollutant pollutant : Pollutant.values()) {
 			double emissions = 
-					((DeliveryDriverBody) agentBody)
+					((DriverBody) agentBody)
 					.getVehicle()
 					.getEmissions(pollutant, traveledDistance / time, traveledDistance);
 			for (PollutableOsmArc arc : arcsCrossed) {

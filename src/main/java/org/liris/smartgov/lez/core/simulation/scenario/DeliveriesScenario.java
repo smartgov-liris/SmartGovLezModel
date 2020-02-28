@@ -10,9 +10,9 @@ import java.util.Map;
 
 import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverAgent;
-import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverBody;
+import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.driver.behavior.DeliveryDriverBehavior;
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.preprocess.LezPreprocessor;
 import org.liris.smartgov.lez.core.copert.fields.EuroNorm;
@@ -134,7 +134,7 @@ public class DeliveriesScenario extends PollutionScenario {
 		for( Establishment establishment : ((LezContext) context).getEstablishments().values() ) {
 			if(!establishment.getFleet().isEmpty()) {
 				List<EuroNorm> euroNorms = new ArrayList<>();
-				for(DeliveryVehicle vehicle : establishment.getFleet().values()) {
+				for(Vehicle vehicle : establishment.getFleet().values()) {
 					euroNorms.add(vehicle.getEuroNorm());
 				}
 				Run.logger.info(
@@ -235,7 +235,7 @@ public class DeliveriesScenario extends PollutionScenario {
 		for(Establishment establishment : establishments.values()) {
 			if(!establishment.getFleet().isEmpty()) {
 				List<EuroNorm> euroNorms = new ArrayList<>();
-				for(DeliveryVehicle vehicle : establishment.getFleet().values()) {
+				for(Vehicle vehicle : establishment.getFleet().values()) {
 					euroNorms.add(vehicle.getEuroNorm());
 				}
 				Run.logger.info(
@@ -267,7 +267,7 @@ public class DeliveriesScenario extends PollutionScenario {
 		}
 
 		public void run() {
-			DeliveryDriverBody driver = new DeliveryDriverBody(establishment.getFleet().get(vehicleId));
+			DriverBody driver = new DriverBody(establishment.getFleet().get(vehicleId));
 			builtBehavior
 				= new DeliveryDriverBehavior(
 						driver,

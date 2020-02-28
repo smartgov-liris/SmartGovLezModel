@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.junit.Test;
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.agent.establishment.preprocess.LezPreprocessor;
@@ -48,11 +48,11 @@ public class LezPreprocessorTest {
 		when(lez.getLezCriteria()).thenReturn(new NothingAllowedCriteria());
 		when(lez.contains(any())).thenReturn(true);
 		
-		Map<String, DeliveryVehicle> testFleet = new HashMap<>();
+		Map<String, Vehicle> testFleet = new HashMap<>();
 		
 		testFleet.put(
 			"0",
-			new DeliveryVehicle(
+			new Vehicle(
 				"0",
 				VehicleCategory.HEAVY_DUTY_TRUCK,
 				Fuel.DIESEL,
@@ -65,7 +65,7 @@ public class LezPreprocessorTest {
 		
 		testFleet.put(
 				"1",
-				new DeliveryVehicle(
+				new Vehicle(
 					"1",
 					VehicleCategory.HEAVY_DUTY_TRUCK,
 					Fuel.DIESEL,
@@ -82,7 +82,7 @@ public class LezPreprocessorTest {
 		LezPreprocessor preprocessor = new LezPreprocessor(lez, loadCopertParser());
 		preprocessor.preprocess(establishment);
 		
-		DeliveryVehicle expectedCharacteristics = new DeliveryVehicle(
+		Vehicle expectedCharacteristics = new Vehicle(
 				null,
 				VehicleCategory.HEAVY_DUTY_TRUCK,
 				Fuel.DIESEL,
@@ -97,7 +97,7 @@ public class LezPreprocessorTest {
 				hasSize(2)
 				);
 		
-		for (DeliveryVehicle vehicle : testFleet.values()) {
+		for (Vehicle vehicle : testFleet.values()) {
 			assertThat(
 					vehicle.getCategory().equals(expectedCharacteristics.getCategory()),
 					is(true)
@@ -132,8 +132,8 @@ public class LezPreprocessorTest {
 		Establishment origin = mock(Establishment.class);
 		when(origin.getClosestOsmNode()).thenReturn(originFakeNode);
 		
-		Map<String, DeliveryVehicle> originFleet = new HashMap<>();
-		originFleet.put("0", new DeliveryVehicle(
+		Map<String, Vehicle> originFleet = new HashMap<>();
+		originFleet.put("0", new Vehicle(
 				"0",
 				VehicleCategory.HEAVY_DUTY_TRUCK,
 				Fuel.DIESEL,
@@ -176,7 +176,7 @@ public class LezPreprocessorTest {
 		LezPreprocessor preprocessor = new LezPreprocessor(lez, loadCopertParser());
 		preprocessor.preprocess(origin);
 		
-		DeliveryVehicle expectedCharacteristics = new DeliveryVehicle(
+		Vehicle expectedCharacteristics = new Vehicle(
 				null,
 				VehicleCategory.HEAVY_DUTY_TRUCK,
 				Fuel.DIESEL,
@@ -186,7 +186,7 @@ public class LezPreprocessorTest {
 				null
 				);
 		
-		DeliveryVehicle vehicle = origin.getFleet().get("0");
+		Vehicle vehicle = origin.getFleet().get("0");
 		assertThat(
 				vehicle.getCategory().equals(expectedCharacteristics.getCategory()),
 				is(true)
