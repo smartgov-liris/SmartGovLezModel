@@ -14,6 +14,7 @@ import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.driver.behavior.DeliveryDriverBehavior;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
+import org.liris.smartgov.lez.core.agent.establishment.ST8;
 import org.liris.smartgov.lez.core.agent.establishment.preprocess.LezPreprocessor;
 import org.liris.smartgov.lez.core.copert.fields.EuroNorm;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
@@ -220,6 +221,10 @@ public class DeliveriesScenario extends PollutionScenario {
 				threads.add(thread);
 				thread.start();
 			}
+			if ( establishment.getActivity() == ST8.PRIVATE_HABITATION ) {
+				System.out.println ( establishment.getName() );
+				//TODO : Implémenter les habitants qui vivent dans ces habitations et vont taffer.
+			}
 		}
 		for(BuildAgentThread thread : threads) {
 			try {
@@ -238,10 +243,10 @@ public class DeliveriesScenario extends PollutionScenario {
 				for(Vehicle vehicle : establishment.getFleet().values()) {
 					euroNorms.add(vehicle.getEuroNorm());
 				}
-				Run.logger.info(
+				/*Run.logger.info(
 						"[" + establishment.getId() + "] " + establishment.getName()
 						+ " - fleet norms : " + euroNorms
-						);
+						);*/
 			}
 		}
 		
@@ -300,7 +305,6 @@ public class DeliveriesScenario extends PollutionScenario {
 					SmartGov.getRuntime().stop();
 				}
 			});
-			Run.logger.info("Agent " + builtAgent.getId() + " : " + builtBehavior.getRound());
 		}
 		
 		/*

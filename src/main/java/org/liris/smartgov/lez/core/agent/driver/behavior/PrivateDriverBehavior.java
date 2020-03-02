@@ -30,6 +30,12 @@ public class PrivateDriverBehavior extends LezBehavior {
 	public Round getRound() {
 		return round;
 	}
+
+	@Override
+	public void setUpListeners() {
+		throw new UnsupportedOperationException("Not implmented yet");
+		
+	}
 	
 	
 }

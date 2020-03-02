@@ -35,7 +35,12 @@ public enum ST8 {
 	/**
 	 * 8 : Transports companies and warehouses
 	 */
-	TRANSPORT_WAREHOUSE ("8");
+	TRANSPORT_WAREHOUSE ("8"),
+	
+	/**
+	 * 9 : Private habitations
+	 */
+	PRIVATE_HABITATION ("9");
 	
 	private final String code;
 	

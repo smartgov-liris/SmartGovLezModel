@@ -37,5 +37,7 @@ public abstract class LezBehavior extends GeoMovingBehavior {
 			) {
 		super(agentBody, origin, destination, context, lez.costs(agentBody.getVehicle()));
 	}
+	
+	public abstract void setUpListeners();
 
 }

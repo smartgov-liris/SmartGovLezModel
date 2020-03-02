@@ -180,6 +180,12 @@ public class LezCostsTest {
 				return MoverAction.WAIT();
 			return MoverAction.MOVE();
 		}
+
+		@Override
+		public void setUpListeners() {
+			// TODO Auto-generated method stub
+			
+		}
 		
 	}
 }
