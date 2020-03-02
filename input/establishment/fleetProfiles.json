@@ -5,7 +5,7 @@
 		[
 			{
 				"value": "LIGHT_WEIGHT",
-				"rate": 0.5,
+				"rate": 0.4,
 				"subProfile": {
 					"header": "EURO_STANDARD",
 					"values":
@@ -17,7 +17,7 @@
 			},
 			{
 				"value": "HEAVY_DUTY_TRUCK",
-				"rate": 0.5,
+				"rate": 0.4,
 				"subProfile": {
 					"header": "FUEL",
 					"values":
@@ -54,6 +54,10 @@
 						}
 					} ]
 				}
+			},
+			{
+				"value": "PASSENGER_CAR",
+				"rate": 0.2
 			}
 		]
 	},

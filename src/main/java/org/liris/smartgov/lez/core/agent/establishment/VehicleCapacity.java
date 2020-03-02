@@ -2,6 +2,7 @@ package org.liris.smartgov.lez.core.agent.establishment;
 
 import org.liris.smartgov.lez.core.copert.fields.HeavyDutyTrucksSegment;
 import org.liris.smartgov.lez.core.copert.fields.LightWeightVehicleSegment;
+import org.liris.smartgov.lez.core.copert.fields.PassengerCarsSegment;
 import org.liris.smartgov.lez.core.copert.fields.VehicleCategory;
 import org.liris.smartgov.lez.core.copert.fields.VehicleSegment;
 
@@ -99,6 +100,8 @@ public class VehicleCapacity implements Comparable<VehicleCapacity> {
 		if(vehicleSegment instanceof LightWeightVehicleSegment)
 			// Natural light weight segment ordering : order of definition in the LightWeightVehicleSegment enum
 			return ((LightWeightVehicleSegment) vehicleSegment).compareTo((LightWeightVehicleSegment) arg0.getVehicleSegment());
+		else if (vehicleSegment instanceof PassengerCarsSegment)
+			return ((PassengerCarsSegment) vehicleSegment).compareTo((PassengerCarsSegment) arg0.getVehicleSegment());
 		else
 			// Natural heavy trucks segment ordering : order of definition in the HeavyDutyTrucksSegment enum
 			return ((HeavyDutyTrucksSegment) vehicleSegment).compareTo((HeavyDutyTrucksSegment) arg0.getVehicleSegment());

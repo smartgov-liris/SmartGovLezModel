@@ -3,7 +3,8 @@ package org.liris.smartgov.lez.core.copert.fields;
 import java.util.regex.Pattern;
 
 public enum EuroNorm implements CopertField {
-	CONVENTIONAL ("Conventional"),
+	CONVENTIONAL ("(Conventional)|(Improved Conventionnal)"),
+	OLDER ("(?:Open Loop)|(?:PRE ECE)|(:?ECE.*)"),
 	EURO1 ("(?:Euro 1)|(?:Euro I)"),
 	EURO2 ("(?:Euro 2)|(?:Euro II)"),
 	EURO3 ("(?:Euro 3)|(?:Euro III)"),

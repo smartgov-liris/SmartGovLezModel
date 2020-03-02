@@ -113,6 +113,56 @@ public enum CritAir {
 			default:
 				return null;
 			}
+		case PASSENGER_CAR:
+			vehicle.getFuel();
+			switch ( vehicle.getFuel() ) {
+			case DIESEL:
+				switch ( vehicle.getEuroNorm() ) {
+				case CONVENTIONAL:
+					return NONE;
+				case OLDER:
+					return NONE;
+				case EURO1:
+					return NONE;
+				case EURO2:
+					return CRITAIR_5;
+				case EURO3:
+					return CRITAIR_4;
+				case EURO4:
+					return CRITAIR_3;
+				case EURO5:
+					return CRITAIR_2;
+				case EURO6:
+					return CRITAIR_2;
+				default :
+					return null;
+				}
+			case PETROL:
+				switch ( vehicle.getEuroNorm() ) {
+				case CONVENTIONAL:
+					return NONE;
+				case OLDER:
+					return NONE;
+				case EURO1:
+					return NONE;
+				case EURO2:
+					return CRITAIR_3;
+				case EURO3:
+					return CRITAIR_3;
+				case EURO4:
+					return CRITAIR_2;
+				case EURO5:
+					return CRITAIR_1;
+				case EURO6:
+					return CRITAIR_1;
+				default :
+					return null;
+				}
+			case PETROL_HYBRID:
+				return CRITAIR_1;
+			default:
+				return null;
+			}
 		default:
 			return null;
 		
