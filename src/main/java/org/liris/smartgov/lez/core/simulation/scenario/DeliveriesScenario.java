@@ -216,14 +216,16 @@ public class DeliveriesScenario extends PollutionScenario {
 		Collection<BuildAgentThread> threads = new ArrayList<>();
 		
 		for (Establishment establishment : establishments.values()) {
-			for(String vehicleId : establishment.getRounds().keySet()) {
-				BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context);
-				threads.add(thread);
-				thread.start();
-			}
 			if ( establishment.getActivity() == ST8.PRIVATE_HABITATION ) {
-				System.out.println ( establishment.getName() );
-				//TODO : Implémenter les habitants qui vivent dans ces habitations et vont taffer.
+				//if it's a passenger car TODO
+
+			} 
+			else {
+				for(String vehicleId : establishment.getRounds().keySet()) {
+					BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context);
+					threads.add(thread);
+					thread.start();
+				}
 			}
 		}
 		for(BuildAgentThread thread : threads) {

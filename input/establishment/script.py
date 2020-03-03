@@ -19,22 +19,33 @@ with open('establishments_simturb.json') as json_file:
         if float(d['y']) < min_y:
             min_y = float(d['y'])
 
-    print("Max x : ", max_x)
-    print("Min x : ", min_x)
-    print("Max y : ", max_y)
-    print("Min y : ", min_y)
-
-    listEstablishment = []
+    #print("Max x : ", max_x)
+    #print("Min x : ", min_x)
+    #print("Max y : ", max_y)
+    #print("Min y : ", min_y)
+    
 
     for i in range(nb_establishment):
         dico = {}
         dico['ST8'] = '9'
         dico['id'] = str(i)
         dico['name'] = 'habitation' + str(i)
-        dico['rounds'] = []
+
+        #Adding appointments
+        dico_rounds = {}
+        dico_rounds['departure'] = "NONE"
+        dico_rounds['ids'] = []
+        dico_rounds['ids'].append(data[random.randint(0, len(data) - 1)]['id'])
+        if random.random() < 0.5 : #proba to add a second appointment
+            dico_rounds['ids'].append(data[random.randint(0, len(data) - 1)]['id'])
+            if random.random() < 0.5: #proba to add a 3rd one
+                dico_rounds['ids'].append(data[random.randint(0, len(data) - 1)]['id'])
+
+        
+
+        dico['rounds'] = [dico_rounds]
         dico['x'] = str(random.uniform(min_x, max_x))
         dico['y'] = str(random.uniform(min_y, max_y))
-        listEstablishment.append(dico)
+        data.append(dico)
 
-    print (json.dumps(listEstablishment, sort_keys=True, indent=4))
-    
+    print (json.dumps(data, sort_keys=True, indent=4))
