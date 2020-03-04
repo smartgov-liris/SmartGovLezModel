@@ -16,10 +16,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import org.liris.smartgov.lez.core.environment.lez.Environment;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
 import org.liris.smartgov.lez.core.environment.lez.criteria.CritAir;
-import org.liris.smartgov.lez.core.environment.lez.criteria.CritAirCriteria;
-import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
 
 public class CritAirLezDeserializer extends StdDeserializer<Environment> {
 

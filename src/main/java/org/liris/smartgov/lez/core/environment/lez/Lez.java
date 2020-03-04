@@ -10,7 +10,6 @@ import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 
 import java.util.Hashtable;
-import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.environment.lez.criteria.AllAllowedCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCosts;

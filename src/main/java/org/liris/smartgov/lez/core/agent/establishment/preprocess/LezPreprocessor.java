@@ -1,8 +1,5 @@
 package org.liris.smartgov.lez.core.agent.establishment.preprocess;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicleFactory;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
@@ -12,49 +9,42 @@ import org.liris.smartgov.lez.core.copert.fields.Technology;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertHeader;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertSelector;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
+import org.liris.smartgov.lez.core.environment.lez.Environment;
 
 public class LezPreprocessor {
 	
-	private Lez lez;
+	private Environment environment;
 	private CopertParser parser;
 	
-	public LezPreprocessor(Lez lez, CopertParser parser) {
-		this.lez = lez;
+	public LezPreprocessor(Environment environment, CopertParser parser) {
+		this.environment = environment;
 		this.parser = parser;
 	}
 
 	public int preprocess(Establishment establishment) {
-		Collection<Vehicle> allowedVehicles = new ArrayList<>();
-		Collection<Vehicle> forbiddenVehicles = new ArrayList<>();
-		
-		for(Vehicle vehicle : establishment.getFleet().values()) {
-			if(lez.getLezCriteria().isAllowed(vehicle)) {
-				allowedVehicles.add(vehicle);
-			}
-			else {
-				forbiddenVehicles.add(vehicle);
-			}
-		}
 		
 		int replacedVehicles = 0;
 		
-		for(Vehicle vehicle : forbiddenVehicles) {
+		for(Vehicle vehicle : establishment.getFleet().values()) {
 			Round round = establishment.getRounds().get(vehicle.getId());
-			boolean roundInLez = false;
+			boolean vehicleForbidden = false;
+			
+			if(environment.getNeighborhood(establishment.getClosestOsmNode()).getLezCriteria().isAllowed(vehicle)) {
+				//if the origin establishment does not allow the vehicle
+				vehicleForbidden = true;
+			}
+			
 			int i = 0;
-			
-			if(lez.contains(establishment.getClosestOsmNode())) {
-				roundInLez = true;
-			}
-			
-			while(!roundInLez && i < round.getEstablishments().size()) {
-				if(lez.contains(round.getEstablishments().get(i).getClosestOsmNode())) {
-					roundInLez = true;
+			while(!vehicleForbidden && i < round.getEstablishments().size()) {
+				
+				if ( environment.getNeighborhood( round.getEstablishments().get(i).getClosestOsmNode() ).getLezCriteria().isAllowed(vehicle) ) {
+					//if the establishments of the round do not allow the vehicle
+					vehicleForbidden = true;
 				}
+				i++;
 			}
 			
-			if(roundInLez) {
+			if(vehicleForbidden) {
 				CopertSelector selector = new CopertSelector();
 				selector.put(CopertHeader.CATEGORY, vehicle.getCategory());
 				selector.put(CopertHeader.FUEL, vehicle.getFuel());

@@ -21,7 +21,6 @@ import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
 import org.liris.smartgov.lez.core.environment.LezContext;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArcFactory;
 import org.liris.smartgov.lez.core.environment.lez.Environment;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
 import org.liris.smartgov.lez.input.establishment.EstablishmentLoader;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.agent.core.Agent;
@@ -97,15 +96,15 @@ public class DeliveriesScenario extends PollutionScenario {
 
 		int establishmentsInLez = 0;
 		int totalVehiclesReplaced = 0;
+		
 		for( Establishment establishment : ((LezContext) context).getEstablishments().values() ) {
-			if(getEnvironment().contains(establishment.getClosestOsmNode())) {
-				//Run.logger.info("[LEZ] " + establishment.getId() + " - " + establishment.getName());
-				int replacedVehiclesCount = preprocessor.preprocess(establishment);
-				totalVehiclesReplaced += replacedVehiclesCount;
-				//Run.logger.info("[LEZ] Number of vehicles replaced : " + replacedVehiclesCount);
-				establishmentsInLez++;
-			}
+			//Run.logger.info("[LEZ] " + establishment.getId() + " - " + establishment.getName());
+			int replacedVehiclesCount = preprocessor.preprocess(establishment);
+			totalVehiclesReplaced += replacedVehiclesCount;
+			//Run.logger.info("[LEZ] Number of vehicles replaced : " + replacedVehiclesCount);
+			establishmentsInLez++;
 		}
+		
 		Run.logger.info("[LEZ] Number of establishments in lez : " + establishmentsInLez);
 		Run.logger.info("[LEZ] Total number of vehicles replaced : " + totalVehiclesReplaced);
 		
@@ -116,12 +115,19 @@ public class DeliveriesScenario extends PollutionScenario {
 		
 		
 		for ( Establishment establishment : ((LezContext) context).getEstablishments().values() ) {
-			for(String vehicleId : establishment.getRounds().keySet()) {
-				BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context);
-				threads.add(thread);
-				thread.start();
+			if ( establishment.getActivity() == ST8.PRIVATE_HABITATION ) {
+				//if it's a passenger car TODO
+
+			} 
+			else {
+				for(String vehicleId : establishment.getRounds().keySet()) {
+					BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context);
+					threads.add(thread);
+					thread.start();
+				}
 			}
 		}
+		
 		for(BuildAgentThread thread : threads) {
 			try {
 				thread.join();
@@ -200,15 +206,15 @@ public class DeliveriesScenario extends PollutionScenario {
 
 		int establishmentsInLez = 0;
 		int totalVehiclesReplaced = 0;
-		for(Establishment establishment : establishments.values()) {
-			if(getEnvironment().contains(establishment.getClosestOsmNode())) {
-				//Run.logger.info("[LEZ] " + establishment.getId() + " - " + establishment.getName());
-				int replacedVehiclesCount = preprocessor.preprocess(establishment);
-				totalVehiclesReplaced += replacedVehiclesCount;
-				//Run.logger.info("[LEZ] Number of vehicles replaced : " + replacedVehiclesCount);
-				establishmentsInLez++;
-			}
+		
+		for( Establishment establishment : ((LezContext) context).getEstablishments().values() ) {
+			//Run.logger.info("[LEZ] " + establishment.getId() + " - " + establishment.getName());
+			int replacedVehiclesCount = preprocessor.preprocess(establishment);
+			totalVehiclesReplaced += replacedVehiclesCount;
+			//Run.logger.info("[LEZ] Number of vehicles replaced : " + replacedVehiclesCount);
+			establishmentsInLez++;
 		}
+		
 		Run.logger.info("[LEZ] Number of establishments in lez : " + establishmentsInLez);
 		Run.logger.info("[LEZ] Total number of vehicles replaced : " + totalVehiclesReplaced);
 		
@@ -322,29 +328,5 @@ public class DeliveriesScenario extends PollutionScenario {
 		}
 		
 	}
-	
-	/**
-	 * Special scenario used to model deliveries without LEZ.
-	 *
-	 */
-	public static class NoLezDeliveries extends DeliveriesScenario {
-		
-		/**
-		 * NoLezDeliveries
-		 */
-		public static final String name = "NoLezDeliveries";
-
-		/**
-		 * NoLezDeliveries constructor.
-		 * 
-		 * {@link Lez#none()} is used as the LEZ for this scenario.
-		 */
-		public NoLezDeliveries() {
-			super(Lez.none());
-		}
-		
-	}
-
-
 
 }
