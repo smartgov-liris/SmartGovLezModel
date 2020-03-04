@@ -1,9 +1,18 @@
 [
     {
-        "nb_square" : 8,
-        "north_bound" : 46.146,
-        "south_bound" : 45.43,
-        "left_bound" : 4.4,
-        "right_bound" : 5.46
+        "nb_squares" : 8,
+        "dimensions" :
+        {
+            "north_bound" : 46.146,
+            "south_bound" : 45.43,
+            "west_bound" : 4.4,
+            "east_bound" : 5.46
+        },
+        "allowed" : 
+        [
+            "CRITAIR_1",
+            "CRITAIR_2",
+            "CRITAIR_3"
+        ]
     }
 ]

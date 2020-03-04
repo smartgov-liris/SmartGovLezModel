@@ -19,7 +19,7 @@ import org.liris.smartgov.simulator.urban.osm.environment.graph.Road;
 public class PollutableOsmArc extends OsmArc {
 
 	private Pollution pollution;
-	private boolean inLez;
+	private int neighborhoodId;
 	
 	private Collection<EventHandler<PollutionIncreasedEvent>> pollutionIncreasedListeners;
 	
@@ -39,9 +39,9 @@ public class PollutableOsmArc extends OsmArc {
 			OsmNode targetNode,
 			Road road,
 			RoadDirection roadDirection,
-			boolean inLez) {
+			int neighborhoodId) {
 		super(id, startNode, targetNode, road, roadDirection);
-		this.inLez = inLez;
+		this.neighborhoodId = neighborhoodId;
 		pollution = new Pollution();
 		pollutionIncreasedListeners = new ArrayList<>();
 	}
@@ -67,9 +67,11 @@ public class PollutableOsmArc extends OsmArc {
 		return pollution;
 	}
 	
-	public boolean isInLez() {
-		return inLez;
+	public int getNeighborhoodId() {
+		return neighborhoodId;
 	}
+	
+	
 	
 	/**
 	 * Adds a new pollution increased event handler, called each time the arc is

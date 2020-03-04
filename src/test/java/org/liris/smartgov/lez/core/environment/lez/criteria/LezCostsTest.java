@@ -81,7 +81,7 @@ public class LezCostsTest {
 		
 		TestLezScenario scenario = ((TestLezScenario) smartGov.getContext().getScenario());
 		assertThat(
-				scenario.getLez().getLezCriteria().isAllowed(
+				scenario.getEnvironment().getLezCriteria().isAllowed(
 						((DriverBody) smartGov.getContext().agents.get("0").getBody()).getVehicle()
 					),
 				is(false)
@@ -151,7 +151,7 @@ public class LezCostsTest {
 			OsmAgent agent = new OsmAgent(
 					"0",
 					body,
-					new TestLezBehavior(body, context, getLez())
+					new TestLezBehavior(body, context, getEnvironment())
 					);
 			return Arrays.asList(agent);
 		}

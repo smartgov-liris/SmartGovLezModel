@@ -15,12 +15,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
+import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.core.environment.lez.Lez;
 import org.liris.smartgov.lez.core.environment.lez.criteria.CritAir;
 import org.liris.smartgov.lez.core.environment.lez.criteria.CritAirCriteria;
 import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
 
-public class CritAirLezDeserializer extends StdDeserializer<Lez> {
+public class CritAirLezDeserializer extends StdDeserializer<Environment> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -33,35 +34,34 @@ public class CritAirLezDeserializer extends StdDeserializer<Lez> {
 	}
 
 	@Override
-	public Lez deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Environment deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		JsonNode jsonLez = p.getCodec().readTree(p);
 		
 		Collection<CritAir> allowed = new ArrayList<>();
 		JsonNode allowedArray = jsonLez.get("allowed");
+		
 		for(int i = 0; i < allowedArray.size(); i++) {
 			allowed.add(CritAir.valueOf(allowedArray.get(i).asText()));
 		}
 		
+		JsonNode dimensions = jsonLez.get("dimensions");
 		
-		JsonNode perimeterArray = jsonLez.get("perimeter");
-		LatLon[] coordinates = new LatLon[perimeterArray.size()];
 		
-		for(int i = 0; i < perimeterArray.size(); i++) {
-			coordinates[i] = new LatLon(
-					perimeterArray.get(i).get(0).asDouble(),
-					perimeterArray.get(i).get(1).asDouble()
-					);
-		}
-		return new Lez(coordinates, new CritAirCriteria(allowed));
+		return new Environment(dimensions.get("north_bound").asDouble(),
+				dimensions.get("south_bound").asDouble(),
+				dimensions.get("west_bound").asDouble(),
+				dimensions.get("east_bound").asDouble(),
+				jsonLez.get("nb_squares").asInt(),
+				allowed);
 	}
 	
-	public static Lez load(File lezFile) throws JsonParseException, JsonMappingException, IOException {
+	public static Environment load(File environmentFile) throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		SimpleModule module = new SimpleModule();
-		module.addDeserializer(Lez.class, new CritAirLezDeserializer());
+		module.addDeserializer(Environment.class, new CritAirLezDeserializer());
 		mapper.registerModule(module);
 		
-		return mapper.readValue(lezFile, Lez.class);
+		return mapper.readValue(environmentFile, Environment.class);
 	}
 
 }

@@ -38,21 +38,12 @@ public abstract class PollutionScenario extends GenericOsmScenario<OsmNode, Road
 	}
 	
 	/**
-	 * PollutionScenario constructor for scenarios
-	 * without LEZ.
-	 * 
-	 */
-	public PollutionScenario() {
-		this(Lez.none());
-	}
-	
-	/**
 	 * Returns the current LEZ used in this scenario.
 	 * 
 	 * @return current LEZ
 	 */
-	public Lez getLez() {
-		return lez;
+	public Environment getEnvironment() {
+		return environment;
 	}
 	
 	/**

@@ -92,6 +92,10 @@ public class Lez {
 		return lezCriteria;
 	}
 	
+	public int getId() {
+		return id;
+	}
+	
 	/**
 	 * Returns the cost function associated to this vehicle, depending
 	 * on its permission to enter the LEZ or not.

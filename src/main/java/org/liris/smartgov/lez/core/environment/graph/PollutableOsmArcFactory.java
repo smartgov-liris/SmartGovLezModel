@@ -11,8 +11,8 @@ public class PollutableOsmArcFactory  implements OsmArcFactory<PollutableOsmArc>
 	
 	private Environment environment;
 	
-	public PollutableOsmArcFactory(Environment lez) {
-		this.environment = lez;
+	public PollutableOsmArcFactory(Environment environment) {
+		this.environment = environment;
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class PollutableOsmArcFactory  implements OsmArcFactory<PollutableOsmArc>
 			OsmNode targetNode,
 			Road road,
 			RoadDirection roadDirection) {
-		return new PollutableOsmArc(id, startNode, targetNode, road, roadDirection, environment.contains(targetNode));
+		return new PollutableOsmArc(id, startNode, targetNode, road, roadDirection, environment.getNeighborhoodId(targetNode));
 	}
 
 }

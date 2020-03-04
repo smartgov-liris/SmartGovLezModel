@@ -20,6 +20,7 @@ import org.liris.smartgov.lez.core.copert.fields.EuroNorm;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
 import org.liris.smartgov.lez.core.environment.LezContext;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArcFactory;
+import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.core.environment.lez.Lez;
 import org.liris.smartgov.lez.input.establishment.EstablishmentLoader;
 import org.liris.smartgov.simulator.SmartGov;
@@ -79,8 +80,8 @@ public class DeliveriesScenario extends PollutionScenario {
 	 * 
 	 * @param lez LEZ used in this scenario
 	 */
-	public DeliveriesScenario(Lez lez) {
-		super(lez);
+	public DeliveriesScenario(Environment environment) {
+		super(environment);
 	}
 	
 	@Override
@@ -92,12 +93,12 @@ public class DeliveriesScenario extends PollutionScenario {
 	
 	public Collection<? extends Agent<?>> rebuildAgents(SmartGovContext context) {
 		CopertParser parser = loadParser(context);
-		LezPreprocessor preprocessor = new LezPreprocessor(getLez(), parser);
+		LezPreprocessor preprocessor = new LezPreprocessor(getEnvironment(), parser);
 
 		int establishmentsInLez = 0;
 		int totalVehiclesReplaced = 0;
 		for( Establishment establishment : ((LezContext) context).getEstablishments().values() ) {
-			if(getLez().contains(establishment.getClosestOsmNode())) {
+			if(getEnvironment().contains(establishment.getClosestOsmNode())) {
 				//Run.logger.info("[LEZ] " + establishment.getId() + " - " + establishment.getName());
 				int replacedVehiclesCount = preprocessor.preprocess(establishment);
 				totalVehiclesReplaced += replacedVehiclesCount;
@@ -160,7 +161,7 @@ public class DeliveriesScenario extends PollutionScenario {
 		}
 		Run.logger.info(deadEnds + " dead ends found.");
 		
-		OsmArcsBuilder.fixDeadEnds((LezContext) context, new PollutableOsmArcFactory(getLez()));
+		OsmArcsBuilder.fixDeadEnds((LezContext) context, new PollutableOsmArcFactory(getEnvironment()));
 
 		// All the vehicles will belong to the loaded copert table
 		CopertParser parser = loadParser(context);
@@ -195,12 +196,12 @@ public class DeliveriesScenario extends PollutionScenario {
 		}
 		
 		Run.logger.info("Applying lez...");
-		LezPreprocessor preprocessor = new LezPreprocessor(getLez(), parser);
+		LezPreprocessor preprocessor = new LezPreprocessor(getEnvironment(), parser);
 
 		int establishmentsInLez = 0;
 		int totalVehiclesReplaced = 0;
 		for(Establishment establishment : establishments.values()) {
-			if(getLez().contains(establishment.getClosestOsmNode())) {
+			if(getEnvironment().contains(establishment.getClosestOsmNode())) {
 				//Run.logger.info("[LEZ] " + establishment.getId() + " - " + establishment.getName());
 				int replacedVehiclesCount = preprocessor.preprocess(establishment);
 				totalVehiclesReplaced += replacedVehiclesCount;
