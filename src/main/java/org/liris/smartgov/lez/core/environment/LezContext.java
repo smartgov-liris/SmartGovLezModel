@@ -54,7 +54,7 @@ public class LezContext extends OsmContext {
 				try {
 					return new DeliveriesScenario(
 							CritAirLezDeserializer.load(
-									this.getFileLoader().load("lez")
+									this.getFileLoader().load("size")
 									)
 							);
 				} catch (IOException e) {

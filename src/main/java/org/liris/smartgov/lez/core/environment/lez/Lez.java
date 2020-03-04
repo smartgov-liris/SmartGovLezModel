@@ -27,9 +27,10 @@ import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
  */
 public class Lez {
 	
-	private Hashtable<Integer, LatLon> perimeter;
+	private LatLon[] perimeter;
 	private PointOnGeometryLocator locator;
 	private LezCriteria lezCriteria;
+	private int id;
 	
 	/**
 	 * Lez constructor.
@@ -39,8 +40,9 @@ public class Lez {
 	 * @param lezCriteria criteria associated to this lez, that determines which
 	 * vehicles are allowed or not
 	 */
-	public Lez(LatLon[] perimeter, LezCriteria lezCriteria) {
-		this.perimeter = createTable(perimeter);
+	public Lez(LatLon[] perimeter, LezCriteria lezCriteria, int id) {
+		this.id = id;
+		this.perimeter = perimeter;
 		this.lezCriteria = lezCriteria;
 		
 		GeometryFactory factory = new GeometryFactory();
@@ -76,22 +78,8 @@ public class Lez {
 					));
 	}
 	
-	public LatLon[] getPerimeterArray() {
-		LatLon[] sortie = (LatLon[]) perimeter.values().toArray(new LatLon[perimeter.size()]);
-		return sortie;
-	}
-	
-	public Hashtable<Integer, LatLon> getPerimeter() {
+	public LatLon[] getPerimeter() {
 		return perimeter;
-	}
-
-	/**
-	 * Allows political agents to change the border of the LEZ
-	 * 
-	 * @param id
-	 */
-	public void setLatLon(int id, LatLon value) {
-		perimeter.replace(id, value);
 	}
 	
 	/**

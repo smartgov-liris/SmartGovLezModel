@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArcFactory;
+import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.core.environment.lez.Lez;
 import org.liris.smartgov.simulator.core.agent.core.Agent;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
@@ -23,7 +24,7 @@ public abstract class PollutionScenario extends GenericOsmScenario<OsmNode, Road
 	 */
 	public static Random random = new Random(240720191835l);
 	
-	private Lez lez;
+	private Environment environment;
 	private CopertParser copertParser;
 	
 	/**
@@ -31,9 +32,9 @@ public abstract class PollutionScenario extends GenericOsmScenario<OsmNode, Road
 	 * 
 	 * @param lez LEZ to consider in this scenario
 	 */
-	public PollutionScenario(Lez lez) {
-		super(OsmNode.class, Road.class, new PollutableOsmArcFactory(lez));
-		this.lez = lez;
+	public PollutionScenario(Environment environment) {
+		super(OsmNode.class, Road.class, new PollutableOsmArcFactory(environment));
+		this.environment = environment;
 	}
 	
 	/**
