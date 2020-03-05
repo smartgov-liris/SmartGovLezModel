@@ -116,11 +116,11 @@
 		"values": 
 		[
 			{
-				"value": "HEAVY_DUTY_TRUCK",
+				"value": "LIGHT_WEIGHT",
 				"rate": 0.5
 			},
 			{
-				"value": "LIGHT_WEIGHT",
+				"value": "HEAVY_DUTY_TRUCK",
 				"rate": 0.5
 			}
 		]

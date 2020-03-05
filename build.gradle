@@ -46,6 +46,6 @@ application {
 }
 
 //si besoin d'afficher les logs & prit dans les tests
-test {
-  testLogging.showStandardStreams = true
-}
+//test {
+//	testLogging.showStandardStreams = true
+//}
