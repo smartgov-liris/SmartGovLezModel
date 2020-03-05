@@ -22,7 +22,7 @@ public class LezTest {
 							new LatLon(45., 4.1),
 							new LatLon(45.1, 4.)
 						},
-						null
+						null, 0
 				);
 		
 		LatLon[] testPoints = {

@@ -27,7 +27,7 @@ import org.liris.smartgov.lez.core.copert.fields.HeavyDutyTrucksSegment;
 import org.liris.smartgov.lez.core.copert.fields.Technology;
 import org.liris.smartgov.lez.core.copert.fields.VehicleCategory;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
+import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.core.environment.lez.criteria.NothingAllowedCriteria;
 import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
 
@@ -44,9 +44,9 @@ public class LezPreprocessorTest {
 	 */
 	@Test
 	public void testBasicPreprocess() {
-		Lez lez = mock(Lez.class);
-		when(lez.getLezCriteria()).thenReturn(new NothingAllowedCriteria());
-		when(lez.contains(any())).thenReturn(true);
+		Environment environment = mock(Environment.class);
+		when(environment.getNeighborhood(any()).getLezCriteria()).thenReturn(new NothingAllowedCriteria());
+		when(environment.getNeighborhood(any()).contains(any())).thenReturn(true);
 		
 		Map<String, Vehicle> testFleet = new HashMap<>();
 		
@@ -79,7 +79,7 @@ public class LezPreprocessorTest {
 		Establishment establishment = mock(Establishment.class);
 		when(establishment.getFleet()).thenReturn(testFleet);
 		
-		LezPreprocessor preprocessor = new LezPreprocessor(lez, loadCopertParser());
+		LezPreprocessor preprocessor = new LezPreprocessor(environment, loadCopertParser());
 		preprocessor.preprocess(establishment);
 		
 		Vehicle expectedCharacteristics = new Vehicle(
@@ -157,23 +157,23 @@ public class LezPreprocessorTest {
 		
 		when(origin.getRounds()).thenReturn(rounds);
 		
-		Lez lez = mock(Lez.class);
-		when(lez.getLezCriteria()).thenReturn(new NothingAllowedCriteria());
+		Environment environment = mock(Environment.class);
+		when(environment.getNeighborhood(any()).getLezCriteria()).thenReturn(new NothingAllowedCriteria());
 		
-		when(lez.contains(originFakeNode)).thenReturn(false);
-		when(lez.contains(destinationFakeNode)).thenReturn(true);
+		when(environment.getNeighborhood(any()).contains(originFakeNode)).thenReturn(false);
+		when(environment.getNeighborhood(any()).contains(destinationFakeNode)).thenReturn(true);
 		
 		assertThat(
-				lez.contains(originFakeNode),
+				environment.getNeighborhood(any()).contains(originFakeNode),
 				is(false)
 				);
 		
 		assertThat(
-				lez.contains(destinationFakeNode),
+				environment.getNeighborhood(any()).contains(destinationFakeNode),
 				is(true)
 				);
 		
-		LezPreprocessor preprocessor = new LezPreprocessor(lez, loadCopertParser());
+		LezPreprocessor preprocessor = new LezPreprocessor(environment, loadCopertParser());
 		preprocessor.preprocess(origin);
 		
 		Vehicle expectedCharacteristics = new Vehicle(

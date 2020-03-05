@@ -7,7 +7,9 @@ import java.util.TreeMap;
 
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
+import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
+import org.liris.smartgov.lez.core.simulation.scenario.RandomTrafficPollutionScenario;
 import org.liris.smartgov.lez.input.lez.CritAirLezDeserializer;
 import org.liris.smartgov.simulator.core.scenario.Scenario;
 import org.liris.smartgov.simulator.urban.osm.environment.OsmContext;
@@ -44,19 +46,26 @@ public class LezContext extends OsmContext {
 			return superScenario;
 		}
 		switch(scenarioName){
-			case DeliveriesScenario.name:
-				try {
-					return new DeliveriesScenario(
-							CritAirLezDeserializer.load(
-									this.getFileLoader().load("dimensions")
-									)
-							);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			default:
-				return null;
+		case DeliveriesScenario.NoLezDeliveries.name:
+			return new DeliveriesScenario.NoLezDeliveries();
+			
+		case RandomTrafficPollutionScenario.name:
+			return new RandomTrafficPollutionScenario(Environment.none());
+			
+			
+		case DeliveriesScenario.name:
+			try {
+				return new DeliveriesScenario(
+						CritAirLezDeserializer.load(
+								this.getFileLoader().load("dimensions")
+								)
+						);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		default:
+			return null;
 		}
 	}
 }

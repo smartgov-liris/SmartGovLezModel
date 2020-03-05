@@ -328,5 +328,13 @@ public class DeliveriesScenario extends PollutionScenario {
 		}
 		
 	}
+	
+	public static class NoLezDeliveries extends DeliveriesScenario {
+		public static final String name = "NoLezDeliveries";
+		
+		public NoLezDeliveries() {
+			super(Environment.none());
+		}
+	}
 
 }

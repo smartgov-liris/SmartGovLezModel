@@ -10,7 +10,7 @@ import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
 import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
 
 public class Environment {
-	private List <Lez> neighborhoods = new ArrayList<Lez>();
+	protected List <Lez> neighborhoods = new ArrayList<Lez>();
 	//gridSize is the size of the matrix : gridSize = 4 means a 4*4 matrix
 	private int gridSize;
 	
@@ -22,7 +22,6 @@ public class Environment {
 		
 		for (int i = 0 ; i < gridSize ; i ++) {
 			for (int j = 0 ; j < gridSize ; j++) {
-				allowed.add(CritAir.CRITAIR_1);
 				LatLon[] perimeter = {new LatLon(bottom + j * vertical_size, left + i * horizontal_size),
 						new LatLon(bottom + (j + 1) * vertical_size, left + i * horizontal_size),
 						new LatLon(bottom + (j + 1) * vertical_size, left + (i + 1) * horizontal_size),
@@ -40,5 +39,28 @@ public class Environment {
 			}
 		}
 		return null;
+	}
+	
+	public List<Lez> getNeighborhoods() {
+		return neighborhoods;
+	}
+	
+	
+	private Environment() {
+		neighborhoods.add(Lez.none());
+	}
+	
+	public static Environment none() {
+		return new noLezEnvironment();
+	}
+	
+	
+	private static class noLezEnvironment extends Environment {
+		public Lez getNeighborhood(OsmNode node) {
+			if (neighborhoods.isEmpty()) {
+				throw new IllegalStateException("There is no lez to return");
+			}
+			return neighborhoods.get(0);
+		}
 	}
 }
