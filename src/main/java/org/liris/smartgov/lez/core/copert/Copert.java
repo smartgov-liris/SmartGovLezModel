@@ -172,16 +172,16 @@ public class Copert {
 	private CopertParameters getCopertParameters(Map<String, String> copertLine) {
 		return new CopertParameters(
 				//replaceAll here to avoid random caracters
-				Double.valueOf(copertLine.get(CopertHeader.ALPHA.columnName()).replaceAll("[^\\d.]", "")),
-				Double.valueOf(copertLine.get(CopertHeader.BETA.columnName()).replaceAll("[^\\d.]", "")),
-				Double.valueOf(copertLine.get(CopertHeader.GAMMA.columnName()).replaceAll("[^\\d.]", "")),
-				Double.valueOf(copertLine.get(CopertHeader.DELTA.columnName()).replaceAll("[^\\d.]", "")),
-				Double.valueOf(copertLine.get(CopertHeader.EPSILON.columnName()).replaceAll("[^\\d.]", "")),
-				Double.valueOf(copertLine.get(CopertHeader.ZITA.columnName()).replaceAll("[^\\d.]", "")),
-				Double.valueOf(copertLine.get(CopertHeader.HTA.columnName()).replaceAll("[^\\d.]", "")),
-				Double.valueOf(copertLine.get(CopertHeader.REDUCTION_FACTOR.columnName()).replaceAll("[^\\d.]", "")),
-				Double.valueOf(copertLine.get(CopertHeader.MIN_SPEED.columnName()).replaceAll("[^\\d.]", "")),
-				Double.valueOf(copertLine.get(CopertHeader.MAX_SPEED.columnName()).replaceAll("[^\\d.]", ""))
+				Double.valueOf(copertLine.get(CopertHeader.ALPHA.columnName())),
+				Double.valueOf(copertLine.get(CopertHeader.BETA.columnName())),
+				Double.valueOf(copertLine.get(CopertHeader.GAMMA.columnName())),
+				Double.valueOf(copertLine.get(CopertHeader.DELTA.columnName())),
+				Double.valueOf(copertLine.get(CopertHeader.EPSILON.columnName())),
+				Double.valueOf(copertLine.get(CopertHeader.ZITA.columnName())),
+				Double.valueOf(copertLine.get(CopertHeader.HTA.columnName())),
+				Double.valueOf(copertLine.get(CopertHeader.REDUCTION_FACTOR.columnName())),
+				Double.valueOf(copertLine.get(CopertHeader.MIN_SPEED.columnName())),
+				Double.valueOf(copertLine.get(CopertHeader.MAX_SPEED.columnName()))
 				);
 	}
 }

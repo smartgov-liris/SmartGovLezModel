@@ -1,7 +1,7 @@
 import json
 import random
 
-nb_establishment = 150
+nb_establishment = 400
 
 with open('establishments_simturb.json') as json_file:
     min_x = 99999999999.0

@@ -23,7 +23,6 @@ public class PrivateDriverBehavior extends LezBehavior {
 
 	@Override
 	public MoverAction provideAction() {
-		// TODO Auto-generated method stub
 		return nextAction;
 	}
 	

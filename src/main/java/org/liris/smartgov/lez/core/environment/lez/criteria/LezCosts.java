@@ -1,6 +1,8 @@
 package org.liris.smartgov.lez.core.environment.lez.criteria;
 
+import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
+import org.liris.smartgov.simulator.core.agent.moving.MovingAgentBody;
 import org.liris.smartgov.simulator.core.environment.graph.Arc;
 import org.liris.smartgov.simulator.core.environment.graph.Node;
 import org.liris.smartgov.simulator.core.environment.graph.astar.Costs;
@@ -45,9 +47,18 @@ public class LezCosts implements Costs {
 	 */
 	@Override
 	public double cost(Arc arc) {
-		if(((PollutableOsmArc) arc).isInLez())
-			return Double.MAX_VALUE;
 		return arc.getLength();
+	}
+
+	@Override
+	public double cost(Arc arc, MovingAgentBody body) {
+		if (! ((PollutableOsmArc)arc).isAllowed( ((DriverBody) body).getVehicle() ) ) {
+			//if the vehicle is not allowed in the zone
+			return Double.MAX_VALUE;
+		}
+		else {
+			return cost(arc);
+		}
 	}
 	
 }

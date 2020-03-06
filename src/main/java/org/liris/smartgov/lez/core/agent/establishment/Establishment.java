@@ -8,7 +8,6 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverAgent;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.simulator.core.agent.moving.MovingAgent;
 import org.liris.smartgov.simulator.core.agent.moving.ParkingArea;

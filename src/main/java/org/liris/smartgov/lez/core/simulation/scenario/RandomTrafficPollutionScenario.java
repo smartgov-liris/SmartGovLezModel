@@ -12,6 +12,7 @@ import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicleFactory;
 import org.liris.smartgov.lez.core.copert.inputParser.CopertInputReader;
 import org.liris.smartgov.lez.core.copert.inputParser.CopertProfile;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
+import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.core.environment.lez.Lez;
 import org.liris.smartgov.simulator.core.agent.core.Agent;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
@@ -22,8 +23,8 @@ import org.liris.smartgov.simulator.urban.osm.scenario.lowLayer.RandomTrafficSce
 
 public class RandomTrafficPollutionScenario extends PollutionScenario {
 
-	public RandomTrafficPollutionScenario(Lez lez) {
-		super(lez);
+	public RandomTrafficPollutionScenario(Environment environment) {
+		super(environment);
 	}
 
 	public static final String name = "Pollution";

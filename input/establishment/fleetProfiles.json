@@ -1,80 +1,227 @@
 {
+	"PRIVATE_HABITATION" :
+	{
+		"header" : "CATEGORY",
+		"values" :
+		[
+			{
+				"value" : "PASSENGER_CAR",
+				"rate" : 1.0,
+				"subProfile" : {
+					"header" :  "FUEL",
+					"values" : 
+					[ {
+						"value" : "PETROL",
+						"rate" : 0.55,
+						"subProfile" : {
+							"header" : "EURO_STANDARD",
+							"values" : [
+								{
+									"value" :"EURO6",
+									"rate" : 0.2
+								},
+								{
+									"value" :"EURO5",
+									"rate" : 0.2
+								},
+								{
+									"value" :"EURO4",
+									"rate" : 0.32
+								},
+								{
+									"value" :"EURO3",
+									"rate" : 0.12
+								},
+								{
+									"value" :"EURO2",
+									"rate" : 0.12
+								},
+								{
+									"value" :"EURO1",
+									"rate" : 0.04
+								}
+							]
+						}
+
+					},
+					{
+						"value" : "DIESEL",
+						"rate" : 0.45,
+						"subProfile" : {
+							"header" : "EURO_STANDARD",
+							"values" : [
+								{
+									"value" :"EURO6",
+									"rate" : 0.2
+								},
+								{
+									"value" :"EURO5",
+									"rate" : 0.2
+								},
+								{
+									"value" :"EURO4",
+									"rate" : 0.29
+								},
+								{
+									"value" :"EURO3",
+									"rate" : 0.22
+								},
+								{
+									"value" :"EURO2",
+									"rate" : 0.05
+								},
+								{
+									"value" :"EURO1",
+									"rate" : 0.02
+								},
+								{
+									"value" : "CONVENTIONAL",
+									"rate" : 0.02
+								}
+							]
+						}
+
+					}
+				
+				]
+				}
+
+			}
+		]
+	},
 	"default": {
 		"header": "CATEGORY",
 		"values": 
 		[
 			{
 				"value": "LIGHT_WEIGHT",
-				"rate": 0.4,
-				"subProfile": {
-					"header": "EURO_STANDARD",
-					"values":
+				"rate": 0.5,
+				"subProfile" : {
+					"header" :  "FUEL",
+					"values" : 
 					[ {
-						"value": "EURO1",
-						"rate": 1.0
-					} ]
+						"value" : "PETROL",
+						"rate" : 0.46,
+						"subProfile" : {
+							"header" : "EURO_STANDARD",
+							"values" : [
+								{
+									"value" :"EURO6",
+									"rate" : 0.045
+								},
+								{
+									"value" :"EURO5",
+									"rate" : 0.045
+								},
+								{
+									"value" :"EURO4",
+									"rate" : 0.65
+								},
+								{
+									"value" :"EURO3",
+									"rate" : 0.11
+								},
+								{
+									"value" :"EURO2",
+									"rate" : 0.11
+								},
+								{
+									"value" :"EURO1",
+									"rate" : 0.02
+								},
+								{
+									"value" : "CONVENTIONAL",
+									"rate" : 0.02
+								}
+							]
+						}
+					},
+					{
+						"value" : "DIESEL",
+						"rate" : 0.54,
+						"subProfile" : {
+							"header" : "EURO_STANDARD",
+							"values" : [
+								{
+									"value" :"EURO6",
+									"rate" : 0.28
+								},
+								{
+									"value" :"EURO5",
+									"rate" : 0.28
+								},
+								{
+									"value" :"EURO4",
+									"rate" : 0.18
+								},
+								{
+									"value" :"EURO3",
+									"rate" : 0.16
+								},
+								{
+									"value" :"EURO2",
+									"rate" : 0.06
+								},
+								{
+									"value" :"EURO1",
+									"rate" : 0.02
+								},
+								{
+									"value" : "CONVENTIONAL",
+									"rate" : 0.02
+								}
+							]
+						}
+					}
+				]
 				}
 			},
 			{
 				"value": "HEAVY_DUTY_TRUCK",
-				"rate": 0.4,
+				"rate": 0.5,
 				"subProfile": {
-					"header": "FUEL",
-					"values":
-					[ {
-						"value": "DIESEL",
-						"rate": 1,
-						"subProfile": {
-							"header": "SEGMENT",
-							"values":
-							[ {
-								"value": "ARTICULATED",
-								"rate": 0.2,
-								"subProfile": {
-									"header": "EURO_STANDARD",
-									"values":
-									[ {
-										"value": "EURO1",
-										"rate": 1.0
-									} ]
+					"header" :  "FUEL",
+					"values" : 
+					[
+					{
+						"value" : "DIESEL",
+						"rate" : 1.0,
+						"subProfile" : {
+							"header" : "EURO_STANDARD",
+							"values" : [
+								{
+									"value" :"EURO6",
+									"rate" : 0.52
+								},
+								{
+									"value" :"EURO5",
+									"rate" : 0.19
+								},
+								{
+									"value" :"EURO4",
+									"rate" : 0.12
+								},
+								{
+									"value" :"EURO3",
+									"rate" : 0.11
+								},
+								{
+									"value" :"EURO2",
+									"rate" : 0.02
+								},
+								{
+									"value" :"EURO1",
+									"rate" : 0.02
+								},
+								{
+									"value" : "CONVENTIONAL",
+									"rate" : 0.02
 								}
-							},
-							{
-								"value": "RIGID",
-								"rate": 0.8,
-								"subProfile": {
-									"header": "EURO_STANDARD",
-									"values":
-									[ {
-										"value": "EURO1",
-										"rate": 1.0
-									} ]
-								}
-							} ]
+							]
 						}
-					} ]
-				}
-			},
-			{
-				"value": "PASSENGER_CAR",
-				"rate": 0.2
-			}
-		]
-	},
-	"CRAFTS_AND_SERVICES": {
-		"header": "CATEGORY",
-		"values": 
-		[
-			{
-				"value": "LIGHT_WEIGHT",
-				"rate": 1.0,
-				"subProfile": {
-					"header": "EURO_STANDARD",
-					"values":
-					[ {
-						"value": "EURO1",
-						"rate": 1.0
-					} ]
+
+					} 
+				]
 				}
 			}
 		]

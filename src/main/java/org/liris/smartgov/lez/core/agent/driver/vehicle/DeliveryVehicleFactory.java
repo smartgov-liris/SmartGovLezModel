@@ -107,7 +107,7 @@ public class DeliveryVehicleFactory {
 		}
 		
 		int requiredNumberOfVehicles = 0;
-		float checkSum = 0;
+		double checkSum = 0;
 		for(CopertRate rate : copertProfile.getValues()) {
 			/*
 			 * We take the ceil of the vehicle number, so that we will have a final selector count
@@ -123,6 +123,7 @@ public class DeliveryVehicleFactory {
 			 * 3 + 2 + 4 = 9 vehicles, so we would need to generate a RANDOM vehicle to have
 			 * 10 vehicles, what is not the required behavior. 
 			 */
+			//System.out.println(rate.getRate());
 			if(rate.getRate() < 0 || rate.getRate() > 1) {
 				throw new IllegalArgumentException(
 						"Bad proportion at level " + copertProfile.getHeader()
@@ -132,7 +133,7 @@ public class DeliveryVehicleFactory {
 				
 			}
 			requiredNumberOfVehicles += (int) Math.ceil(vehicleCount * rate.getRate());
-			checkSum += rate.getRate();
+			checkSum = checkSum +  rate.getRate();
 		}
 		if (checkSum != 1.) {
 			throw new IllegalArgumentException(
@@ -205,8 +206,8 @@ public class DeliveryVehicleFactory {
 		CopertTree completeTree = copertParser.getCopertTree()
 				.select(copertSelector.get(CopertHeader.CATEGORY).matcher()) // "Category"
 				.select(copertSelector.get(CopertHeader.FUEL).matcher()) // "Fuel"
-				.select(copertSelector.get(CopertHeader.SEGMENT).matcher()) // "Segment"
 				.select(copertSelector.get(CopertHeader.EURO_STANDARD).matcher()) // "Euro Standard"
+				.select(copertSelector.get(CopertHeader.SEGMENT).matcher()) // "Segment"
 				.select(copertSelector.get(CopertHeader.TECHNOLOGY).matcher()); // "Technology"
 		
 		// The complete selector (no more RANDOM fields)
