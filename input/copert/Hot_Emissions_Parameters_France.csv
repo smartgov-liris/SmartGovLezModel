@@ -863,30 +863,6 @@ Passenger Cars,Petrol,Large-SUV-Executive,Euro 6 2020+,GDI+GPF,CH4,Urban Peak,,,
 Passenger Cars,Petrol,Large-SUV-Executive,Euro 6 2020+,GDI+GPF,CH4,Urban Off Peak,,,10,130,0,0,"2,87",0,0,0,1000,0,"0,0%","0,0%",120,"0,0029"
 Passenger Cars,Petrol,Large-SUV-Executive,Euro 6 2020+,GDI+GPF,CH4,Rural,,,10,130,0,0,"2,69",0,0,0,1000,0,"0,0%","0,0%",120,"0,0027"
 Passenger Cars,Petrol,Large-SUV-Executive,Euro 6 2020+,GDI+GPF,CH4,Highway,,,10,130,0,0,"5,08",0,0,0,1000,0,"0,0%","0,0%",120,"0,0051"
-Passenger Cars,Petrol,2-Stroke,Conventional,,CO,Urban Peak,,,10,130,0,0,"20,7",0,0,0,1,0,"0,0%","0,0%",120,"20,7"
-Passenger Cars,Petrol,2-Stroke,Conventional,,CO,Urban Off Peak,,,10,130,0,0,"20,7",0,0,0,1,0,"0,0%","0,0%",120,"20,7"
-Passenger Cars,Petrol,2-Stroke,Conventional,,CO,Rural,,,10,130,0,0,"7,5",0,0,0,1,0,"0,0%","0,0%",120,"7,5"
-Passenger Cars,Petrol,2-Stroke,Conventional,,CO,Highway,,,10,130,0,0,"8,7",0,0,0,1,0,"0,0%","0,0%",120,"8,7"
-Passenger Cars,Petrol,2-Stroke,Conventional,,NOx,Urban Peak,,,10,130,0,0,"0,3",0,0,0,1,0,"0,0%","0,0%",120,"0,3"
-Passenger Cars,Petrol,2-Stroke,Conventional,,NOx,Urban Off Peak,,,10,130,0,0,"0,3",0,0,0,1,0,"0,0%","0,0%",120,"0,3"
-Passenger Cars,Petrol,2-Stroke,Conventional,,NOx,Rural,,,10,130,0,0,1,0,0,0,1,0,"0,0%","0,0%",120,1
-Passenger Cars,Petrol,2-Stroke,Conventional,,NOx,Highway,,,10,130,0,0,"0,75",0,0,0,1,0,"0,0%","0,0%",120,"0,75"
-Passenger Cars,Petrol,2-Stroke,Conventional,,VOC,Urban Peak,,,10,130,0,0,"15,4",0,0,0,1,0,"0,0%","0,0%",120,"15,4"
-Passenger Cars,Petrol,2-Stroke,Conventional,,VOC,Urban Off Peak,,,10,130,0,0,"15,4",0,0,0,1,0,"0,0%","0,0%",120,"15,4"
-Passenger Cars,Petrol,2-Stroke,Conventional,,VOC,Rural,,,10,130,0,0,"7,2",0,0,0,1,0,"0,0%","0,0%",120,"7,2"
-Passenger Cars,Petrol,2-Stroke,Conventional,,VOC,Highway,,,10,130,0,0,"5,9",0,0,0,1,0,"0,0%","0,0%",120,"5,9"
-Passenger Cars,Petrol,2-Stroke,Conventional,,PM Exhaust,Urban Peak,,,10,130,0,0,0,0,0,0,1,0,"0,0%","0,0%",120,0
-Passenger Cars,Petrol,2-Stroke,Conventional,,PM Exhaust,Urban Off Peak,,,10,130,0,0,0,0,0,0,1,0,"0,0%","0,0%",120,0
-Passenger Cars,Petrol,2-Stroke,Conventional,,PM Exhaust,Rural,,,10,130,0,0,0,0,0,0,1,0,"0,0%","0,0%",120,0
-Passenger Cars,Petrol,2-Stroke,Conventional,,PM Exhaust,Highway,,,10,130,0,0,0,0,0,0,1,0,"0,0%","0,0%",120,0
-Passenger Cars,Petrol,2-Stroke,Conventional,,FC,Urban Peak,,,10,130,0,0,"4,88",0,0,0,1,0,"0,0%","0,0%",120,"4,88"
-Passenger Cars,Petrol,2-Stroke,Conventional,,FC,Urban Off Peak,,,10,130,0,0,"4,88",0,0,0,1,0,"0,0%","0,0%",120,"4,88"
-Passenger Cars,Petrol,2-Stroke,Conventional,,FC,Rural,,,10,130,0,0,"2,89",0,0,0,1,0,"0,0%","0,0%",120,"2,89"
-Passenger Cars,Petrol,2-Stroke,Conventional,,FC,Highway,,,10,130,0,0,"2,49",0,0,0,1,0,"0,0%","0,0%",120,"2,49"
-Passenger Cars,Petrol,2-Stroke,Conventional,,CH4,Urban Peak,,,10,130,0,0,131,0,0,0,1000,0,"0,0%","0,0%",120,"0,131"
-Passenger Cars,Petrol,2-Stroke,Conventional,,CH4,Urban Off Peak,,,10,130,0,0,131,0,0,0,1000,0,"0,0%","0,0%",120,"0,131"
-Passenger Cars,Petrol,2-Stroke,Conventional,,CH4,Rural,,,10,130,0,0,86,0,0,0,1000,0,"0,0%","0,0%",120,"0,086"
-Passenger Cars,Petrol,2-Stroke,Conventional,,CH4,Highway,,,10,130,0,0,41,0,0,0,1000,0,"0,0%","0,0%",120,"0,041"
 Passenger Cars,Diesel,Mini,Euro 4,DPF,CO,,,,10,130,0,"-0,013","0,999","0,88","0,002","0,042","2,88",0,"0,0%","0,0%",120,"0,0193"
 Passenger Cars,Diesel,Mini,Euro 4,DPF,NOx,,,,10,130,"0,001","-0,076","4,199",0,0,0,"3,79",0,"0,0%","0,0%",120,"0,8258"
 Passenger Cars,Diesel,Mini,Euro 4,DPF,VOC,,,,10,130,0,"-0,004","0,193",0,"0,009","-0,149","5,55",0,"0,0%","0,0%",120,"0,0057"

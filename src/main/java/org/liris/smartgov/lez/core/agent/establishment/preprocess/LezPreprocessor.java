@@ -29,7 +29,7 @@ public class LezPreprocessor {
 			Round round = establishment.getRounds().get(vehicle.getId());
 			boolean vehicleForbidden = false;
 			
-			if(environment.getNeighborhood(establishment.getClosestOsmNode()).getLezCriteria().isAllowed(vehicle)) {
+			if(! environment.getNeighborhood(establishment.getClosestOsmNode()).getLezCriteria().isAllowed(vehicle)) {
 				//if the origin establishment does not allow the vehicle
 				vehicleForbidden = true;
 			}
@@ -37,7 +37,7 @@ public class LezPreprocessor {
 			int i = 0;
 			while(!vehicleForbidden && i < round.getEstablishments().size()) {
 				
-				if ( environment.getNeighborhood( round.getEstablishments().get(i).getClosestOsmNode() ).getLezCriteria().isAllowed(vehicle) ) {
+				if (! environment.getNeighborhood( round.getEstablishments().get(i).getClosestOsmNode() ).getLezCriteria().isAllowed(vehicle) ) {
 					//if the establishments of the round do not allow the vehicle
 					vehicleForbidden = true;
 				}
@@ -48,10 +48,9 @@ public class LezPreprocessor {
 				CopertSelector selector = new CopertSelector();
 				selector.put(CopertHeader.CATEGORY, vehicle.getCategory());
 				selector.put(CopertHeader.FUEL, vehicle.getFuel());
-				selector.put(CopertHeader.SEGMENT, vehicle.getSegment());
-				selector.put(CopertHeader.TECHNOLOGY, Technology.RANDOM); // Not all technologies are available for all euro norms
-				
 				selector.put(CopertHeader.EURO_STANDARD, EuroNorm.EURO6);
+				//selector.put(CopertHeader.SEGMENT, Segment);
+				//selector.put(CopertHeader.TECHNOLOGY, Technology.RANDOM); // Not all technologies are available for all euro norms
 				
 				Vehicle newVehicle =
 					DeliveryVehicleFactory.generateVehicle(
