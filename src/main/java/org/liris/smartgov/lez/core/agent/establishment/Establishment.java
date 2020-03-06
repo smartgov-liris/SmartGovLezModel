@@ -34,6 +34,7 @@ public class Establishment implements ParkingArea {
 	private OsmNode closestOsmNode;
 	
 	private Map<String, Vehicle> fleet;
+	private Map<String, Vehicle> originalFleet;
 	
 	@JsonIgnore
 	private Map<VehicleCapacity, Collection<Vehicle>> fleetByCapacity;
@@ -57,6 +58,7 @@ public class Establishment implements ParkingArea {
 		this.activity = activity;
 		this.location = location;
 		fleet = new HashMap<>();
+		originalFleet = new HashMap<>();
 		fleetByCapacity = new HashMap<>();
 		rounds = new HashMap<>();
 		agents = new ArrayList<>();
@@ -139,7 +141,12 @@ public class Establishment implements ParkingArea {
 			fleetByCapacity.put(capacity, new ArrayList<>());
 		}
 		fleetByCapacity.get(capacity).add(vehicle);
+		originalFleet.put(vehicle.getId(), vehicle);
 		fleet.put(vehicle.getId(), vehicle);
+	}
+	
+	public void resetFleet() {
+		fleet = originalFleet;
 	}
 	
 	/**
