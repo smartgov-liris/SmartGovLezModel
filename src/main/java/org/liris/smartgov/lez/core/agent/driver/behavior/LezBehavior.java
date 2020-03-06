@@ -1,6 +1,7 @@
 package org.liris.smartgov.lez.core.agent.driver.behavior;
 
-import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverBody;
+
+import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.environment.lez.Lez;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
 import org.liris.smartgov.simulator.core.environment.graph.Node;
@@ -28,7 +29,7 @@ public abstract class LezBehavior extends GeoMovingBehavior {
 	 * @param lez current lez
 	 */
 	public LezBehavior(
-			DeliveryDriverBody agentBody,
+			DriverBody agentBody,
 			Node origin,
 			Node destination,
 			SmartGovContext context,
@@ -36,5 +37,7 @@ public abstract class LezBehavior extends GeoMovingBehavior {
 			) {
 		super(agentBody, origin, destination, context, lez.costs(agentBody.getVehicle()));
 	}
+	
+	public abstract void setUpListeners();
 
 }

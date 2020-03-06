@@ -15,7 +15,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import org.junit.Test;
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicleFactory;
 import org.liris.smartgov.lez.core.copert.fields.CopertField;
 import org.liris.smartgov.lez.core.copert.fields.EuroNorm;
@@ -65,13 +65,13 @@ public class DeliveryVehicleFactoryTest {
 	/*
 	 * Count the number of vehicles that have a config that match the specified configMatcher.
 	 */
-	private static int countOccurences(List<DeliveryVehicle> vehicles, Map<CopertHeader, CopertField> configMatcher) {
+	private static int countOccurences(List<Vehicle> vehicles, Map<CopertHeader, CopertField> configMatcher) {
 		if (configMatcher.size() == 0) {
 			return 0;
 		}
 		
 		int count = 0;
-		for(DeliveryVehicle vehicle : vehicles) {
+		for(Vehicle vehicle : vehicles) {
 			boolean match = true;
 			CopertField matcher;
 			for(Entry<CopertHeader, CopertField> field : configMatcher.entrySet()) {
@@ -193,9 +193,9 @@ public class DeliveryVehicleFactoryTest {
 		CopertParser copertParser = loadCopertParser(copert_table_test);
 		DeliveryVehicleFactory factory = new DeliveryVehicleFactory(copertProfile, copertParser);
 		
-		List<DeliveryVehicle> vehicles = factory.create(16);
+		List<Vehicle> vehicles = factory.create(16);
 		
-		for(DeliveryVehicle vehicle : vehicles) {
+		for(Vehicle vehicle : vehicles) {
 			/*
 			 * Assert that all the fields are well initialized,
 			 * even if the user didn't specified all the fields.  
@@ -262,7 +262,7 @@ public class DeliveryVehicleFactoryTest {
 		CopertParser copertParser = loadCopertParser(copert_table_test);
 		DeliveryVehicleFactory factory = new DeliveryVehicleFactory(copertProfile, copertParser);
 		
-		List<DeliveryVehicle> vehicles = factory.create(16);
+		List<Vehicle> vehicles = factory.create(16);
 		
 		int count;
 		Map<CopertHeader, CopertField> matcher = new HashMap<>();
@@ -308,9 +308,9 @@ public class DeliveryVehicleFactoryTest {
 		
 		int count = 0;
 		for (int i = 0; i < 1000; i ++) {
-			List<DeliveryVehicle> vehicles = factory.create(3);
+			List<Vehicle> vehicles = factory.create(3);
 			int _count = 0;
-			for (DeliveryVehicle vehicle : vehicles) {
+			for (Vehicle vehicle : vehicles) {
 				assertThat(
 						vehicle.getSegment(),
 						anyOf(
@@ -359,11 +359,11 @@ public class DeliveryVehicleFactoryTest {
 		CopertParser copertParser = loadCopertParser(copert_table_full);
 		DeliveryVehicleFactory factory = new DeliveryVehicleFactory(copertProfile, copertParser);
 		
-		List<DeliveryVehicle> vehicles = factory.create(12);
+		List<Vehicle> vehicles = factory.create(12);
 		
 		int euro1 = 0;
 		int euro6 = 0;
-		for(DeliveryVehicle vehicle : vehicles) {
+		for(Vehicle vehicle : vehicles) {
 			assertThat(
 					vehicle.getCategory(),
 					equalTo(VehicleCategory.LIGHT_WEIGHT)

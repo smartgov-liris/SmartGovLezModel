@@ -3,7 +3,7 @@ package org.liris.smartgov.lez.core.copert.inputParser;
 public class CopertRate {
 	
 	private String value;
-	private float rate;
+	private double rate;
 	private CopertProfile subProfile;
 	
 	public CopertRate() {
@@ -21,7 +21,7 @@ public class CopertRate {
 		return value;
 	}
 
-	public float getRate() {
+	public double getRate() {
 		return rate;
 	}
 

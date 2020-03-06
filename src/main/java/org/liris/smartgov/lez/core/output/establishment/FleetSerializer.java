@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.establishment.VehicleCapacity;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-public class FleetSerializer extends StdSerializer<Map<VehicleCapacity, Collection<DeliveryVehicle>>> {
+public class FleetSerializer extends StdSerializer<Map<VehicleCapacity, Collection<Vehicle>>> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,16 +20,16 @@ public class FleetSerializer extends StdSerializer<Map<VehicleCapacity, Collecti
 		this(null);
 	}
 	
-	protected FleetSerializer(Class<Map<VehicleCapacity, Collection<DeliveryVehicle>>> t) {
+	protected FleetSerializer(Class<Map<VehicleCapacity, Collection<Vehicle>>> t) {
 		super(t);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void serialize(Map<VehicleCapacity, Collection<DeliveryVehicle>> value, JsonGenerator gen,
+	public void serialize(Map<VehicleCapacity, Collection<Vehicle>> value, JsonGenerator gen,
 			SerializerProvider provider) throws IOException {
-		Collection<DeliveryVehicle> vehicles = new ArrayList<>();
-		for(Collection<DeliveryVehicle> _vehicles : value.values()) {
+		Collection<Vehicle> vehicles = new ArrayList<>();
+		for(Collection<Vehicle> _vehicles : value.values()) {
 			vehicles.addAll(_vehicles);
 		}
 		gen.writeObject(vehicles);

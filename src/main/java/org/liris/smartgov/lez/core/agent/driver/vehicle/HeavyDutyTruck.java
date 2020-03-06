@@ -11,11 +11,11 @@ import org.liris.smartgov.lez.core.copert.fields.VehicleCategory;
  * DeliveryVehicle extension, to simplify heavy duty trucks instantiation.
  *
  */
-public class HeavyDutyTruck extends DeliveryVehicle {
+public class HeavyDutyTruck extends Vehicle {
 
 	/**
 	 * HeavyDutyTruck constructor. Equivalent to a call to
-	 * {@link DeliveryVehicle#DeliveryVehicle(String, VehicleCategory, Fuel, VehicleSegment, EuroNorm, Technology, Copert)}
+	 * {@link Vehicle#DeliveryVehicle(String, VehicleCategory, Fuel, VehicleSegment, EuroNorm, Technology, Copert)}
 	 * with the same parameters, with HEAVY_DUTY_TRUCK as the vehicle category.
 	 * 
 	 * @param id vehicle id

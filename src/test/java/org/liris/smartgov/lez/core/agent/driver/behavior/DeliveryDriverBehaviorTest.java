@@ -19,9 +19,9 @@ import java.util.List;
 
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
-import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverBody;
+import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.driver.behavior.DeliveryDriverBehavior;
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
@@ -151,16 +151,16 @@ public class DeliveryDriverBehaviorTest {
 
 	private static class DeliveryScenario extends PollutionScenario {
 		
-		public static DeliveryDriverBody driverSpy;
+		public static DriverBody driverSpy;
 		
 		public static Date departure = new Date(Clock.origin, 1, 10, 30);
 
 		@Override
 		public Collection<? extends Agent<?>> buildAgents(SmartGovContext context) {
-			DeliveryVehicle fakeVehicle = mock(DeliveryVehicle.class);
+			Vehicle fakeVehicle = mock(Vehicle.class);
 			doReturn(0.).when(fakeVehicle).getEmissions(any(Pollutant.class), anyDouble(), anyDouble());
 			
-			driverSpy = spy(new DeliveryDriverBody(fakeVehicle));
+			driverSpy = spy(new DriverBody(fakeVehicle));
 
 			// Because the car mover agent body is set in the OsmAgentBody constructor
 			// with "this" agent body, the real delivery driver is set as agentBody in the car mover.

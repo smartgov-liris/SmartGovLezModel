@@ -14,7 +14,15 @@ public interface VehicleSegment extends CopertField {
 			return lightSegment;
 		}
 		else {
-			return HeavyDutyTrucksSegment.getValue(string);
+			PassengerCarsSegment passengerSegment;
+			passengerSegment = PassengerCarsSegment.getValue(string);
+			if ( passengerSegment != null ) {
+				return passengerSegment;
+			}
+			else {
+				return HeavyDutyTrucksSegment.getValue(string);
+			}
+
 		}
 	}
 	
@@ -24,7 +32,13 @@ public interface VehicleSegment extends CopertField {
 		}
 		catch(IllegalArgumentException e) {
 			// String was not a LightWeightVehicleSegment : should be an HeavyTrucksSegment
-			return HeavyDutyTrucksSegment.valueOf(string);
+			try {
+				return LightWeightVehicleSegment.valueOf(string);
+			}
+			catch(IllegalArgumentException e2) {
+				return HeavyDutyTrucksSegment.valueOf(string);
+			}
+
 		}
 	}
 	

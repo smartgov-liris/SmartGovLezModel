@@ -1,0 +1,19 @@
+{
+    "nb_squares" : 2,
+    "dimensions" :
+    {
+        "north_bound" : 46.146,
+        "south_bound" : 45.43,
+        "west_bound" : 4.4,
+        "east_bound" : 5.46
+    },
+    "allowed" : 
+    [
+        "CRITAIR_1",
+        "CRITAIR_2",
+        "CRITAIR_3",
+        "CRITAIR_4",
+        "CRITAIR_5",
+        "NONE"
+    ]
+}

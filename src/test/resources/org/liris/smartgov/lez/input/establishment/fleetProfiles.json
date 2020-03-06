@@ -110,5 +110,19 @@
 				"rate": 0.5
 			}
 		]
+	},
+	"PRIVATE_HABITATION": {
+	"header" : "CATEGORY",
+	"values": 
+	[
+		{
+			"value": "PASSENGER_CAR",
+			"rate": 0.9
+		},
+		{
+			"value": "LIGHT_WEIGHT",
+			"rate": 0.1
+		}
+	]
 	}
 }

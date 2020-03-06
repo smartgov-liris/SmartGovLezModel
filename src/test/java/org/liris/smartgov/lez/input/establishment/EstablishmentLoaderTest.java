@@ -19,7 +19,7 @@ import org.locationtech.jts.geom.Coordinate;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.agent.establishment.ST8;
@@ -144,7 +144,7 @@ public class EstablishmentLoaderTest {
 				hasSize(3)
 				);
 
-		Map<String, Map<VehicleCapacity, Collection<DeliveryVehicle>>> originFleets = new HashMap<>();
+		Map<String, Map<VehicleCapacity, Collection<Vehicle>>> originFleets = new HashMap<>();
 		for(Establishment establishment : originEstablishments.values()) {
 			originFleets.put(establishment.getId(), establishment.getFleetByCapacity());
 			int expectedFleetSize = 0;
@@ -182,8 +182,8 @@ public class EstablishmentLoaderTest {
 							establishment.getFleetByCapacity().get(capacity).size(),
 							equalTo(originEstablishment.getFleetByCapacity().get(capacity).size())
 							);
-					Iterator<DeliveryVehicle> origin = establishment.getFleetByCapacity().get(capacity).iterator();
-					Iterator<DeliveryVehicle> current = establishment.getFleetByCapacity().get(capacity).iterator();
+					Iterator<Vehicle> origin = establishment.getFleetByCapacity().get(capacity).iterator();
+					Iterator<Vehicle> current = establishment.getFleetByCapacity().get(capacity).iterator();
 					while(origin.hasNext()) {
 						assertThat(
 								origin.next().equalCharacteristics(current.next()),
@@ -215,16 +215,16 @@ public class EstablishmentLoaderTest {
 		}
 		
 		Establishment establishmentWithThreeRounds = establishments.get("0");
-		List<DeliveryVehicle> vehicles = new ArrayList<>(establishmentWithThreeRounds.getFleet().values());
+		List<Vehicle> vehicles = new ArrayList<>(establishmentWithThreeRounds.getFleet().values());
 		vehicles.sort((vehicle1, vehicle2) -> vehicle1.compareTo(vehicle2));
 		
 		/*
 		 * Assert that vehicles are assigned to rounds according to their capacities.
 		 * The lighter vehicle must handle the lighter round and reciprocally.
 		 */
-		List<DeliveryVehicle> lighterVehicles = new ArrayList<>();
-		for(DeliveryVehicle vehicle : vehicles) {
-			for(DeliveryVehicle lighterVehicle : lighterVehicles) {
+		List<Vehicle> lighterVehicles = new ArrayList<>();
+		for(Vehicle vehicle : vehicles) {
+			for(Vehicle lighterVehicle : lighterVehicles) {
 				assertThat(
 						establishmentWithThreeRounds.getRounds().get(lighterVehicle.getId()).getInitialWeight(),
 						lessThanOrEqualTo(establishmentWithThreeRounds.getRounds().get(vehicle.getId()).getInitialWeight())

@@ -44,3 +44,8 @@ shadowJar {
 application {
 	mainClassName = "org.liris.smartgov.lez.cli.Cli"
 }
+
+//si besoin d'afficher les logs & prit dans les tests
+//test {
+//	testLogging.showStandardStreams = true
+//}

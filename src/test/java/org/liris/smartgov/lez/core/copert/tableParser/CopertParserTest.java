@@ -108,8 +108,8 @@ public class CopertParserTest {
 				copertParser.getCopertTree()
 				.select(VehicleCategory.LIGHT_WEIGHT.matcher())
 				.select(Fuel.PETROL.matcher())
-				.select(LightWeightVehicleSegment.N1_II.matcher())
 				.select(EuroNorm.EURO1.matcher())
+				.select(LightWeightVehicleSegment.N1_II.matcher())
 				.select();
 		
 		Copert copert = new Copert(completeCopertTreeUntilTechnology);
@@ -253,8 +253,8 @@ public class CopertParserTest {
 				copertParser.getCopertTree().
 				select(VehicleCategory.LIGHT_WEIGHT.matcher())
 				.select(Fuel.DIESEL.matcher())
-				.select(LightWeightVehicleSegment.N1_II.matcher())
 				.select(EuroNorm.EURO6.matcher())
+				.select(LightWeightVehicleSegment.N1_II.matcher())
 				.getPath(),
 				equalTo(selector)
 				);

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.liris.smartgov.lez.cli.tools.Run;
-import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverBody;
+import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.environment.lez.Lez;
@@ -44,7 +44,7 @@ public class DeliveryDriverBehavior extends LezBehavior {
 	 * @param context currentContext
 	 */
 	public DeliveryDriverBehavior(
-			DeliveryDriverBody agentBody,
+			DriverBody agentBody,
 			Round round,
 			SmartGovContext context) {
 		super(
@@ -82,17 +82,17 @@ public class DeliveryDriverBehavior extends LezBehavior {
 				);
 		
 		// After the agents leave the parking, it moves until it finished the round
-		((DeliveryDriverBody) getAgentBody()).addOnParkingLeftListener((event) ->
+		((DriverBody) getAgentBody()).addOnParkingLeftListener((event) ->
 			nextAction = MoverAction.MOVE()
 			);
 		
 		// When the agent enter the parking, it waits
-		((DeliveryDriverBody) getAgentBody()).addOnParkingEnteredListener((event) ->
+		((DriverBody) getAgentBody()).addOnParkingEnteredListener((event) ->
 			nextAction = MoverAction.WAIT()
 			);
 		
 		// When a destination is reached
-		((DeliveryDriverBody) getAgentBody()).addOnDestinationReachedListener((event) -> {
+		((DriverBody) getAgentBody()).addOnDestinationReachedListener((event) -> {
 			
 			if (currentPosition <= round.getEstablishments().size() - 1) {
 				Establishment currentEstablishment = round.getEstablishments().get(currentPosition);

@@ -171,6 +171,7 @@ public class Copert {
 	
 	private CopertParameters getCopertParameters(Map<String, String> copertLine) {
 		return new CopertParameters(
+				//replaceAll here to avoid random caracters
 				Double.valueOf(copertLine.get(CopertHeader.ALPHA.columnName())),
 				Double.valueOf(copertLine.get(CopertHeader.BETA.columnName())),
 				Double.valueOf(copertLine.get(CopertHeader.GAMMA.columnName())),

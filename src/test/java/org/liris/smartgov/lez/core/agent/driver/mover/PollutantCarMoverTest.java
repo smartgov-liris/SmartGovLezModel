@@ -20,11 +20,12 @@ import org.powermock.api.mockito.PowerMockito;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverBody;
+import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.driver.mover.PollutantCarMover;
-import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicle;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
+import org.liris.smartgov.lez.core.environment.lez.Lez;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.agent.core.Agent;
 import org.liris.smartgov.simulator.core.agent.moving.MovingAgentBody;
@@ -73,7 +74,7 @@ public class PollutantCarMoverTest {
 		}
 		
 		assertThat(
-				smartGov.getContext().agents.get("1").getBody() instanceof DeliveryDriverBody,
+				smartGov.getContext().agents.get("1").getBody() instanceof DriverBody,
 				equalTo(true)
 				);
 		
@@ -220,10 +221,10 @@ public class PollutantCarMoverTest {
 
 		@Override
 		public Collection<? extends Agent<?>> buildAgents(SmartGovContext context) {
-			DeliveryVehicle fakeVehicle = PowerMockito.mock(DeliveryVehicle.class);
+			Vehicle fakeVehicle = PowerMockito.mock(Vehicle.class);
 			doReturn(1.0).when(fakeVehicle).getEmissions(Mockito.any(Pollutant.class), Mockito.anyDouble(), Mockito.anyDouble());
 			
-			OsmAgentBody deliveryDriver = new DeliveryDriverBody(fakeVehicle);
+			OsmAgentBody deliveryDriver = new DriverBody(fakeVehicle);
 			OsmAgent agent = new OsmAgent("1", deliveryDriver, new PollutantCarMoverTestBehavior(deliveryDriver, context));
 			
 			deliveryDriver.initialize();
@@ -272,7 +273,9 @@ public class PollutantCarMoverTest {
 		@Override
 		public PollutableOsmArc create(String id, OsmNode startNode, OsmNode targetNode, Road road, RoadDirection roadDirection) {
 
-			PollutableOsmArc spy = PowerMockito.spy(new PollutableOsmArc(id, startNode, targetNode, road, roadDirection, false));
+			
+			
+			PollutableOsmArc spy = PowerMockito.spy(new PollutableOsmArc(id, startNode, targetNode, road, roadDirection, Lez.none()));
 			spies.put(id, spy);
 			return spy;
 		}

@@ -11,11 +11,11 @@ import org.liris.smartgov.lez.core.copert.fields.VehicleCategory;
  * DeliveryVehicle extension, to simplify light weight vehicles instantiation.
  *
  */
-public class LightCommercialVehicle extends DeliveryVehicle {
+public class LightCommercialVehicle extends Vehicle {
 	
 	/**
 	 * LightCommercialVehicle constructor. Equivalent to a call to
-	 * {@link DeliveryVehicle#DeliveryVehicle(String, VehicleCategory, Fuel, VehicleSegment, EuroNorm, Technology, Copert)}
+	 * {@link Vehicle#DeliveryVehicle(String, VehicleCategory, Fuel, VehicleSegment, EuroNorm, Technology, Copert)}
 	 * with the same parameters, with LIGHT_WEIGHT as the vehicle category.
 	 * 
 	 * @param id vehicle id

@@ -26,7 +26,7 @@ public class DeliveryDriverAgent extends OsmAgent {
 	 */
 	public DeliveryDriverAgent(
 			String id,
-			DeliveryDriverBody body,
+			DriverBody body,
 			DeliveryDriverBehavior deliveryDriverBehavior) {
 		super(id, body, deliveryDriverBehavior);
 		this.establishment = deliveryDriverBehavior.getRound().getOrigin();
