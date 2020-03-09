@@ -3,6 +3,7 @@ package org.liris.smartgov.lez.core.agent.establishment;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -34,7 +35,7 @@ public class Establishment implements ParkingArea {
 	private OsmNode closestOsmNode;
 	
 	private Map<String, Vehicle> fleet;
-	private Map<String, Vehicle> originalFleet;
+	private List<Vehicle> replacedVehicle;
 	
 	@JsonIgnore
 	private Map<VehicleCapacity, Collection<Vehicle>> fleetByCapacity;
@@ -58,7 +59,7 @@ public class Establishment implements ParkingArea {
 		this.activity = activity;
 		this.location = location;
 		fleet = new HashMap<>();
-		originalFleet = new HashMap<>();
+		replacedVehicle = new ArrayList<>();
 		fleetByCapacity = new HashMap<>();
 		rounds = new HashMap<>();
 		agents = new ArrayList<>();
@@ -141,12 +142,14 @@ public class Establishment implements ParkingArea {
 			fleetByCapacity.put(capacity, new ArrayList<>());
 		}
 		fleetByCapacity.get(capacity).add(vehicle);
-		originalFleet.put(vehicle.getId(), vehicle);
 		fleet.put(vehicle.getId(), vehicle);
 	}
 	
 	public void resetFleet() {
-		fleet = originalFleet;
+		for ( Vehicle vehicle : replacedVehicle) {
+			fleet.put(vehicle.getId(), vehicle);
+		}
+		replacedVehicle.clear();
 	}
 	
 	/**
@@ -170,6 +173,11 @@ public class Establishment implements ParkingArea {
 	 */
 	public Map<String, Vehicle> getFleet() {
 		return fleet;
+	}
+	
+	public void replaceVehicle (String id, Vehicle vehicle) {
+		replacedVehicle.add(fleet.get(id));
+		fleet.put(id, vehicle);
 	}
 
 	/**

@@ -59,7 +59,7 @@ public class LezPreprocessor {
 						vehicle.getId()
 						);
 				
-				establishment.getFleet().put(newVehicle.getId(), newVehicle);
+				establishment.replaceVehicle(newVehicle.getId(), newVehicle);
 				replacedVehicles++;
 			}
 		}
