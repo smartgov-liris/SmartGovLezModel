@@ -216,7 +216,7 @@ public class Establishment implements ParkingArea {
 	 * done currently).
 	 * </p>
 	 *
-	 * @param agent agent to add to this establishment
+	 * @param agent agent to System.out.println(agents.size());add to this establishment
 	 */
 	public void addAgent(OsmAgent agent) {
 		agents.add(agent);
@@ -275,6 +275,10 @@ public class Establishment implements ParkingArea {
 	public String toString() {
 		return "Establishment [id=" + id + ", name=" + name + ", activity=" + activity + ", location=" + location
 				+ ", fleet=" + fleet + ", rounds=" + rounds + "]";
+	}
+	
+	public boolean acceptToReplaceVehicle() {
+		return true;
 	}
 
 	

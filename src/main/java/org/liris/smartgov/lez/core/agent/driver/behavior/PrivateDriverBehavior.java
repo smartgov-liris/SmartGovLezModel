@@ -48,5 +48,4 @@ public abstract class PrivateDriverBehavior extends DriverBehavior {
 			listener.handle(event);
 		}		
 	}	
-	
 }

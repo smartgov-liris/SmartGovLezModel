@@ -36,10 +36,8 @@ with open('establishments_simturb.json') as json_file:
         dico_rounds['departure'] = "NONE"
         dico_rounds['ids'] = []
         dico_rounds['ids'].append(data[random.randint(0, len(data) - 1)]['id'])
-        if random.random() < 0.5 : #proba to add a second appointment
+        if random.random() < 0.25 : #proba to add a second appointment
             dico_rounds['ids'].append(data[random.randint(0, len(data) - 1)]['id'])
-            if random.random() < 0.5: #proba to add a 3rd one
-                dico_rounds['ids'].append(data[random.randint(0, len(data) - 1)]['id'])
 
         
 

@@ -17,6 +17,7 @@ import org.liris.smartgov.lez.core.agent.driver.behavior.DeliveryDriverBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.DriverBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.PrivateDriverBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerBehavior;
+import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerOneActivityBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.LezBehavior;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
@@ -99,7 +100,7 @@ public class DeliveriesScenario extends PollutionScenario {
 		}
 	}
 	
-	public Map<String, Establishment> loadEstablishments(SmartGovContext context) {
+	public Map<String, Establishment> loadEstablishments(SmartGovContext context, CopertParser parser) {
 		
 		int deadEnds = 0;
 		for(Node node : context.nodes.values()) {
@@ -112,9 +113,6 @@ public class DeliveriesScenario extends PollutionScenario {
 		Run.logger.info(deadEnds + " dead ends found.");
 		
 		OsmArcsBuilder.fixDeadEnds((LezContext) context, new PollutableOsmArcFactory(getEnvironment()));
-
-		// All the vehicles will belong to the loaded copert table
-		CopertParser parser = loadParser(context);
 		
 		Map<String, Establishment> establishments = null;
 		try {
@@ -149,22 +147,21 @@ public class DeliveriesScenario extends PollutionScenario {
 	
 
 	public Collection<? extends Agent<?>> buildAgents(SmartGovContext context, boolean reload) {
+		CopertParser parser = loadParser(context);
 		
 		if (!reload) {
-			establishments = loadEstablishments(context);
+			establishments = loadEstablishments(context, parser);
 		} else {
 			for (Establishment establishment: establishments.values()) {
 				establishment.resetFleet();
 			}
 		}
 		
-		CopertParser parser = loadParser(context);
-		
 		Run.logger.info("Applying lez...");
 		LezPreprocessor preprocessor = new LezPreprocessor(getEnvironment(), parser);
 		int totalVehiclesReplaced = 0;
 		
-		for( Establishment establishment : ((LezContext) context).getEstablishments().values() ) {
+		for( Establishment establishment : establishments.values() ) {
 			int replacedVehiclesCount = preprocessor.preprocess(establishment);
 			totalVehiclesReplaced += replacedVehiclesCount;
 		}
@@ -175,9 +172,11 @@ public class DeliveriesScenario extends PollutionScenario {
 		Collection<OsmAgent> agents = new ArrayList<>();
 		Collection<BuildAgentThread> threads = new ArrayList<>();
 		
+		Random random = new Random(111111);
+		
 		for (Establishment establishment : establishments.values()) {
 			for(String vehicleId : establishment.getRounds().keySet()) {
-				BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context);
+				BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context, random);
 				threads.add(thread);
 				thread.start();
 			}
@@ -207,13 +206,13 @@ public class DeliveriesScenario extends PollutionScenario {
 		private DriverBehavior builtBehavior;
 		private Random random;
 		
-		public BuildAgentThread(int agentId, String vehicleId, Establishment establishment, LezContext context) {
+		public BuildAgentThread(int agentId, String vehicleId, Establishment establishment, LezContext context, Random random) {
 			super();
 			this.agentId = agentId;
 			this.vehicleId = vehicleId;
 			this.establishment = establishment;
 			this.context = context;
-			random = new Random(111111);
+			this.random = random;
 		}
 
 		public void run() {
@@ -231,11 +230,21 @@ public class DeliveriesScenario extends PollutionScenario {
 						driver, (DeliveryDriverBehavior)builtBehavior);
 			}
 			else {
-				builtBehavior = new WorkerBehavior(
-						driver,
-						establishment.getRounds().get(vehicleId),
-						context, 
-						random);
+				//Private agent
+				if (establishment.getRounds().get(vehicleId).getEstablishments().size() < 2) {
+					builtBehavior = new WorkerBehavior(
+							driver,
+							establishment.getRounds().get(vehicleId),
+							context, 
+							random);
+				} else {
+					builtBehavior = new WorkerOneActivityBehavior(
+							driver,
+							establishment.getRounds().get(vehicleId),
+							context, 
+							random);
+				}
+
 				builtAgent = new PrivateDriverAgent(String.valueOf(agentId),
 						driver, (PrivateDriverBehavior)builtBehavior);
 			}

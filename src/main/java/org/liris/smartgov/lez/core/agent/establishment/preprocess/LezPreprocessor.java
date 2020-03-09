@@ -1,6 +1,10 @@
 package org.liris.smartgov.lez.core.agent.establishment.preprocess;
 
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
+
+import java.util.ArrayList;
+
+import org.liris.smartgov.lez.core.agent.driver.behavior.DriverBehavior;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicleFactory;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
@@ -10,6 +14,7 @@ import org.liris.smartgov.lez.core.copert.tableParser.CopertHeader;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertSelector;
 import org.liris.smartgov.lez.core.environment.lez.Environment;
+import org.liris.smartgov.simulator.urban.osm.agent.OsmAgent;
 
 public class LezPreprocessor {
 	
@@ -25,6 +30,8 @@ public class LezPreprocessor {
 		
 		int replacedVehicles = 0;
 		
+
+
 		for(Vehicle vehicle : establishment.getFleet().values()) {
 			Round round = establishment.getRounds().get(vehicle.getId());
 			boolean vehicleForbidden = false;
@@ -44,7 +51,7 @@ public class LezPreprocessor {
 				i++;
 			}
 			
-			if(vehicleForbidden) {
+			if(vehicleForbidden && establishment.acceptToReplaceVehicle()) {
 				CopertSelector selector = new CopertSelector();
 				selector.put(CopertHeader.CATEGORY, vehicle.getCategory());
 				selector.put(CopertHeader.FUEL, vehicle.getFuel());
@@ -63,6 +70,7 @@ public class LezPreprocessor {
 				replacedVehicles++;
 			}
 		}
+
 		return replacedVehicles;
 	}
 }

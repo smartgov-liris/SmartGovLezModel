@@ -12,24 +12,29 @@ import org.liris.smartgov.simulator.core.simulation.time.Date;
 import org.liris.smartgov.simulator.core.simulation.time.DelayedActionHandler;
 import org.liris.smartgov.simulator.core.simulation.time.WeekDay;
 
-public class WorkerBehavior extends PrivateDriverBehavior {
-	
+public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 	private int position;
 	
-	public WorkerBehavior(
+	public WorkerOneActivityBehavior(
 			DriverBody agentBody,
 			Round round,
 			SmartGovContext context,
 			Random random
 			) {
+	
 		super(agentBody,
 				round,
 				context,
 				random);
+		
+		if (round.getEstablishments().size() < 2) {
+			throw new IllegalArgumentException("This behavior needs two establishments in his round");
+		}
+		
 		position = 0;
 		this.nextAction = MoverAction.ENTER(round.getOrigin());
 	}
-	
+
 	@Override
 	public void setUpListeners() {
 		// After the agents leave the parking, it moves until it finished the round
@@ -41,7 +46,7 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 		((DriverBody) getAgentBody()).addOnParkingEnteredListener((event) ->
 			nextAction = MoverAction.WAIT()
 			);
-
+		
 		//the departure is between 7h and 8h59
 		Date departure = new Date(0, WeekDay.MONDAY, random.nextInt(2) + 7, random.nextInt(60));
 		
@@ -52,7 +57,7 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 			new DelayedActionHandler(
 					departure,
 					() -> {
-						if (Integer.parseInt(getAgentBody().getAgent().getId()) <= -1) {
+						if (Integer.parseInt(getAgentBody().getAgent().getId()) <= 100) {
 							Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 									+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 									+ "Agent " + getAgentBody().getAgent().getId()
@@ -65,8 +70,8 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 					)
 			);
 		
-		//leaves work between 16h and 18h59
-		departure = new Date(0, WeekDay.MONDAY, random.nextInt(3) + 16, random.nextInt(60));
+		//leaves work between 16h and 17h59
+		departure = new Date(0, WeekDay.MONDAY, random.nextInt(2) + 16, random.nextInt(60));
 		SmartGov
 		.getRuntime()
 		.getClock()
@@ -75,7 +80,7 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 					departure,
 					() -> {
 						
-						if (Integer.parseInt(getAgentBody().getAgent().getId()) <= -1) {
+						if (Integer.parseInt(getAgentBody().getAgent().getId()) <= 100) {
 							Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 									+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 									+ "Agent " + getAgentBody().getAgent().getId()
@@ -88,23 +93,63 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 					)
 			);
 		
+		//leaves his activity between 19h and 20h59
+		departure = new Date(0, WeekDay.MONDAY, random.nextInt(2) + 18, random.nextInt(60));
+		SmartGov
+		.getRuntime()
+		.getClock()
+		.addDelayedAction(
+			new DelayedActionHandler(
+					departure,
+					() -> {
+						
+						if (Integer.parseInt(getAgentBody().getAgent().getId()) <= 100) {
+							Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+									+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
+									+ "Agent " + getAgentBody().getAgent().getId()
+									+ " left work "
+									);
+						}
+						nextAction = MoverAction.LEAVE(round.getEstablishments().get(0));
+						triggerRoundDepartureListeners(new RoundDeparture());
+					}
+					)
+			);
+		
+		
 		((DriverBody) getAgentBody()).addOnDestinationReachedListener((event) -> {
 			if ( position == 0 ) {
 				//he arrives to work
-				if (Integer.parseInt(getAgentBody().getAgent().getId()) <= -1) {
+				if (Integer.parseInt(getAgentBody().getAgent().getId()) <= 100) {
 					Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 							+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 							+ "Agent " + getAgentBody().getAgent().getId()
 							+ " arrived at work "
 							);
 				}
-				refresh(round.getEstablishments().get(0).getClosestOsmNode(),
-						round.getOrigin().getClosestOsmNode());
+				refresh(round.getNodes().get(0),
+						round.getNodes().get(1));
 				nextAction = MoverAction.ENTER(round.getEstablishments().get(0));
 				position += 1;
-			} else {
+			} else  if (position == 1){
+				//he just arrived at his activity
+				if (Integer.parseInt(getAgentBody().getAgent().getId()) <= 100) {
+					Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+							+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
+							+ "Agent " + getAgentBody().getAgent().getId()
+							+ " arrived at his activity "
+							);
+				}
+				
+				refresh(round.getNodes().get(1),
+						round.getOrigin().getClosestOsmNode());
+				nextAction = MoverAction.ENTER(round.getEstablishments().get(1));
+				position += 1;
+				
+			}
+			else {
 				//he is back home
-				if (Integer.parseInt(getAgentBody().getAgent().getId()) <= -1) {
+				if (Integer.parseInt(getAgentBody().getAgent().getId()) <= 100) {
 					Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 							+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 							+ "Agent " + getAgentBody().getAgent().getId()
