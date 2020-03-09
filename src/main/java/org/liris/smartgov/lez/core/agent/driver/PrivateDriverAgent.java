@@ -1,6 +1,5 @@
 package org.liris.smartgov.lez.core.agent.driver;
 
-import org.liris.smartgov.lez.core.agent.driver.behavior.DeliveryDriverBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.PrivateDriverBehavior;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.simulator.urban.osm.agent.OsmAgent;

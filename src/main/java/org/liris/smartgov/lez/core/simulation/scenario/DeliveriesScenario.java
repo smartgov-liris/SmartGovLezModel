@@ -7,11 +7,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverAgent;
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
+import org.liris.smartgov.lez.core.agent.driver.PrivateDriverAgent;
 import org.liris.smartgov.lez.core.agent.driver.behavior.DeliveryDriverBehavior;
+import org.liris.smartgov.lez.core.agent.driver.behavior.DriverBehavior;
+import org.liris.smartgov.lez.core.agent.driver.behavior.PrivateDriverBehavior;
+import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerBehavior;
+import org.liris.smartgov.lez.core.agent.driver.behavior.LezBehavior;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.ST8;
@@ -170,16 +176,10 @@ public class DeliveriesScenario extends PollutionScenario {
 		Collection<BuildAgentThread> threads = new ArrayList<>();
 		
 		for (Establishment establishment : establishments.values()) {
-			if ( establishment.getActivity() == ST8.PRIVATE_HABITATION ) {
-				//if it's a passenger car TODO
-
-			} 
-			else {
-				for(String vehicleId : establishment.getRounds().keySet()) {
-					BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context);
-					threads.add(thread);
-					thread.start();
-				}
+			for(String vehicleId : establishment.getRounds().keySet()) {
+				BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context);
+				threads.add(thread);
+				thread.start();
 			}
 		}
 		for(BuildAgentThread thread : threads) {
@@ -203,8 +203,9 @@ public class DeliveriesScenario extends PollutionScenario {
 		private Establishment establishment;
 		private LezContext context;
 		
-		private DeliveryDriverAgent builtAgent;
-		private DeliveryDriverBehavior builtBehavior;
+		private OsmAgent builtAgent;
+		private DriverBehavior builtBehavior;
+		private Random random;
 		
 		public BuildAgentThread(int agentId, String vehicleId, Establishment establishment, LezContext context) {
 			super();
@@ -212,36 +213,54 @@ public class DeliveriesScenario extends PollutionScenario {
 			this.vehicleId = vehicleId;
 			this.establishment = establishment;
 			this.context = context;
+			random = new Random(111111);
 		}
 
 		public void run() {
 			DriverBody driver = new DriverBody(establishment.getFleet().get(vehicleId));
-			builtBehavior
+			
+			if ( establishment.getActivity() != ST8.PRIVATE_HABITATION) {
+				//if it is a delivery establishment
+				builtBehavior
 				= new DeliveryDriverBehavior(
 						driver,
 						establishment.getRounds().get(vehicleId),
 						context
 						);
+				builtAgent = new DeliveryDriverAgent(String.valueOf(agentId),
+						driver, (DeliveryDriverBehavior)builtBehavior);
+			}
+			else {
+				builtBehavior = new WorkerBehavior(
+						driver,
+						establishment.getRounds().get(vehicleId),
+						context, 
+						random);
+				builtAgent = new PrivateDriverAgent(String.valueOf(agentId),
+						driver, (PrivateDriverBehavior)builtBehavior);
+			}
 			
-			builtAgent = new DeliveryDriverAgent(String.valueOf(agentId), driver, builtBehavior);
+
+			
+			
 
 			builtBehavior.addRoundDepartureListener((event) -> {
-				Run.logger.info(
+				/*Run.logger.info(
 				"[" + SmartGov.getRuntime().getClock().getHour()
 				+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 				+ "Agent " + builtAgent.getId()
 				+ " begins round for [" + establishment.getId() + "] "
-				+ establishment.getName());
+				+ establishment.getName());*/
 			});
 				
 			builtBehavior.addRoundEndListener((event) -> {
-				Run.logger.info(
+				/*Run.logger.info(
 					"[" + SmartGov.getRuntime().getClock().getHour()
 					+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 					+ "Agent " + builtAgent.getId()
 					+ " ended round for [" + establishment.getId() + "] "
 					+ establishment.getName()
-					);
+					);*/
 				context.ongoingRounds.remove(builtAgent.getId());
 				Run.logger.info("Rounds still ongoing : " + context.ongoingRounds.size());
 				if(context.ongoingRounds.isEmpty()) {
@@ -255,7 +274,7 @@ public class DeliveriesScenario extends PollutionScenario {
 		 * concurrent modifications errors.
 		 * Rounds are also added to the context there, for the same reasons.
 		 */
-		public DeliveryDriverAgent getBuiltAgent() {
+		public OsmAgent getBuiltAgent() {
 			builtBehavior.setUpListeners();
 			context.ongoingRounds.put(builtAgent.getId(), builtBehavior.getRound());
 			return builtAgent;

@@ -2,10 +2,12 @@ package org.liris.smartgov.lez.core.agent.driver.behavior;
 
 
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
+import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.environment.lez.Lez;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
 import org.liris.smartgov.simulator.core.environment.graph.Node;
 import org.liris.smartgov.simulator.urban.geo.agent.behavior.GeoMovingBehavior;
+import org.liris.smartgov.simulator.core.events.EventHandler;
 
 /**
  * Abstract behavior that describes the behavior of an agent
@@ -13,6 +15,8 @@ import org.liris.smartgov.simulator.urban.geo.agent.behavior.GeoMovingBehavior;
  * Zone.
  */
 public abstract class LezBehavior extends GeoMovingBehavior {
+	
+	private Round round;
 
 	/**
 	 * LezBehavior constructor.
@@ -37,7 +41,5 @@ public abstract class LezBehavior extends GeoMovingBehavior {
 			) {
 		super(agentBody, origin, destination, context, lez.costs(agentBody.getVehicle()));
 	}
-	
-	public abstract void setUpListeners();
 
 }

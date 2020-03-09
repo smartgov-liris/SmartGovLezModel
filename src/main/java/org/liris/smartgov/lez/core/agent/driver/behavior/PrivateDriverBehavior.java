@@ -1,40 +1,52 @@
 package org.liris.smartgov.lez.core.agent.driver.behavior;
 
+import java.util.Random;
+
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.environment.lez.Lez;
+import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.agent.moving.behavior.MoverAction;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
+import org.liris.smartgov.simulator.core.events.EventHandler;
+import org.liris.smartgov.simulator.core.simulation.time.Date;
+import org.liris.smartgov.simulator.core.simulation.time.DelayedActionHandler;
+import org.liris.smartgov.simulator.core.simulation.time.WeekDay;
 
-public class PrivateDriverBehavior extends LezBehavior {
+public abstract class PrivateDriverBehavior extends DriverBehavior {
 	
-	private Round round;
 	
-	private MoverAction nextAction;
+	
+	protected MoverAction nextAction;
+	protected Random random;
 	
 	public PrivateDriverBehavior(
 			DriverBody agentBody,
 			Round round,
-			SmartGovContext context
+			SmartGovContext context,
+			Random random
 			) {
-		super(agentBody, round.getOrigin().getClosestOsmNode(), round.getEstablishments().get(0).getClosestOsmNode(), context, Lez.none());
-		this.round = round;
+		super(agentBody, round, context);
+		this.random = random;
 	}
 
 	@Override
 	public MoverAction provideAction() {
 		return nextAction;
 	}
-	
-	public Round getRound() {
-		return round;
+
+	@Override
+	protected void triggerRoundDepartureListeners(RoundDeparture event) {
+		for(EventHandler<RoundDeparture> listener : roundDepartureListeners) {
+			listener.handle(event);
+		}		
 	}
 
 	@Override
-	public void setUpListeners() {
-		throw new UnsupportedOperationException("Not implmented yet");
-		
-	}
-	
+	protected void triggerRoundEndListeners(RoundEnd event) {
+		for(EventHandler<RoundEnd> listener : roundEndListeners) {
+			listener.handle(event);
+		}		
+	}	
 	
 }

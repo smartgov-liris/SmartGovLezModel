@@ -1,13 +1,9 @@
 package org.liris.smartgov.lez.core.agent.driver.behavior;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.agent.moving.behavior.MoverAction;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
@@ -27,14 +23,10 @@ import org.liris.smartgov.simulator.core.simulation.time.DelayedActionHandler;
  * 	establishment. </li>
  * </ul>
  */
-public class DeliveryDriverBehavior extends LezBehavior {
+public class DeliveryDriverBehavior extends DriverBehavior {
 	
-	private Round round;
 	private int currentPosition;
 	private MoverAction nextAction;
-	
-	private Collection<EventHandler<RoundDeparture>> roundDepartureListeners;
-	private Collection<EventHandler<RoundEnd>> roundEndListeners;
 
 	/**
 	 * DeliveryDriverBehavior constructor.
@@ -47,17 +39,8 @@ public class DeliveryDriverBehavior extends LezBehavior {
 			DriverBody agentBody,
 			Round round,
 			SmartGovContext context) {
-		super(
-			agentBody,
-			round.getOrigin().getClosestOsmNode(),
-			round.getEstablishments().get(0).getClosestOsmNode(),
-			context,
-			Lez.none()
-			);
-		roundDepartureListeners = new ArrayList<>();
-		roundEndListeners = new ArrayList<>();
+		super(agentBody, round, context);
 		
-		this.round = round;
 		this.currentPosition = 0;
 		
 		// Start waiting at the origin
@@ -96,13 +79,13 @@ public class DeliveryDriverBehavior extends LezBehavior {
 			
 			if (currentPosition <= round.getEstablishments().size() - 1) {
 				Establishment currentEstablishment = round.getEstablishments().get(currentPosition);
-				Run.logger.info(
+				/*Run.logger.info(
 						"[" + SmartGov.getRuntime().getClock().getHour()
 						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 						+ "Agent " + getAgentBody().getAgent().getId()
 						+ " has reached establishment [" + currentEstablishment.getId()
 						+ "] " + currentEstablishment.getName()
-						);
+						);*/
 				if (currentPosition < round.getEstablishments().size() - 1) {
 					// Go to the next node of the round
 					Node currentNode = currentEstablishment.getClosestOsmNode();
@@ -112,13 +95,13 @@ public class DeliveryDriverBehavior extends LezBehavior {
 						// Sometimes, two consecutive establishment has the same closest osm node.
 						currentPosition++;
 						currentEstablishment = round.getEstablishments().get(currentPosition);
-						Run.logger.info(
+						/*Run.logger.info(
 								"[" + SmartGov.getRuntime().getClock().getHour()
 								+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 								+ "Agent " + getAgentBody().getAgent().getId()
 								+ " has reached establishment [" + currentEstablishment.getId()
 								+ "] " + currentEstablishment.getName()
-								);
+								);*/
 						currentNode = round.getEstablishments().get(currentPosition).getClosestOsmNode();
 						nextNode = round.getEstablishments().get(currentPosition + 1).getClosestOsmNode();
 					}
@@ -196,39 +179,13 @@ public class DeliveryDriverBehavior extends LezBehavior {
 		return nextAction;
 	}
 	
-	/**
-	 * Adds a round departure event handler, triggered when the departure
-	 * date has been reached.
-	 *
-	 * @param listener round departure listener
-	 */
-	public void addRoundDepartureListener(EventHandler<RoundDeparture> listener) {
-		this.roundDepartureListeners.add(listener);
-	}
-	
-	private void triggerRoundDepartureListeners(RoundDeparture event) {
+	protected void triggerRoundDepartureListeners(RoundDeparture event) {
 		for(EventHandler<RoundDeparture> listener : roundDepartureListeners) {
 			listener.handle(event);
 		}
 	}
-
-	/**
-	 * Adds a round end event handler, triggered when the agent come back
-	 * to the origin establishment.
-	 *
-	 * <p>
-	 * Triggered when the agent reaches the destination, but does not
-	 * guarantee that the agent as re-entered the establishment (what will
-	 * be its next action.
-	 * </p>
-	 *
-	 * @param listener round end listener
-	 */
-	public void addRoundEndListener(EventHandler<RoundEnd> listener) {
-		this.roundEndListeners.add(listener);
-	}
 	
-	private void triggerRoundEndListeners(RoundEnd event) {
+	protected void triggerRoundEndListeners(RoundEnd event) {
 		for(EventHandler<RoundEnd> listener : roundEndListeners) {
 			listener.handle(event);
 		}
