@@ -87,6 +87,10 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 									+ " left work "
 									);
 						}
+						if ( position != 1 ) {
+							throw new IllegalStateException("Agent received a new place to go but he did not reach the previous one");
+						}
+						
 						nextAction = MoverAction.LEAVE(round.getEstablishments().get(0));
 						triggerRoundDepartureListeners(new RoundDeparture());
 					}
@@ -94,7 +98,7 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 			);
 		
 		//leaves his activity between 19h and 20h59
-		departure = new Date(0, WeekDay.MONDAY, random.nextInt(2) + 18, random.nextInt(60));
+		departure = new Date(0, WeekDay.MONDAY, random.nextInt(2) + 19, random.nextInt(60));
 		SmartGov
 		.getRuntime()
 		.getClock()
@@ -110,8 +114,13 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 									+ " left work "
 									);
 						}
-						nextAction = MoverAction.LEAVE(round.getEstablishments().get(0));
+						if ( position != 2 ) {
+							//we could implement another behavior in this case instead of throwing an exception
+							throw new IllegalStateException("Agent received a new place to go but he did not reach the previous one");
+						}
+						nextAction = MoverAction.LEAVE(round.getEstablishments().get(1));
 						triggerRoundDepartureListeners(new RoundDeparture());
+						
 					}
 					)
 			);
@@ -127,8 +136,8 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 							+ " arrived at work "
 							);
 				}
-				refresh(round.getNodes().get(0),
-						round.getNodes().get(1));
+				refresh(round.getEstablishments().get(0).getClosestOsmNode(),
+						round.getEstablishments().get(1).getClosestOsmNode());
 				nextAction = MoverAction.ENTER(round.getEstablishments().get(0));
 				position += 1;
 			} else  if (position == 1){
@@ -141,7 +150,7 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 							);
 				}
 				
-				refresh(round.getNodes().get(1),
+				refresh(round.getEstablishments().get(1).getClosestOsmNode(),
 						round.getOrigin().getClosestOsmNode());
 				nextAction = MoverAction.ENTER(round.getEstablishments().get(1));
 				position += 1;
@@ -157,6 +166,7 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 							);
 				}
 				nextAction = MoverAction.ENTER(round.getOrigin());
+				position += 1;
 				triggerRoundEndListeners(new RoundEnd());
 			}
 		});

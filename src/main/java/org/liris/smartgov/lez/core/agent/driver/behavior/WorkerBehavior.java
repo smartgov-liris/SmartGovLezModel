@@ -26,8 +26,12 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 				round,
 				context,
 				random);
+		if (round.getEstablishments() == null || round.getEstablishments().size() == 0) {
+			throw new IllegalArgumentException("This behavior needs one establishment in his round");
+		}
 		position = 0;
 		this.nextAction = MoverAction.ENTER(round.getOrigin());
+		
 	}
 	
 	@Override
@@ -42,7 +46,7 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 			nextAction = MoverAction.WAIT()
 			);
 
-		//the departure is between 7h and 8h59
+		//goes to work between 7h and 8h59
 		Date departure = new Date(0, WeekDay.MONDAY, random.nextInt(2) + 7, random.nextInt(60));
 		
 		SmartGov
