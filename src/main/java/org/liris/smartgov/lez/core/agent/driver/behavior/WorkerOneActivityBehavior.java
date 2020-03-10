@@ -28,7 +28,7 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 				random);
 		
 		if (round.getEstablishments().size() < 2) {
-			throw new IllegalArgumentException("This behavior needs two establishments in his round");
+			throw new IllegalArgumentException("This behavior needs two establishments in its round");
 		}
 		
 		position = 0;
@@ -79,14 +79,11 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 			new DelayedActionHandler(
 					departure,
 					() -> {
-						
-						if (Integer.parseInt(getAgentBody().getAgent().getId()) <= 100) {
-							Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
-									+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
-									+ "Agent " + getAgentBody().getAgent().getId()
-									+ " left work "
-									);
-						}
+						Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+								+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
+								+ "Agent " + getAgentBody().getAgent().getId()
+								+ " left work "
+								);
 						if ( position != 1 ) {
 							throw new IllegalStateException("Agent received a new place to go but he did not reach the previous one");
 						}
@@ -106,14 +103,11 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 			new DelayedActionHandler(
 					departure,
 					() -> {
-						
-						if (Integer.parseInt(getAgentBody().getAgent().getId()) <= 100) {
-							Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
-									+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
-									+ "Agent " + getAgentBody().getAgent().getId()
-									+ " left work "
-									);
-						}
+						Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+								+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
+								+ "Agent " + getAgentBody().getAgent().getId()
+								+ " left work "
+								);
 						if ( position != 2 ) {
 							//we could implement another behavior in this case instead of throwing an exception
 							throw new IllegalStateException("Agent received a new place to go but he did not reach the previous one");
@@ -129,26 +123,22 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 		((DriverBody) getAgentBody()).addOnDestinationReachedListener((event) -> {
 			if ( position == 0 ) {
 				//he arrives to work
-				if (Integer.parseInt(getAgentBody().getAgent().getId()) <= 100) {
-					Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
-							+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
-							+ "Agent " + getAgentBody().getAgent().getId()
-							+ " arrived at work "
-							);
-				}
+				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
+						+ "Agent " + getAgentBody().getAgent().getId()
+						+ " arrived at work "
+						);
 				refresh(round.getEstablishments().get(0).getClosestOsmNode(),
 						round.getEstablishments().get(1).getClosestOsmNode());
 				nextAction = MoverAction.ENTER(round.getEstablishments().get(0));
 				position += 1;
 			} else  if (position == 1){
 				//he just arrived at his activity
-				if (Integer.parseInt(getAgentBody().getAgent().getId()) <= 100) {
-					Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
-							+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
-							+ "Agent " + getAgentBody().getAgent().getId()
-							+ " arrived at his activity "
-							);
-				}
+				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
+						+ "Agent " + getAgentBody().getAgent().getId()
+						+ " arrived at his activity "
+						);
 				
 				refresh(round.getEstablishments().get(1).getClosestOsmNode(),
 						round.getOrigin().getClosestOsmNode());
@@ -158,13 +148,11 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 			}
 			else {
 				//he is back home
-				if (Integer.parseInt(getAgentBody().getAgent().getId()) <= 100) {
-					Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
-							+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
-							+ "Agent " + getAgentBody().getAgent().getId()
-							+ " is back home "
-							);
-				}
+				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
+						+ "Agent " + getAgentBody().getAgent().getId()
+						+ " is back home "
+						);
 				nextAction = MoverAction.ENTER(round.getOrigin());
 				position += 1;
 				triggerRoundEndListeners(new RoundEnd());
