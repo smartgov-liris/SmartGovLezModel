@@ -11,9 +11,11 @@ import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 
 import java.util.Hashtable;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
+import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.environment.lez.criteria.AllAllowedCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCosts;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCriteria;
+import org.liris.smartgov.lez.core.environment.pollution.Pollution;
 import org.liris.smartgov.simulator.core.environment.graph.astar.Costs;
 import org.liris.smartgov.simulator.urban.geo.environment.graph.DistanceCosts;
 import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
@@ -30,6 +32,7 @@ public class Lez {
 	private PointOnGeometryLocator locator;
 	private LezCriteria lezCriteria;
 	private int id;
+	private Pollution pollution;
 	
 	/**
 	 * Lez constructor.
@@ -43,6 +46,7 @@ public class Lez {
 		this.id = id;
 		this.perimeter = perimeter;
 		this.lezCriteria = lezCriteria;
+		pollution = new Pollution();
 		
 		GeometryFactory factory = new GeometryFactory();
 		
@@ -93,6 +97,14 @@ public class Lez {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public void increasePollution(Pollutant pollutant, double increment) {
+		pollution.get(pollutant).increasePollution(increment);
+	}
+	
+	public Pollution getPollution() {
+		return pollution;
 	}
 	
 	/**

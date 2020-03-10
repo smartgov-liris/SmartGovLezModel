@@ -1,5 +1,7 @@
 package org.liris.smartgov.lez.cli.tools;
 
+import java.util.Map;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -9,11 +11,16 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.environment.LezContext;
+import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
+import org.liris.smartgov.lez.core.environment.pollution.Pollution;
 import org.liris.smartgov.lez.core.simulation.ExtendedSimulationBuilder;
 import org.liris.smartgov.lez.core.simulation.ExtendedSimulationRuntime;
 import org.liris.smartgov.lez.core.simulation.ExtendedSmartGov;
+import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
 import org.liris.smartgov.simulator.SmartGov;
+import org.liris.smartgov.simulator.core.environment.graph.Arc;
 import org.liris.smartgov.simulator.core.events.EventHandler;
 import org.liris.smartgov.simulator.core.simulation.SimulationBuilder;
 import org.liris.smartgov.simulator.core.simulation.events.SimulationStopped;
@@ -67,7 +74,7 @@ public class PoliticRun {
 		if(cmd.hasOption("t")) {
 			maxTicksValue = Integer.valueOf(cmd.getOptionValue("t"));
 		} else {
-			maxTicksValue = 3600 * 24;
+			maxTicksValue = 3600 * 12;
 		}
 		
 		LezContext ctxt = new LezContext(configFile);
@@ -111,6 +118,23 @@ public class PoliticRun {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					
+					Map<String, Pollution> map = ((DeliveriesScenario)ctxt.getScenario()).getEnvironment().getPollutionByNeighborhood();
+					
+					/*for ( Pollution p : map.values() ) {
+						System.out.println(p.get(Pollutant.CO).getAbsValue());
+					}*/
+					
+					System.out.println("Global : " + map.get("1").get(Pollutant.CO).getAbsValue());
+					
+					double pollution = 0;
+					for ( Arc arc : ctxt.arcs.values()) {
+						PollutableOsmArc arc2 = (PollutableOsmArc)arc;
+						if (arc2.getNeighborhoodId() == 1) {
+							pollution += arc2.getPollution().get(Pollutant.CO).getAbsValue();
+						}
+					}
+					System.out.println("Particulier : " + pollution);
 					
 					ctxt.reload();
 			        smartGov.restart(ctxt);

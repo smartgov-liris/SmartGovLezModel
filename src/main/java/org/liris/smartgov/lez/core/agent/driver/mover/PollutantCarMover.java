@@ -92,7 +92,9 @@ public class PollutantCarMover extends CarMover {
 					.getVehicle()
 					.getEmissions(pollutant, traveledDistance / time, traveledDistance);
 			for (PollutableOsmArc arc : arcsCrossed) {
-				arc.increasePollution(pollutant, emissions * arc.getLength() / traveledDistance);
+				if (traveledDistance != 0) {
+					arc.increasePollution(pollutant, emissions * arc.getLength() / traveledDistance);
+				}
 			}
 		}
 		for (PollutableOsmArc arc : arcsCrossed) {

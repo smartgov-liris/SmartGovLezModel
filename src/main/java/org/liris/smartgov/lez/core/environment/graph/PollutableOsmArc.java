@@ -57,6 +57,7 @@ public class PollutableOsmArc extends OsmArc {
 	 * @param increment emission in g
 	 */
 	public void increasePollution(Pollutant pollutant, double increment) {
+		neighborhood.increasePollution(pollutant, increment);
 		pollution.get(pollutant).increasePollution(increment);
 	}
 	

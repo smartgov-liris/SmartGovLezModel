@@ -21,7 +21,16 @@ public class PollutableOsmArcFactory  implements OsmArcFactory<PollutableOsmArc>
 			OsmNode targetNode,
 			Road road,
 			RoadDirection roadDirection) {
-		return new PollutableOsmArc(id, startNode, targetNode, road, roadDirection, environment.getNeighborhood(targetNode));
+		if (environment.getNeighborhood(targetNode) != null) {
+			return new PollutableOsmArc(id, startNode, targetNode, road, roadDirection, environment.getNeighborhood(targetNode));
+		}
+		else if (environment.getNeighborhood(startNode) != null) {
+			return new PollutableOsmArc(id, startNode, targetNode, road, roadDirection, environment.getNeighborhood(startNode));
+		}
+		else {
+			throw new IllegalArgumentException("This arc has no neighborhood");
+		}
+		
 	}
 
 }
