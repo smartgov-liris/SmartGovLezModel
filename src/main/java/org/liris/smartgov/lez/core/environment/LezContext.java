@@ -7,10 +7,12 @@ import java.util.TreeMap;
 
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
+import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
 import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
 import org.liris.smartgov.lez.core.simulation.scenario.RandomTrafficPollutionScenario;
 import org.liris.smartgov.lez.input.lez.CritAirLezDeserializer;
+import org.liris.smartgov.simulator.core.environment.graph.Arc;
 import org.liris.smartgov.simulator.core.scenario.Scenario;
 import org.liris.smartgov.simulator.urban.osm.environment.OsmContext;
 
@@ -36,6 +38,16 @@ public class LezContext extends OsmContext {
 	public void reload() {
 		agents = new TreeMap<>();
 		ongoingRounds = new TreeMap<>();
+	}
+	
+	public void resetPollution() {
+		if (getScenario() instanceof DeliveriesScenario) {
+			//if we are in the deliveries scenario, we also reset pollution of neighborhoods
+			((DeliveriesScenario)getScenario()).getEnvironment().resetNeighborhoodPollution();
+		}
+		for (Arc arc : arcs.values()) {
+			((PollutableOsmArc)arc).resetPollution();
+		}
 	}
 
 	

@@ -59,4 +59,9 @@ public class PollutionRate {
 	public double getValue() {
 		return pollution / (SmartGov.getRuntime().getTickCount() * SmartGov.getRuntime().getTickDuration());
 	}
+	
+	@Override
+	public String toString() {
+		return "[Absolute value : " + pollution + "] ; [Value : " + getValue() + "]";
+	}
 }

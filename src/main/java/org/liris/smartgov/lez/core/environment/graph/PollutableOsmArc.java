@@ -71,6 +71,10 @@ public class PollutableOsmArc extends OsmArc {
 		return pollution;
 	}
 	
+	public void resetPollution() {
+		pollution = new Pollution();
+	}
+	
 	public int getNeighborhoodId() {
 		return neighborhood.getId();
 	}

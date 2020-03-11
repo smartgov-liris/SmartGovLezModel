@@ -119,23 +119,14 @@ public class PoliticRun {
 						e.printStackTrace();
 					}
 					
-					Map<String, Pollution> map = ((DeliveriesScenario)ctxt.getScenario()).getEnvironment().getPollutionByNeighborhood();
+					/*Map<String, Pollution> pollutionMap = ((DeliveriesScenario)ctxt.getScenario())
+							.getEnvironment().getPollutionByNeighborhood();
 					
-					/*for ( Pollution p : map.values() ) {
-						System.out.println(p.get(Pollutant.CO).getAbsValue());
+					for (Pollution pollution : pollutionMap.values()) {
+						System.out.println(pollution.get(Pollutant.CO));
 					}*/
 					
-					System.out.println("Global : " + map.get("1").get(Pollutant.CO).getAbsValue());
-					
-					double pollution = 0;
-					for ( Arc arc : ctxt.arcs.values()) {
-						PollutableOsmArc arc2 = (PollutableOsmArc)arc;
-						if (arc2.getNeighborhoodId() == 1) {
-							pollution += arc2.getPollution().get(Pollutant.CO).getAbsValue();
-						}
-					}
-					System.out.println("Particulier : " + pollution);
-					
+					ctxt.resetPollution();
 					ctxt.reload();
 			        smartGov.restart(ctxt);
 			        

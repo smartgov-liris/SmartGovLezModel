@@ -124,6 +124,10 @@ public class Lez {
 			return new DistanceCosts();
 		return new LezCosts();
 	}
+	
+	public void resetPollution() {
+		pollution = new Pollution();
+	}
 
 	/*
 	 * Used by NoLez class below

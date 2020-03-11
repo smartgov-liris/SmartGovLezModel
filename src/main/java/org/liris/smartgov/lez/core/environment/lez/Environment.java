@@ -56,6 +56,12 @@ public class Environment {
 		return neighborhoods;
 	}
 	
+	public void resetNeighborhoodPollution() {
+		for (Lez lez : neighborhoods) {
+			lez.resetPollution();
+		}
+	}
+	
 	
 	private Environment() {
 		neighborhoods.add(Lez.none());
