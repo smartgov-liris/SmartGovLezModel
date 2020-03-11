@@ -17,6 +17,7 @@ import org.liris.smartgov.lez.core.agent.driver.behavior.DeliveryDriverBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.DriverBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.PrivateDriverBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerBehavior;
+import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerHomeAtNoonBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerOneActivityBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.LezBehavior;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
@@ -232,11 +233,21 @@ public class DeliveriesScenario extends PollutionScenario {
 			else {
 				//Private agent
 				if (establishment.getRounds().get(vehicleId).getEstablishments().size() < 2) {
-					builtBehavior = new WorkerBehavior(
-							driver,
-							establishment.getRounds().get(vehicleId),
-							context, 
-							random);
+					//if only one establishment, might be either a worker (2/3) or a worker home at noon (1/3)
+					if (random.nextInt(4) == 0) {
+						builtBehavior = new WorkerHomeAtNoonBehavior(
+								driver,
+								establishment.getRounds().get(vehicleId),
+								context,
+								random);
+					}
+					else {
+						builtBehavior = new WorkerBehavior(
+								driver,
+								establishment.getRounds().get(vehicleId),
+								context, 
+								random);
+					}
 				} else {
 					builtBehavior = new WorkerOneActivityBehavior(
 							driver,

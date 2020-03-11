@@ -74,7 +74,7 @@ public class PoliticRun {
 		if(cmd.hasOption("t")) {
 			maxTicksValue = Integer.valueOf(cmd.getOptionValue("t"));
 		} else {
-			maxTicksValue = 3600 * 12;
+			maxTicksValue = 3600 * 24;
 		}
 		
 		LezContext ctxt = new LezContext(configFile);
@@ -99,12 +99,16 @@ public class PoliticRun {
 				);
 		});
         
+        final long simulationStart = System.nanoTime();
+        
         EventHandler<SimulationStopped> relaunchSimulation = new EventHandler<SimulationStopped>() {
         	
 			@Override
 			public void handle(SimulationStopped event) {
 				
 				if (true) {
+					long simulationEnd = System.nanoTime();
+					logger.info("It took " + ((simulationEnd - simulationStart) / 1E9) + " to play the simulation" );
 					
 					try {
 						Thread.sleep(2000);
@@ -123,7 +127,7 @@ public class PoliticRun {
 							.getEnvironment().getPollutionByNeighborhood();
 					
 					for (Pollution pollution : pollutionMap.values()) {
-						System.out.println(pollution.get(Pollutant.CO));
+						logger.info(pollution.get(Pollutant.CO));
 					}*/
 					
 					ctxt.resetPollution();
@@ -163,7 +167,7 @@ public class PoliticRun {
         };
         
         SmartGov.getRuntime().addSimulationStoppedListener(relaunchSimulation);
-		
+        
 		SmartGov.getRuntime().start((int) Math.floor(maxTicksValue));
 	}
 	

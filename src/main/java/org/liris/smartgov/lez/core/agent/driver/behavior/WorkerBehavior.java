@@ -90,7 +90,7 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 		
 		((DriverBody) getAgentBody()).addOnDestinationReachedListener((event) -> {
 			if ( position == 0 ) {
-				//he arrives to work
+				//he arrives at work
 				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 						+ "Agent " + getAgentBody().getAgent().getId()
