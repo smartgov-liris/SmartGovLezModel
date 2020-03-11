@@ -13,7 +13,7 @@ import org.liris.smartgov.lez.core.copert.inputParser.CopertInputReader;
 import org.liris.smartgov.lez.core.copert.inputParser.CopertProfile;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
 import org.liris.smartgov.lez.core.environment.lez.Environment;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
+import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.simulator.core.agent.core.Agent;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
 import org.liris.smartgov.simulator.urban.osm.agent.OsmAgent;

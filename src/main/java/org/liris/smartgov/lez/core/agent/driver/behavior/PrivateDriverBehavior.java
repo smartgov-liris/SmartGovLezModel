@@ -4,7 +4,7 @@ import java.util.Random;
 
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
+import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.agent.moving.behavior.MoverAction;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;

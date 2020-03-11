@@ -25,7 +25,7 @@ import org.liris.smartgov.lez.core.agent.driver.mover.PollutantCarMover;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
+import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.agent.core.Agent;
 import org.liris.smartgov.simulator.core.agent.moving.MovingAgentBody;
@@ -275,7 +275,7 @@ public class PollutantCarMoverTest {
 
 			
 			
-			PollutableOsmArc spy = PowerMockito.spy(new PollutableOsmArc(id, startNode, targetNode, road, roadDirection, Lez.none()));
+			PollutableOsmArc spy = PowerMockito.spy(new PollutableOsmArc(id, startNode, targetNode, road, roadDirection, Neighborhood.none()));
 			spies.put(id, spy);
 			return spy;
 		}

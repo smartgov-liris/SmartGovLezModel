@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
+import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.lez.core.environment.lez.criteria.CritAir;
 import org.liris.smartgov.lez.core.environment.pollution.Pollution;
 import org.liris.smartgov.simulator.core.events.EventHandler;
@@ -22,7 +22,7 @@ import org.liris.smartgov.simulator.urban.osm.environment.graph.Road;
 public class PollutableOsmArc extends OsmArc {
 
 	private Pollution pollution;
-	private Lez neighborhood;
+	private Neighborhood neighborhood;
 	
 	private Collection<EventHandler<PollutionIncreasedEvent>> pollutionIncreasedListeners;
 	
@@ -42,7 +42,7 @@ public class PollutableOsmArc extends OsmArc {
 			OsmNode targetNode,
 			Road road,
 			RoadDirection roadDirection,
-			Lez neighborhood) {
+			Neighborhood neighborhood) {
 		super(id, startNode, targetNode, road, roadDirection);
 		this.neighborhood = neighborhood;
 		pollution = new Pollution();

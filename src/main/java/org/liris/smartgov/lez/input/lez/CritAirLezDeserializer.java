@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.core.environment.lez.criteria.CritAir;
+import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 
 public class CritAirLezDeserializer extends StdDeserializer<Environment> {
 
@@ -49,7 +50,8 @@ public class CritAirLezDeserializer extends StdDeserializer<Environment> {
 				dimensions.get("west_bound").asDouble(),
 				dimensions.get("east_bound").asDouble(),
 				jsonLez.get("nb_squares").asInt(),
-				allowed);
+				allowed,
+				Surveillance.valueOf(jsonLez.get("surveillance").asText()));
 	}
 	
 	public static Environment load(File environmentFile) throws JsonParseException, JsonMappingException, IOException {

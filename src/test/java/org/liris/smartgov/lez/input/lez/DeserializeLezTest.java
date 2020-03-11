@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.core.environment.lez.Environment;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
+import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.lez.core.environment.lez.criteria.CritAir;
 import org.liris.smartgov.lez.core.environment.lez.criteria.CritAirCriteria;
 import org.liris.smartgov.lez.input.lez.CritAirLezDeserializer;
@@ -38,7 +38,7 @@ public class DeserializeLezTest {
 				new File(this.getClass().getResource("dimension.json").getFile())
 				);
 		
-		List<Lez> allNeighborhoods = environment.getNeighborhoods();
+		List<Neighborhood> allNeighborhoods = environment.getNeighborhoods();
 		
 		assertNotNull(allNeighborhoods);
 		

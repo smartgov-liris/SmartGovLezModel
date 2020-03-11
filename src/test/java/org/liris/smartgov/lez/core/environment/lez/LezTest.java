@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
+import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
 import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
 
@@ -17,7 +17,7 @@ public class LezTest {
 
 	@Test
 	public void testOsmNodeInLez() {
-		Lez lez = new Lez(new LatLon[] {
+		Neighborhood lez = new Neighborhood(new LatLon[] {
 							new LatLon(45., 4.),
 							new LatLon(45., 4.1),
 							new LatLon(45.1, 4.)
@@ -57,7 +57,7 @@ public class LezTest {
 	
 	@Test
 	public void testNoLezContainsNothing() {
-		Lez lez = Lez.none();
+		Neighborhood lez = Neighborhood.none();
 		
 		OsmNode fakeNode = mock(OsmNode.class);
 		

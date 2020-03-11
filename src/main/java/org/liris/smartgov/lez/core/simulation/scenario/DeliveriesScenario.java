@@ -259,7 +259,7 @@ public class DeliveriesScenario extends PollutionScenario {
 				try {builtAgent = new PrivateDriverAgent(String.valueOf(agentId),
 						driver, (PrivateDriverBehavior)builtBehavior);}
 				catch (IllegalArgumentException e) {
-					System.err.println("Agent from establishment" + establishment.getId() + " could not create his path");
+					System.err.println("Agent from establishment " + establishment.getId() + " could not create his path");
 					e.printStackTrace();
 				}
 			}

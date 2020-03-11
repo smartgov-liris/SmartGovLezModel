@@ -3,7 +3,7 @@ package org.liris.smartgov.lez.core.agent.driver.behavior;
 
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
+import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
 import org.liris.smartgov.simulator.core.environment.graph.Node;
 import org.liris.smartgov.simulator.urban.geo.agent.behavior.GeoMovingBehavior;
@@ -22,7 +22,7 @@ public abstract class LezBehavior extends GeoMovingBehavior {
 	 * LezBehavior constructor.
 	 * <p>
 	 * The costs associated to arcs for this behavior are
-	 * retrieved from the {@link org.liris.smartgov.lez.core.environment.lez.Lez#costs}
+	 * retrieved from the {@link org.liris.smartgov.lez.core.environment.lez.Neighborhood#costs}
 	 * function, applied to the delivery driver's current vehicle.
 	 * </p>
 	 *
@@ -30,16 +30,16 @@ public abstract class LezBehavior extends GeoMovingBehavior {
 	 * @param origin initial origin
 	 * @param destination initial destination
 	 * @param context current context
-	 * @param lez current lez
+	 * @param neighborhood current lez
 	 */
 	public LezBehavior(
 			DriverBody agentBody,
 			Node origin,
 			Node destination,
 			SmartGovContext context,
-			Lez lez
+			Neighborhood neighborhood
 			) {
-		super(agentBody, origin, destination, context, lez.costs(agentBody.getVehicle()));
+		super(agentBody, origin, destination, context, neighborhood.costs(agentBody.getVehicle()));
 	}
 
 }

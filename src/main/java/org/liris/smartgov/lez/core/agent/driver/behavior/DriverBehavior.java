@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
-import org.liris.smartgov.lez.core.environment.lez.Lez;
+import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
 import org.liris.smartgov.simulator.core.events.EventHandler;
 
@@ -21,7 +21,7 @@ public abstract class DriverBehavior extends LezBehavior {
 				round.getOrigin().getClosestOsmNode(),
 				round.getEstablishments().get(0).getClosestOsmNode(),
 				context,
-				Lez.none());
+				Neighborhood.none());
 		this.round = round;
 		roundDepartureListeners = new ArrayList<>();
 		roundEndListeners = new ArrayList<>();

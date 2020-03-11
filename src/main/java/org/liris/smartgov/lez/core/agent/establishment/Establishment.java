@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
+import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 import org.liris.smartgov.simulator.core.agent.moving.MovingAgent;
 import org.liris.smartgov.simulator.core.agent.moving.ParkingArea;
 import org.liris.smartgov.simulator.core.output.node.NodeIdSerializer;
@@ -277,7 +278,8 @@ public class Establishment implements ParkingArea {
 				+ ", fleet=" + fleet + ", rounds=" + rounds + "]";
 	}
 	
-	public boolean acceptToReplaceVehicle() {
+	public boolean acceptToReplaceVehicle(Surveillance surveillance) {
+		//TODO: refactor scenario to put it in agent behavior as it is a bit ugly to put the choice in establishment
 		return true;
 	}
 

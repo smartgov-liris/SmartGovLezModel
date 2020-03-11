@@ -108,7 +108,7 @@ public class PoliticRun {
 				
 				if (true) {
 					long simulationEnd = System.nanoTime();
-					logger.info("It took " + ((simulationEnd - simulationStart) / 1E9) + " to play the simulation" );
+					logger.info("It took " + (int)((simulationEnd - simulationStart) / 1E9) + " seconds to play the simulation" );
 					
 					try {
 						Thread.sleep(2000);
