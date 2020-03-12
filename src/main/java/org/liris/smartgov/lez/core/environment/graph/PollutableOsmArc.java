@@ -75,12 +75,12 @@ public class PollutableOsmArc extends OsmArc {
 		pollution = new Pollution();
 	}
 	
-	public int getNeighborhoodId() {
+	public String getNeighborhoodId() {
 		return neighborhood.getId();
 	}
 	
 	public boolean isAllowed (Vehicle vehicle) {
-		return neighborhood.getLezCriteria().isAllowed(vehicle);
+		return neighborhood.isAllowed(vehicle);
 	}
 	
 	/**

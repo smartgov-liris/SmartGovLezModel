@@ -12,6 +12,7 @@ import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 import java.util.Hashtable;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
+import org.liris.smartgov.lez.core.copert.fields.VehicleCategory;
 import org.liris.smartgov.lez.core.environment.lez.criteria.AllAllowedCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCosts;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCriteria;
@@ -31,8 +32,9 @@ public class Neighborhood {
 	
 	private LatLon[] perimeter;
 	private PointOnGeometryLocator locator;
-	private LezCriteria lezCriteria;
-	private int id;
+	private LezCriteria deliveryLezCriteria;
+	private LezCriteria privateLezCriteria;
+	private String id;
 	private Pollution pollution;
 	private Surveillance surveillance;
 	
@@ -44,10 +46,12 @@ public class Neighborhood {
 	 * @param lezCriteria criteria associated to this lez, that determines which
 	 * vehicles are allowed or not
 	 */
-	public Neighborhood(LatLon[] perimeter, LezCriteria lezCriteria, Surveillance surveillance,int id) {
+	public Neighborhood(LatLon[] perimeter, LezCriteria deliveryLezCriteria,
+			LezCriteria privateLezCriteria, Surveillance surveillance, String id) {
 		this.id = id;
 		this.perimeter = perimeter;
-		this.lezCriteria = lezCriteria;
+		this.deliveryLezCriteria = deliveryLezCriteria;
+		this.privateLezCriteria = privateLezCriteria;
 		pollution = new Pollution();
 		this.surveillance = surveillance;
 		
@@ -98,11 +102,27 @@ public class Neighborhood {
 	 * 
 	 * @return lez criteria
 	 */
-	public LezCriteria getLezCriteria() {
-		return lezCriteria;
+	public LezCriteria getDeliveryLezCriteria() {
+		return deliveryLezCriteria;
 	}
 	
-	public int getId() {
+	public LezCriteria getPrivateLezCriteria() {
+		return privateLezCriteria;
+	}
+	
+	public void setDeliveryLezCriteria(LezCriteria lezCriteria) {
+		this.deliveryLezCriteria = lezCriteria;
+	}
+	
+	public void setPrivateLezCriteria(LezCriteria lezCriteria) {
+		this.privateLezCriteria = lezCriteria;
+	}
+	
+	public void setSurveillance (Surveillance surveillance) {
+		this.surveillance = surveillance;
+	}
+	
+	public String getId() {
 		return id;
 	}
 	
@@ -126,10 +146,20 @@ public class Neighborhood {
 	 * @param deliveryVehicle vehicle
 	 * @return cost function associated to the specified vehicle in the current urban area
 	 */
-	public Costs costs(Vehicle deliveryVehicle) {
-		if(lezCriteria.isAllowed(deliveryVehicle))
+	public Costs costs(Vehicle vehicle) {
+		
+		if(isAllowed(vehicle))
 			return new DistanceCosts();
 		return new LezCosts();
+	}
+	
+	public boolean isAllowed (Vehicle vehicle) {
+		if ( vehicle.getCategory() == VehicleCategory.PASSENGER_CAR ) {
+			return privateLezCriteria.isAllowed(vehicle);
+		}
+		else {
+			return deliveryLezCriteria.isAllowed(vehicle);
+		}
 	}
 	
 	public void resetPollution() {
@@ -140,7 +170,8 @@ public class Neighborhood {
 	 * Used by NoLez class below
 	 */
 	private Neighborhood() {
-		this.lezCriteria = new AllAllowedCriteria();
+		this.deliveryLezCriteria = new AllAllowedCriteria();
+		this.privateLezCriteria = new AllAllowedCriteria();
 	}
 	
 	/**

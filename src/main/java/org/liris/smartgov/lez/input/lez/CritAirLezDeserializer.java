@@ -35,13 +35,6 @@ public class CritAirLezDeserializer extends StdDeserializer<Environment> {
 	public Environment deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		JsonNode jsonLez = p.getCodec().readTree(p);
 		
-		Collection<CritAir> allowed = new ArrayList<>();
-		JsonNode allowedArray = jsonLez.get("allowed");
-		
-		for(int i = 0; i < allowedArray.size(); i++) {
-			allowed.add(CritAir.valueOf(allowedArray.get(i).asText()));
-		}
-		
 		JsonNode dimensions = jsonLez.get("dimensions");
 		
 		
@@ -50,7 +43,8 @@ public class CritAirLezDeserializer extends StdDeserializer<Environment> {
 				dimensions.get("west_bound").asDouble(),
 				dimensions.get("east_bound").asDouble(),
 				jsonLez.get("nb_squares").asInt(),
-				allowed,
+				CritAir.valueOf(jsonLez.get("deliveryAllowed").asText()),
+				CritAir.valueOf(jsonLez.get("privateAllowed").asText()),
 				Surveillance.valueOf(jsonLez.get("surveillance").asText()));
 	}
 	

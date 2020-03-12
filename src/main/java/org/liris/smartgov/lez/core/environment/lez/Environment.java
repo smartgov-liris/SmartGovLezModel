@@ -15,7 +15,7 @@ import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
 
 
 public class Environment {
-	protected List <Neighborhood> neighborhoods = new ArrayList<Neighborhood>();
+	protected Map <String, Neighborhood> neighborhoods = new HashMap<>();
 	
 	/**
 	 * 
@@ -28,7 +28,7 @@ public class Environment {
 	 * @param surveillance the initial surveillance level
 	 */
 	public Environment(double top, double bottom, double left, double right, 
-			int gridSize, Collection<CritAir> allowed, Surveillance surveillance) {
+			int gridSize, CritAir deliveryAllowed, CritAir privateAllowed, Surveillance surveillance) {
 		double horizontal_size = (right - left) / gridSize;
 		double vertical_size = (top - bottom) / gridSize ;
 		int id = 0;
@@ -40,14 +40,15 @@ public class Environment {
 						new LatLon(bottom + (j + 1) * vertical_size, left + (i + 1) * horizontal_size),
 						new LatLon(bottom + j * vertical_size, left + (i + 1) * horizontal_size)
 						};
-				neighborhoods.add(new Neighborhood(perimeter, new CritAirCriteria(allowed), surveillance, id));
+				neighborhoods.put(Integer.toString(id), new Neighborhood(perimeter, 
+						new CritAirCriteria(deliveryAllowed), new CritAirCriteria(privateAllowed), surveillance, Integer.toString(id)));
 				id ++;
 			}
 		}
 	}
 	
 	public Neighborhood getNeighborhood (OsmNode node) {
-		for ( Neighborhood neighborhood : neighborhoods) {
+		for ( Neighborhood neighborhood : neighborhoods.values()) {
 			if ( neighborhood.contains(node) ) {
 				return neighborhood;
 			}
@@ -55,25 +56,32 @@ public class Environment {
 		return null;
 	}
 	
-	public List<Neighborhood> getNeighborhoods() {
+	public Neighborhood getNeighborhood (String id) {
+		if (neighborhoods.get(id) == null) {
+			throw new IllegalArgumentException("There is no neighborhood with this id");
+		}
+		return neighborhoods.get(id);
+	}
+	
+	public Map<String,Neighborhood> getNeighborhoods() {
 		return neighborhoods;
 	}
 	
 	public void resetNeighborhoodPollution() {
-		for (Neighborhood neighborhood : neighborhoods) {
+		for (Neighborhood neighborhood : neighborhoods.values()) {
 			neighborhood.resetPollution();
 		}
 	}
 	
 	
 	private Environment() {
-		neighborhoods.add(Neighborhood.none());
+		neighborhoods.put("0", Neighborhood.none());
 	}
 	
 	public Map<String, Pollution> getPollutionByNeighborhood() {
 		Map<String, Pollution> pollutions = new HashMap<>();
-		for ( Neighborhood neighborhood : neighborhoods ) {
-			pollutions.put(Integer.toString(neighborhood.getId()), neighborhood.getPollution());
+		for ( Neighborhood neighborhood : neighborhoods.values() ) {
+			pollutions.put(neighborhood.getId(), neighborhood.getPollution());
 		}
 		return pollutions;
 	}
@@ -83,12 +91,32 @@ public class Environment {
 	}
 	
 	
+	public void increaseDeliveryCriteria (String id) {
+		Neighborhood neighborhood = getNeighborhood(id);
+		((CritAirCriteria)neighborhood.getDeliveryLezCriteria()).increaseCriteria();
+	}
+	
+	public void increasePrivateCriteria (String id) {
+		Neighborhood neighborhood = getNeighborhood(id);
+		((CritAirCriteria)neighborhood.getPrivateLezCriteria()).increaseCriteria();
+	}
+	
+	public void decreaseDeliveryCriteria (String id) {
+		Neighborhood neighborhood = getNeighborhood(id);
+		((CritAirCriteria)neighborhood.getDeliveryLezCriteria()).decreaseCriteria();
+	}
+	
+	public void decreasePrivateCriteria (String id) {
+		Neighborhood neighborhood = getNeighborhood(id);
+		((CritAirCriteria)neighborhood.getPrivateLezCriteria()).decreaseCriteria();
+	}
+	
 	private static class noLezEnvironment extends Environment {
 		public Neighborhood getNeighborhood(OsmNode node) {
 			if (neighborhoods.isEmpty()) {
 				throw new IllegalStateException("There is no lez to return");
 			}
-			return neighborhoods.get(0);
+			return neighborhoods.get("0");
 		}
 	}
 }

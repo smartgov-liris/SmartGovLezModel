@@ -8,28 +8,23 @@ import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 
 public class CritAirCriteria implements LezCriteria {
 	
-	private Collection<CritAir> allowed;
-	private Map<CritAir, Boolean> allowedIndex = new HashMap<>();
+	CritAir allowed;
 	
-	public CritAirCriteria(Collection<CritAir> allowed) {
+	public CritAirCriteria(CritAir allowed) {
 		this.allowed = allowed;
-		for(CritAir critAir : CritAir.values()) {
-			if(allowed.contains(critAir)) {
-				this.allowedIndex.put(critAir, true);
-			}
-			else {
-				this.allowedIndex.put(critAir, false);
-			}
-		}
 	}
 
 	@Override
 	public boolean isAllowed(Vehicle vehicle) {
-		return allowedIndex.get(vehicle.getCritAir());
+		return vehicle.getCritAir().ordinal() <= allowed.ordinal();
 	}
 	
-	public Collection<CritAir> getAllowedCritAirs() {
-		return allowed;
+	public void increaseCriteria () {
+		allowed = CritAir.values()[allowed.ordinal() - 1];
+	}
+	
+	public void decreaseCriteria () {
+		allowed = CritAir.values()[allowed.ordinal() + 1];
 	}
 
 }

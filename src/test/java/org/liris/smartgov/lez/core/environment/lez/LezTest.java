@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
+import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
 import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
 
@@ -22,7 +23,7 @@ public class LezTest {
 							new LatLon(45., 4.1),
 							new LatLon(45.1, 4.)
 						},
-						null, 0
+						null, Surveillance.NO_SURVEILLANCE, 0
 				);
 		
 		LatLon[] testPoints = {

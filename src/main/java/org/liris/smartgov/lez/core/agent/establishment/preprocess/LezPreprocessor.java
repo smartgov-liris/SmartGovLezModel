@@ -39,7 +39,7 @@ public class LezPreprocessor {
 			boolean vehicleForbidden = false;
 			Surveillance surveillance = Surveillance.NO_SURVEILLANCE;
 			
-			if(! environment.getNeighborhood(establishment.getClosestOsmNode()).getLezCriteria().isAllowed(vehicle)) {
+			if(! environment.getNeighborhood(establishment.getClosestOsmNode()).isAllowed(vehicle)) {
 				//if the origin establishment does not allow the vehicle
 				vehicleForbidden = true;
 				surveillance = environment.getNeighborhood(establishment.getClosestOsmNode()).getSurveillance();
@@ -48,11 +48,14 @@ public class LezPreprocessor {
 			int i = 0;
 			while(!vehicleForbidden && i < round.getEstablishments().size()) {
 				Neighborhood neighborhood = environment.getNeighborhood(round.getEstablishments().get(i).getClosestOsmNode());
-				if (! neighborhood.getLezCriteria().isAllowed(vehicle) ) {
+				if (! neighborhood.isAllowed(vehicle) ) {
 					//if the establishments of the round do not allow the vehicle
 					vehicleForbidden = true;
+					System.out.println(surveillance);
 					if (neighborhood.getSurveillance().ordinal() > surveillance.ordinal()) {
+						//we keep the highest level of surveillance
 						surveillance = neighborhood.getSurveillance();
+						System.out.println(surveillance);
 					}
 				}
 				i++;
@@ -63,8 +66,6 @@ public class LezPreprocessor {
 				selector.put(CopertHeader.CATEGORY, vehicle.getCategory());
 				selector.put(CopertHeader.FUEL, vehicle.getFuel());
 				selector.put(CopertHeader.EURO_STANDARD, EuroNorm.EURO6);
-				//selector.put(CopertHeader.SEGMENT, Segment);
-				//selector.put(CopertHeader.TECHNOLOGY, Technology.RANDOM); // Not all technologies are available for all euro norms
 				
 				Vehicle newVehicle =
 					DeliveryVehicleFactory.generateVehicle(
