@@ -158,6 +158,19 @@ public class DeliveriesScenario extends PollutionScenario {
 			}
 		}
 		
+		int agentId = 0;
+		Collection<OsmAgent> agents = new ArrayList<>();
+		Collection<BuildAgentThread> threads = new ArrayList<>();
+		
+		Random random = new Random(111111);
+		
+		for (Establishment establishment : establishments.values()) {
+			for(String vehicleId : establishment.getRounds().keySet()) {
+				BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context, random);
+				threads.add(thread);
+			}
+		}
+		
 		Run.logger.info("Applying lez...");
 		LezPreprocessor preprocessor = new LezPreprocessor(getEnvironment(), parser);
 		int totalVehiclesReplaced = 0;
@@ -169,21 +182,9 @@ public class DeliveriesScenario extends PollutionScenario {
 		
 		Run.logger.info("[LEZ] Total number of vehicles replaced : " + totalVehiclesReplaced);
 		
-		int agentId = 0;
-		Collection<OsmAgent> agents = new ArrayList<>();
-		Collection<BuildAgentThread> threads = new ArrayList<>();
-		
-		Random random = new Random(111111);
-		
-		for (Establishment establishment : establishments.values()) {
-			for(String vehicleId : establishment.getRounds().keySet()) {
-				BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context, random);
-				threads.add(thread);
-				thread.start();
-			}
-		}
 		for(BuildAgentThread thread : threads) {
 			try {
+				thread.start();
 				thread.join();
 				agents.add(thread.getBuiltAgent());
 			} catch (InterruptedException e) {

@@ -108,7 +108,7 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 								);
 						if ( position != 2 ) {
 							//we could implement another behavior in this case instead of throwing an exception
-							throw new IllegalStateException("Agent received a new place to go but he did not reach the previous one");
+							throw new IllegalStateException("Agent + " + getAgentBody().getAgent().getId() + " received a new place to go but he did not reach the previous one");
 						}
 						nextAction = MoverAction.LEAVE(round.getOrigin());
 						triggerRoundDepartureListeners(new RoundDeparture());
