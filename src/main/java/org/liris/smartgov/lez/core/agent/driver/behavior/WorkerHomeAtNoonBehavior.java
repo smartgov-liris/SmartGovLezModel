@@ -68,8 +68,8 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 					)
 			);
 		
-		//leaves work for noon between 11h and 11h59
-		departure = new Date(0, WeekDay.MONDAY, 11, random.nextInt(60));
+		//leaves work for noon between 11h and 11h29
+		departure = new Date(0, WeekDay.MONDAY, 11, random.nextInt(30));
 		SmartGov
 		.getRuntime()
 		.getClock()
@@ -82,18 +82,14 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 								+ "Agent " + getAgentBody().getAgent().getId()
 								+ " left work to eat "
 								);
-						if ( position != 1 ) {
-							//we could implement another behavior in this case instead of throwing an exception
-							throw new IllegalStateException("Agent received a new place to go but he did not reach the previous one");
-						}
 						nextAction = MoverAction.LEAVE(round.getEstablishments().get(0));
 						triggerRoundDepartureListeners(new RoundDeparture());
 					}
 					)
 			);
 		
-		//goes back to work between 13h and 13h59
-		departure = new Date(0, WeekDay.MONDAY, 13, random.nextInt(60));
+		//goes back to work between 13h30 and 13h59
+		departure = new Date(0, WeekDay.MONDAY, 13, random.nextInt(30) + 30);
 		SmartGov
 		.getRuntime()
 		.getClock()
@@ -107,8 +103,10 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 								+ " goes back to work "
 								);
 						if ( position != 2 ) {
-							//we could implement another behavior in this case instead of throwing an exception
-							throw new IllegalStateException("Agent + " + getAgentBody().getAgent().getId() + " received a new place to go but he did not reach the previous one");
+							//for now, we give him a new place to go to even if he didn't reach the last one
+							position++;
+							refresh(round.getOrigin().getClosestOsmNode(),
+									round.getEstablishments().get(0).getClosestOsmNode());
 						}
 						nextAction = MoverAction.LEAVE(round.getOrigin());
 						triggerRoundDepartureListeners(new RoundDeparture());
@@ -130,10 +128,6 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 								+ "Agent " + getAgentBody().getAgent().getId()
 								+ " left work "
 								);
-						if ( position != 3 ) {
-							//we could implement another behavior in this case instead of throwing an exception
-							throw new IllegalStateException("Agent received a new place to go but he did not reach the previous one");
-						}
 						nextAction = MoverAction.LEAVE(round.getEstablishments().get(0));
 						triggerRoundDepartureListeners(new RoundDeparture());
 					}

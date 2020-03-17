@@ -84,9 +84,6 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 								+ "Agent " + getAgentBody().getAgent().getId()
 								+ " left work "
 								);
-						if ( position != 1 ) {
-							throw new IllegalStateException("Agent received a new place to go but he did not reach the previous one");
-						}
 						
 						nextAction = MoverAction.LEAVE(round.getEstablishments().get(0));
 						triggerRoundDepartureListeners(new RoundDeparture());
@@ -94,8 +91,8 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 					)
 			);
 		
-		//leaves his activity between 19h and 20h59
-		departure = new Date(0, WeekDay.MONDAY, random.nextInt(2) + 19, random.nextInt(60));
+		//leaves his activity between 20h and 20h59
+		departure = new Date(0, WeekDay.MONDAY, 20, random.nextInt(60));
 		SmartGov
 		.getRuntime()
 		.getClock()
