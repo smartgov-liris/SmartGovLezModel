@@ -8,6 +8,7 @@ import org.liris.smartgov.lez.core.agent.driver.behavior.DriverBehavior;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicleFactory;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
+import org.liris.smartgov.lez.core.agent.establishment.personality.Decision;
 import org.liris.smartgov.lez.core.copert.fields.EuroNorm;
 import org.liris.smartgov.lez.core.copert.fields.Technology;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertHeader;
@@ -36,32 +37,32 @@ public class LezPreprocessor {
 
 		for(Vehicle vehicle : establishment.getFleet().values()) {
 			Round round = establishment.getRounds().get(vehicle.getId());
-			boolean vehicleForbidden = false;
+			
+			//counts the number of places in the journey where the vehicle is forbidden
+			int placesVehicleForbidden = 0;
 			Surveillance surveillance = Surveillance.NO_SURVEILLANCE;
 			
 			if(! environment.getNeighborhood(establishment.getClosestOsmNode()).isAllowed(vehicle)) {
 				//if the origin establishment does not allow the vehicle
-				vehicleForbidden = true;
+				placesVehicleForbidden ++;
 				surveillance = environment.getNeighborhood(establishment.getClosestOsmNode()).getSurveillance();
 			}
 			
 			int i = 0;
-			while(!vehicleForbidden && i < round.getEstablishments().size()) {
+			while( i < round.getEstablishments().size()) {
 				Neighborhood neighborhood = environment.getNeighborhood(round.getEstablishments().get(i).getClosestOsmNode());
 				if (! neighborhood.isAllowed(vehicle) ) {
 					//if the establishments of the round do not allow the vehicle
-					vehicleForbidden = true;
-					System.out.println(surveillance);
+					placesVehicleForbidden ++;
 					if (neighborhood.getSurveillance().ordinal() > surveillance.ordinal()) {
-						//we keep the highest level of surveillance
 						surveillance = neighborhood.getSurveillance();
-						System.out.println(surveillance);
 					}
 				}
 				i++;
 			}
 			
-			if(vehicleForbidden && establishment.acceptToReplaceVehicle(surveillance)) {
+			Decision decision = establishment.getPersonality().getDecision(surveillance, placesVehicleForbidden);
+			if(decision == Decision.CHANGE_VEHICLE) {
 				CopertSelector selector = new CopertSelector();
 				selector.put(CopertHeader.CATEGORY, vehicle.getCategory());
 				selector.put(CopertHeader.FUEL, vehicle.getFuel());
@@ -77,7 +78,11 @@ public class LezPreprocessor {
 				establishment.replaceVehicle(newVehicle.getId(), newVehicle);
 				replacedVehicles++;
 			}
+			else if (decision == Decision.CHANGE_MOBILITY) {
+				//TODO delete this vehicle/agent from simulation
+			}
 		}
+
 
 		return replacedVehicles;
 	}

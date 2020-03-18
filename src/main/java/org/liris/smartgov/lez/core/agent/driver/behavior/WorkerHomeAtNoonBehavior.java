@@ -103,10 +103,9 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 								+ " goes back to work "
 								);
 						if ( position != 2 ) {
-							//for now, we give him a new place to go to even if he didn't reach the last one
-							position++;
-							refresh(round.getOrigin().getClosestOsmNode(),
-									round.getEstablishments().get(0).getClosestOsmNode());
+							//for now we just throw an exception, but we could think about another behavior
+							throw new IllegalStateException ("Agent " + getAgentBody().getAgent().getId() + " received a new place to go "
+									+ "but he did not reach the last one");
 						}
 						nextAction = MoverAction.LEAVE(round.getOrigin());
 						triggerRoundDepartureListeners(new RoundDeparture());

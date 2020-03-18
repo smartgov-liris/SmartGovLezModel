@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
+import org.liris.smartgov.lez.core.agent.establishment.personality.Personality;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 import org.liris.smartgov.simulator.core.agent.moving.MovingAgent;
 import org.liris.smartgov.simulator.core.agent.moving.ParkingArea;
@@ -44,6 +45,7 @@ public class Establishment implements ParkingArea {
 	private Map<String, Round> rounds;
 	@JsonIgnore
 	private Collection<OsmAgent> agents;
+	private Personality personality;
 	
 	
 	/**
@@ -64,6 +66,7 @@ public class Establishment implements ParkingArea {
 		fleetByCapacity = new HashMap<>();
 		rounds = new HashMap<>();
 		agents = new ArrayList<>();
+		personality = new Personality(activity);
 	}
 
 	/**
@@ -165,6 +168,10 @@ public class Establishment implements ParkingArea {
 	 */
 	public void addRound(Vehicle vehicle, Round round) {
 		rounds.put(vehicle.getId(), round);
+	}
+	
+	public Personality getPersonality() {
+		return personality;
 	}
 
 	/**
@@ -277,11 +284,5 @@ public class Establishment implements ParkingArea {
 		return "Establishment [id=" + id + ", name=" + name + ", activity=" + activity + ", location=" + location
 				+ ", fleet=" + fleet + ", rounds=" + rounds + "]";
 	}
-	
-	public boolean acceptToReplaceVehicle(Surveillance surveillance) {
-		//TODO: refactor scenario to put it in agent behavior as it is a bit ugly to put the choice in establishment
-		return true;
-	}
-
 	
 }
