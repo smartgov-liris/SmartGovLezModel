@@ -3,6 +3,8 @@ package org.liris.smartgov.lez.core.agent.establishment.preprocess;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.liris.smartgov.lez.core.agent.driver.behavior.DriverBehavior;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicleFactory;
@@ -29,10 +31,12 @@ public class LezPreprocessor {
 		this.parser = parser;
 	}
 
-	public int preprocess(Establishment establishment) {
+	public Map<String, Integer> preprocess(Establishment establishment) {
 		
 		int replacedVehicles = 0;
+		int mobilityChanged = 0;
 		
+		Map<String, Integer> indicators = new HashMap<>();
 
 
 		for(Vehicle vehicle : establishment.getFleet().values()) {
@@ -79,11 +83,13 @@ public class LezPreprocessor {
 				replacedVehicles++;
 			}
 			else if (decision == Decision.CHANGE_MOBILITY) {
-				//TODO delete this vehicle/agent from simulation
+				establishment.replaceVehicle(vehicle.getId(), null);
+				mobilityChanged ++;
 			}
 		}
-
-
-		return replacedVehicles;
+		indicators.put("Replaced", replacedVehicles);
+		indicators.put("Mobility", mobilityChanged);
+		return indicators;
+		
 	}
 }

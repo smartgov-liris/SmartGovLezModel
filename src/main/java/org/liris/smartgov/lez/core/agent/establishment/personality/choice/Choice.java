@@ -7,28 +7,24 @@ public abstract class Choice {
 	public Decision getDecision(Surveillance surveillance, int nbPlacesForbidden) {
 		if (nbPlacesForbidden == 0) {
 			//if his vehicle does not need to be changed
-			if ( acceptToPay(surveillance)) {
-				return Decision.DO_NOTHING;
+			if ( wantToChangeMobility(surveillance, false)) {
+				return Decision.CHANGE_MOBILITY;
 			}
-			return Decision.CHANGE_MOBILITY;
+			return Decision.DO_NOTHING;
 		}
 		else {
 			//his vehicle is not allowed
-			boolean pay = acceptToPay(surveillance);
-			boolean fraud = wantToFraud(surveillance);
-			if (pay && !fraud) {
-				return Decision.CHANGE_VEHICLE;
-			} else if (pay && fraud) {
+			if (wantToFraud(surveillance)) {
 				return Decision.DO_NOTHING;
 			}
-			else {
-				// he refuses to pay anyway
+			if (wantToChangeMobility(surveillance, true)) {
 				return Decision.CHANGE_MOBILITY;
 			}
+			return Decision.CHANGE_VEHICLE;
 			
 		}
 	}
 	
-	protected abstract boolean acceptToPay(Surveillance surveillance);
+	protected abstract boolean wantToChangeMobility(Surveillance surveillance, boolean hasToChange);
 	protected abstract boolean wantToFraud(Surveillance surveillance);
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.liris.smartgov.lez.cli.tools.Run;
+import org.liris.smartgov.lez.cli.tools.PoliticRun;
 import org.liris.smartgov.lez.core.agent.driver.DeliveryDriverAgent;
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.driver.PrivateDriverAgent;
@@ -22,6 +22,7 @@ import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerOneActivityBehavi
 import org.liris.smartgov.lez.core.agent.driver.behavior.LezBehavior;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
+import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.agent.establishment.ST8;
 import org.liris.smartgov.lez.core.agent.establishment.preprocess.LezPreprocessor;
 import org.liris.smartgov.lez.core.copert.fields.EuroNorm;
@@ -108,10 +109,10 @@ public class DeliveriesScenario extends PollutionScenario {
 			if(node.getOutgoingArcs().isEmpty() || node.getIncomingArcs().isEmpty()) {
 				deadEnds++;
 				Road road = ((OsmNode) node).getRoad();
-				Run.logger.debug("Dead end found on node " + node.getId() + ", road " + road.getId());
+				PoliticRun.logger.debug("Dead end found on node " + node.getId() + ", road " + road.getId());
 			}
 		}
-		Run.logger.info(deadEnds + " dead ends found.");
+		PoliticRun.logger.info(deadEnds + " dead ends found.");
 		
 		OsmArcsBuilder.fixDeadEnds((LezContext) context, new PollutableOsmArcFactory(getEnvironment()));
 		
@@ -137,6 +138,7 @@ public class DeliveriesScenario extends PollutionScenario {
 		}
 		GeoStrTree kdTree = new GeoStrTree(geoNodes);
 		
+		PoliticRun.logger.info("Searching for the closest node of each establishment.");
 		for (Establishment establishment : establishments.values()) {
 			establishment.setClosestOsmNode((OsmNode) kdTree.getNearestNodeFrom(
 					new LonLat().project(establishment.getLocation())
@@ -158,6 +160,21 @@ public class DeliveriesScenario extends PollutionScenario {
 			}
 		}
 		
+		PoliticRun.logger.info("Applying lez...");
+		LezPreprocessor preprocessor = new LezPreprocessor(getEnvironment(), parser);
+		int totalVehiclesReplaced = 0;
+		int totalMobilityChanged = 0;
+		
+		for( Establishment establishment : establishments.values() ) {
+			Map<String, Integer> indicators =  preprocessor.preprocess(establishment);
+			totalVehiclesReplaced += indicators.get("Replaced");
+			totalMobilityChanged += indicators.get("Mobility");
+		}
+		
+		PoliticRun.logger.info("[LEZ] Total number of vehicles replaced : " + totalVehiclesReplaced);
+		PoliticRun.logger.info("[LEZ] Total number of mobility changed: " + totalMobilityChanged);
+		
+		
 		int agentId = 0;
 		Collection<OsmAgent> agents = new ArrayList<>();
 		Collection<BuildAgentThread> threads = new ArrayList<>();
@@ -165,26 +182,18 @@ public class DeliveriesScenario extends PollutionScenario {
 		Random random = new Random(111111);
 		
 		for (Establishment establishment : establishments.values()) {
-			for(String vehicleId : establishment.getRounds().keySet()) {
-				BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context, random);
-				threads.add(thread);
+			for (String vehicleId :  establishment.getRounds().keySet()) {
+				if ( establishment.getFleet().get(vehicleId) != null ) {
+					//if he didn't change mobility
+					BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context, random);
+					threads.add(thread);
+					thread.start();
+				}
 			}
 		}
 		
-		Run.logger.info("Applying lez...");
-		LezPreprocessor preprocessor = new LezPreprocessor(getEnvironment(), parser);
-		int totalVehiclesReplaced = 0;
-		
-		for( Establishment establishment : establishments.values() ) {
-			int replacedVehiclesCount = preprocessor.preprocess(establishment);
-			totalVehiclesReplaced += replacedVehiclesCount;
-		}
-		
-		Run.logger.info("[LEZ] Total number of vehicles replaced : " + totalVehiclesReplaced);
-		
 		for(BuildAgentThread thread : threads) {
 			try {
-				thread.start();
 				thread.join();
 				agents.add(thread.getBuiltAgent());
 			} catch (InterruptedException e) {
@@ -270,7 +279,7 @@ public class DeliveriesScenario extends PollutionScenario {
 			
 
 			builtBehavior.addRoundDepartureListener((event) -> {
-				/*Run.logger.info(
+				/*PoliticRun.logger.info(
 				"[" + SmartGov.getRuntime().getClock().getHour()
 				+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 				+ "Agent " + builtAgent.getId()
@@ -279,7 +288,7 @@ public class DeliveriesScenario extends PollutionScenario {
 			});
 				
 			builtBehavior.addRoundEndListener((event) -> {
-				/*Run.logger.info(
+				/*PoliticRun.logger.info(
 					"[" + SmartGov.getRuntime().getClock().getHour()
 					+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 					+ "Agent " + builtAgent.getId()
@@ -287,7 +296,7 @@ public class DeliveriesScenario extends PollutionScenario {
 					+ establishment.getName()
 					);*/
 				context.ongoingRounds.remove(builtAgent.getId());
-				Run.logger.info("Rounds still ongoing : " + context.ongoingRounds.size());
+				PoliticRun.logger.info("Rounds still ongoing : " + context.ongoingRounds.size());
 				if(context.ongoingRounds.isEmpty()) {
 					SmartGov.getRuntime().stop();
 				}
