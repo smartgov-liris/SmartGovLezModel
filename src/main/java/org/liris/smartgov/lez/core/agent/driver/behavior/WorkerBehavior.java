@@ -5,6 +5,7 @@ import java.util.Random;
 import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
+import org.liris.smartgov.lez.core.simulation.ExtendedDate;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.agent.moving.behavior.MoverAction;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
@@ -15,6 +16,8 @@ import org.liris.smartgov.simulator.core.simulation.time.WeekDay;
 public class WorkerBehavior extends PrivateDriverBehavior {
 	
 	private int position;
+	private int journeyTime;
+	private Date[] departures;
 	
 	public WorkerBehavior(
 			DriverBody agentBody,
@@ -26,6 +29,10 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 				round,
 				context,
 				random);
+		
+		departures = new Date[2];
+		journeyTime = 0;
+		
 		if (round.getEstablishments() == null || round.getEstablishments().size() == 0) {
 			throw new IllegalArgumentException("This behavior needs one establishment in its round");
 		}
@@ -48,6 +55,7 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 
 		//goes to work between 7h and 8h59
 		Date departure = new Date(0, WeekDay.MONDAY, random.nextInt(2) + 7, random.nextInt(60));
+		departures[0] = departure;
 		
 		SmartGov
 		.getRuntime()
@@ -70,6 +78,7 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 		
 		//leaves work between 16h and 18h59
 		departure = new Date(0, WeekDay.MONDAY, random.nextInt(3) + 16, random.nextInt(60));
+		departures[1] = departure;
 		SmartGov
 		.getRuntime()
 		.getClock()
@@ -100,6 +109,7 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 						round.getOrigin().getClosestOsmNode());
 				nextAction = MoverAction.ENTER(round.getEstablishments().get(0));
 				position += 1;
+				journeyTime += ExtendedDate.getTimeBetween(departures[0], SmartGov.getRuntime().getClock().time());
 			} else {
 				//he is back home
 				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
@@ -109,6 +119,8 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 						);
 				nextAction = MoverAction.ENTER(round.getOrigin());
 				triggerRoundEndListeners(new RoundEnd());
+				journeyTime += ExtendedDate.getTimeBetween(departures[1], SmartGov.getRuntime().getClock().time());
+				round.getOrigin().giveTime(((DriverBody) getAgentBody()).getVehicle().getId(), journeyTime);
 			}
 		});
 		

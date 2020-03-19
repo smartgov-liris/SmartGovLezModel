@@ -5,6 +5,7 @@ import java.util.Random;
 import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
+import org.liris.smartgov.lez.core.simulation.ExtendedDate;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.agent.moving.behavior.MoverAction;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
@@ -14,6 +15,8 @@ import org.liris.smartgov.simulator.core.simulation.time.WeekDay;
 
 public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 	private int position;
+	private int journeyTime;
+	private Date[] departures;
 	
 	public WorkerHomeAtNoonBehavior(
 			DriverBody agentBody,
@@ -26,6 +29,9 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 				round,
 				context,
 				random);
+		
+		departures = new Date[4];
+		journeyTime = 0;
 		
 		if (round.getEstablishments() == null || round.getEstablishments().size() == 0) {
 			throw new IllegalArgumentException("This behavior needs one establishment in its round");
@@ -49,6 +55,7 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 		
 		//goes to work between 7h and 8h59
 		Date departure = new Date(0, WeekDay.MONDAY, random.nextInt(2) + 7, random.nextInt(60));
+		departures[0] = departure;
 		SmartGov
 		.getRuntime()
 		.getClock()
@@ -70,6 +77,7 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 		
 		//leaves work for noon between 11h and 11h29
 		departure = new Date(0, WeekDay.MONDAY, 11, random.nextInt(30));
+		departures[1] = departure;
 		SmartGov
 		.getRuntime()
 		.getClock()
@@ -90,6 +98,7 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 		
 		//goes back to work between 13h30 and 13h59
 		departure = new Date(0, WeekDay.MONDAY, 13, random.nextInt(30) + 30);
+		departures[2] = departure;
 		SmartGov
 		.getRuntime()
 		.getClock()
@@ -115,6 +124,7 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 		
 		//leaves work between 17h and 18h59
 		departure = new Date(0, WeekDay.MONDAY, random.nextInt(2) + 17, random.nextInt(60));
+		departures[3] = departure;
 		SmartGov
 		.getRuntime()
 		.getClock()
@@ -145,6 +155,7 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 						round.getOrigin().getClosestOsmNode());
 				nextAction = MoverAction.ENTER(round.getEstablishments().get(0));
 				position += 1;
+				
 			} else if (position == 1) {
 				//he is home at noon
 				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
@@ -178,6 +189,11 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 						round.getEstablishments().get(0).getClosestOsmNode());
 				nextAction = MoverAction.ENTER(round.getOrigin());
 				position += 1;
+				triggerRoundEndListeners(new RoundEnd());
+			}
+			journeyTime += ExtendedDate.getTimeBetween(departures[position - 1], SmartGov.getRuntime().getClock().time());
+			if (position == 4) {
+				round.getOrigin().giveTime(((DriverBody) getAgentBody()).getVehicle().getId(), journeyTime);
 			}
 		});
 		

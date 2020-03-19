@@ -46,6 +46,7 @@ public class Establishment implements ParkingArea {
 	@JsonIgnore
 	private Collection<OsmAgent> agents;
 	private Personality personality;
+	private Map<String, Integer> timePerRound;
 	
 	
 	/**
@@ -65,6 +66,7 @@ public class Establishment implements ParkingArea {
 		replacedVehicle = new ArrayList<>();
 		fleetByCapacity = new HashMap<>();
 		rounds = new HashMap<>();
+		timePerRound = new HashMap<>();
 		agents = new ArrayList<>();
 		personality = new Personality(activity);
 	}
@@ -283,6 +285,15 @@ public class Establishment implements ParkingArea {
 	public String toString() {
 		return "Establishment [id=" + id + ", name=" + name + ", activity=" + activity + ", location=" + location
 				+ ", fleet=" + fleet + ", rounds=" + rounds + "]";
+	}
+	
+	public void giveTime(String id, int time) {
+		if ( timePerRound.get(id) == null ) {
+			timePerRound.put(id, time);
+		}
+		else {
+			//TODO implement the difference in personality
+		}
 	}
 	
 }
