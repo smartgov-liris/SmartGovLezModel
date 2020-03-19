@@ -12,7 +12,9 @@ import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.agent.establishment.personality.Decision;
 import org.liris.smartgov.lez.core.copert.fields.EuroNorm;
+import org.liris.smartgov.lez.core.copert.fields.Fuel;
 import org.liris.smartgov.lez.core.copert.fields.Technology;
+import org.liris.smartgov.lez.core.copert.fields.VehicleCategory;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertHeader;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertSelector;
@@ -35,6 +37,7 @@ public class LezPreprocessor {
 		
 		int replacedVehicles = 0;
 		int mobilityChanged = 0;
+		int nbFrauds = 0;
 		
 		Map<String, Integer> indicators = new HashMap<>();
 
@@ -69,7 +72,13 @@ public class LezPreprocessor {
 			if(decision == Decision.CHANGE_VEHICLE) {
 				CopertSelector selector = new CopertSelector();
 				selector.put(CopertHeader.CATEGORY, vehicle.getCategory());
-				selector.put(CopertHeader.FUEL, vehicle.getFuel());
+				if (vehicle.getCategory() != VehicleCategory.HEAVY_DUTY_TRUCK) {
+					//only Diesel is available for heavy duty trucks
+					selector.put(CopertHeader.FUEL, Fuel.DIESEL);
+				} else {
+					selector.put(CopertHeader.FUEL, Fuel.PETROL);
+				}
+				
 				selector.put(CopertHeader.EURO_STANDARD, EuroNorm.EURO6);
 				
 				Vehicle newVehicle =
@@ -80,15 +89,22 @@ public class LezPreprocessor {
 						);
 				
 				establishment.replaceVehicle(newVehicle.getId(), newVehicle);
+				establishment.getPersonality().increaseVehicleChanged();
 				replacedVehicles++;
 			}
 			else if (decision == Decision.CHANGE_MOBILITY) {
 				establishment.replaceVehicle(vehicle.getId(), null);
+				establishment.getPersonality().increaseMobilityChanged();
 				mobilityChanged ++;
+			}
+			else if (decision == Decision.DO_NOTHING && placesVehicleForbidden > 0) {
+				establishment.getPersonality().increaseNbFraud();
+				nbFrauds++;
 			}
 		}
 		indicators.put("Replaced", replacedVehicles);
 		indicators.put("Mobility", mobilityChanged);
+		indicators.put("Fraud", nbFrauds);
 		return indicators;
 		
 	}

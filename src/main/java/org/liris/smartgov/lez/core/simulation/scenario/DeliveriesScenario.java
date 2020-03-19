@@ -164,15 +164,18 @@ public class DeliveriesScenario extends PollutionScenario {
 		LezPreprocessor preprocessor = new LezPreprocessor(getEnvironment(), parser);
 		int totalVehiclesReplaced = 0;
 		int totalMobilityChanged = 0;
+		int totalFrauds = 0;
 		
 		for( Establishment establishment : establishments.values() ) {
 			Map<String, Integer> indicators =  preprocessor.preprocess(establishment);
 			totalVehiclesReplaced += indicators.get("Replaced");
 			totalMobilityChanged += indicators.get("Mobility");
+			totalFrauds += indicators.get("Fraud");
 		}
 		
 		PoliticRun.logger.info("[LEZ] Total number of vehicles replaced : " + totalVehiclesReplaced);
 		PoliticRun.logger.info("[LEZ] Total number of mobility changed: " + totalMobilityChanged);
+		PoliticRun.logger.info("[LEZ] Total number of agents who chose to fraud : " + totalFrauds);
 		
 		
 		int agentId = 0;
