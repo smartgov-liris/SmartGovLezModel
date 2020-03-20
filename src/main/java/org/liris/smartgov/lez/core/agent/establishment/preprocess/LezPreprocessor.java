@@ -7,10 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.liris.smartgov.lez.core.agent.driver.behavior.DriverBehavior;
+import org.liris.smartgov.lez.core.agent.driver.personality.Decision;
+import org.liris.smartgov.lez.core.agent.driver.personality.Personality;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.DeliveryVehicleFactory;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
-import org.liris.smartgov.lez.core.agent.establishment.personality.Decision;
 import org.liris.smartgov.lez.core.copert.fields.EuroNorm;
 import org.liris.smartgov.lez.core.copert.fields.Fuel;
 import org.liris.smartgov.lez.core.copert.fields.Technology;
@@ -68,7 +69,8 @@ public class LezPreprocessor {
 				i++;
 			}
 			
-			Decision decision = establishment.getPersonality().getDecision(surveillance, placesVehicleForbidden);
+			Personality personality = establishment.getPersonalities().get(vehicle.getId());
+			Decision decision = personality.getDecision(surveillance, placesVehicleForbidden);
 			if(decision == Decision.CHANGE_VEHICLE) {
 				CopertSelector selector = new CopertSelector();
 				selector.put(CopertHeader.CATEGORY, vehicle.getCategory());
@@ -89,16 +91,16 @@ public class LezPreprocessor {
 						);
 				
 				establishment.replaceVehicle(newVehicle.getId(), newVehicle);
-				establishment.getPersonality().increaseVehicleChanged();
+				personality.changeVehicle();
 				replacedVehicles++;
 			}
 			else if (decision == Decision.CHANGE_MOBILITY) {
 				establishment.replaceVehicle(vehicle.getId(), null);
-				establishment.getPersonality().increaseMobilityChanged();
+				personality.changeVehicle();
 				mobilityChanged ++;
 			}
 			else if (decision == Decision.DO_NOTHING && placesVehicleForbidden > 0) {
-				establishment.getPersonality().increaseNbFraud();
+				personality.fraud();
 				nbFrauds++;
 			}
 		}

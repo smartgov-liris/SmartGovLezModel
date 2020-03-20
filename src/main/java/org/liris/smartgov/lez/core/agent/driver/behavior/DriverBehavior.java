@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
+import org.liris.smartgov.lez.core.agent.driver.personality.Personality;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
@@ -14,8 +15,9 @@ public abstract class DriverBehavior extends LezBehavior {
 	protected Round round;
 	protected Collection<EventHandler<RoundDeparture>> roundDepartureListeners;
 	protected Collection<EventHandler<RoundEnd>> roundEndListeners;
+	protected Personality personality;
 	
-	public DriverBehavior(DriverBody agentBody, Round round, SmartGovContext context) {
+	public DriverBehavior(DriverBody agentBody, Round round, Personality personality, SmartGovContext context) {
 		super(
 				agentBody,
 				round.getOrigin().getClosestOsmNode(),
@@ -23,6 +25,7 @@ public abstract class DriverBehavior extends LezBehavior {
 				context,
 				Neighborhood.none());
 		this.round = round;
+		this.personality = personality;
 		roundDepartureListeners = new ArrayList<>();
 		roundEndListeners = new ArrayList<>();
 	}

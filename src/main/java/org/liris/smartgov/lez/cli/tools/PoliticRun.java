@@ -129,7 +129,6 @@ public class PoliticRun {
 					for (Pollution pollution : pollutionMap.values()) {
 						logger.info(pollution.get(Pollutant.CO));
 					}*/
-					
 					ctxt.resetPollution();
 					ctxt.reload();
 			        smartGov.restart(ctxt);

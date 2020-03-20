@@ -9,8 +9,8 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import org.liris.smartgov.lez.core.agent.driver.personality.Personality;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
-import org.liris.smartgov.lez.core.agent.establishment.personality.Personality;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 import org.liris.smartgov.simulator.core.agent.moving.MovingAgent;
 import org.liris.smartgov.simulator.core.agent.moving.ParkingArea;
@@ -37,6 +37,7 @@ public class Establishment implements ParkingArea {
 	private OsmNode closestOsmNode;
 	
 	private Map<String, Vehicle> fleet;
+	private Map<String, Personality> personalities;
 	private List<Vehicle> replacedVehicle;
 	
 	@JsonIgnore
@@ -45,8 +46,6 @@ public class Establishment implements ParkingArea {
 	private Map<String, Round> rounds;
 	@JsonIgnore
 	private Collection<OsmAgent> agents;
-	private Personality personality;
-	private Map<String, Integer> timePerRound;
 	
 	
 	/**
@@ -64,11 +63,10 @@ public class Establishment implements ParkingArea {
 		this.location = location;
 		fleet = new HashMap<>();
 		replacedVehicle = new ArrayList<>();
+		personalities = new HashMap<>();
 		fleetByCapacity = new HashMap<>();
 		rounds = new HashMap<>();
-		timePerRound = new HashMap<>();
 		agents = new ArrayList<>();
-		personality = new Personality(activity);
 	}
 
 	/**
@@ -128,6 +126,18 @@ public class Establishment implements ParkingArea {
 	}
 	
 	/**
+	 * Returns the personality at the specified id
+	 * @param id the id of the personality
+	 */
+	public void setPersonality(String vehicleId, Personality personality) {
+		personalities.put(vehicleId, personality);
+	}
+	
+	public Map<String, Personality> getPersonalities() {
+		return personalities;
+	}
+	
+	/**
 	 * Adds a vehicle to the establishment's fleet.
 	 *
 	 * <p>
@@ -170,10 +180,6 @@ public class Establishment implements ParkingArea {
 	 */
 	public void addRound(Vehicle vehicle, Round round) {
 		rounds.put(vehicle.getId(), round);
-	}
-	
-	public Personality getPersonality() {
-		return personality;
 	}
 
 	/**
@@ -285,15 +291,6 @@ public class Establishment implements ParkingArea {
 	public String toString() {
 		return "Establishment [id=" + id + ", name=" + name + ", activity=" + activity + ", location=" + location
 				+ ", fleet=" + fleet + ", rounds=" + rounds + "]";
-	}
-	
-	public void giveTime(String id, int time) {
-		if ( timePerRound.get(id) == null ) {
-			timePerRound.put(id, time);
-		}
-		else {
-			//TODO implement the difference in personality
-		}
 	}
 	
 }

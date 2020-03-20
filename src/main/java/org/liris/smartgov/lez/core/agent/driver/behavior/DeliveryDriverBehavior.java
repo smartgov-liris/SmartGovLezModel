@@ -2,6 +2,7 @@ package org.liris.smartgov.lez.core.agent.driver.behavior;
 
 import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
+import org.liris.smartgov.lez.core.agent.driver.personality.Personality;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.simulation.ExtendedDate;
@@ -27,7 +28,6 @@ import org.liris.smartgov.simulator.core.simulation.time.DelayedActionHandler;
 public class DeliveryDriverBehavior extends DriverBehavior {
 	
 	private int currentPosition;
-	private int journeyTime;
 	private MoverAction nextAction;
 
 	/**
@@ -40,8 +40,9 @@ public class DeliveryDriverBehavior extends DriverBehavior {
 	public DeliveryDriverBehavior(
 			DriverBody agentBody,
 			Round round,
+			Personality personality,
 			SmartGovContext context) {
-		super(agentBody, round, context);
+		super(agentBody, round, personality, context);
 		
 		this.currentPosition = 0;
 		
@@ -162,8 +163,9 @@ public class DeliveryDriverBehavior extends DriverBehavior {
 				// Go back the origin parking area and end round
 				nextAction = MoverAction.ENTER(round.getOrigin());
 				triggerRoundEndListeners(new RoundEnd());
-				round.getOrigin().giveTime(((DriverBody) getAgentBody()).getVehicle().getId(),
-						ExtendedDate.getTimeBetween(round.getDeparture(), SmartGov.getRuntime().getClock().time()));
+				//we give to the personality the total time of the round
+				personality.giveTime(ExtendedDate.getTimeBetween(round.getDeparture(), 
+						SmartGov.getRuntime().getClock().time()));
 			}
 			currentPosition++;
 		});

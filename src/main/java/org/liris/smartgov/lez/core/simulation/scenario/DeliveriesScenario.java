@@ -19,6 +19,7 @@ import org.liris.smartgov.lez.core.agent.driver.behavior.PrivateDriverBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerHomeAtNoonBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerOneActivityBehavior;
+import org.liris.smartgov.lez.core.agent.driver.personality.Personality;
 import org.liris.smartgov.lez.core.agent.driver.behavior.LezBehavior;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
@@ -144,7 +145,12 @@ public class DeliveriesScenario extends PollutionScenario {
 					new LonLat().project(establishment.getLocation())
 					)
 				);
+			//we create personalities of agents
+			for (String vehicleId : establishment.getRounds().keySet()) {
+				establishment.setPersonality(vehicleId, new Personality(establishment.getActivity(), vehicleId));
+			}
 		}
+		
 		return establishments;
 	}
 	
@@ -238,6 +244,7 @@ public class DeliveriesScenario extends PollutionScenario {
 				= new DeliveryDriverBehavior(
 						driver,
 						establishment.getRounds().get(vehicleId),
+						establishment.getPersonalities().get(vehicleId),
 						context
 						);
 				builtAgent = new DeliveryDriverAgent(String.valueOf(agentId),
@@ -251,6 +258,7 @@ public class DeliveriesScenario extends PollutionScenario {
 						builtBehavior = new WorkerHomeAtNoonBehavior(
 								driver,
 								establishment.getRounds().get(vehicleId),
+								establishment.getPersonalities().get(vehicleId),
 								context,
 								random);
 					}
@@ -258,6 +266,7 @@ public class DeliveriesScenario extends PollutionScenario {
 						builtBehavior = new WorkerBehavior(
 								driver,
 								establishment.getRounds().get(vehicleId),
+								establishment.getPersonalities().get(vehicleId),
 								context, 
 								random);
 					}
@@ -265,6 +274,7 @@ public class DeliveriesScenario extends PollutionScenario {
 					builtBehavior = new WorkerOneActivityBehavior(
 							driver,
 							establishment.getRounds().get(vehicleId),
+							establishment.getPersonalities().get(vehicleId),
 							context, 
 							random);
 				}

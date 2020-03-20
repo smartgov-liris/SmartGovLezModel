@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
+import org.liris.smartgov.lez.core.agent.driver.personality.Personality;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.simulation.ExtendedDate;
 import org.liris.smartgov.simulator.SmartGov;
@@ -21,12 +22,14 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 	public WorkerOneActivityBehavior(
 			DriverBody agentBody,
 			Round round,
+			Personality personality,
 			SmartGovContext context,
 			Random random
 			) {
 	
 		super(agentBody,
 				round,
+				personality,
 				context,
 				random);
 		
@@ -165,7 +168,7 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 			}
 			journeyTime += ExtendedDate.getTimeBetween(departures[position - 1], SmartGov.getRuntime().getClock().time());
 			if (position == 3) {
-				round.getOrigin().giveTime(((DriverBody) getAgentBody()).getVehicle().getId(), journeyTime);
+				personality.giveTime(journeyTime);
 			}
 		});
 		

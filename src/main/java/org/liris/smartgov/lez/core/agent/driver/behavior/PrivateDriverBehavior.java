@@ -3,6 +3,7 @@ package org.liris.smartgov.lez.core.agent.driver.behavior;
 import java.util.Random;
 
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
+import org.liris.smartgov.lez.core.agent.driver.personality.Personality;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.simulator.SmartGov;
@@ -23,10 +24,11 @@ public abstract class PrivateDriverBehavior extends DriverBehavior {
 	public PrivateDriverBehavior(
 			DriverBody agentBody,
 			Round round,
+			Personality personality,
 			SmartGovContext context,
 			Random random
 			) {
-		super(agentBody, round, context);
+		super(agentBody, round, personality,context);
 		this.random = random;
 	}
 
