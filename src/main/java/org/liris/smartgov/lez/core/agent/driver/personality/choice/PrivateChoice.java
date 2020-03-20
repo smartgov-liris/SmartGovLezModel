@@ -1,6 +1,6 @@
-package org.liris.smartgov.lez.core.agent.establishment.personality.choice;
+package org.liris.smartgov.lez.core.agent.driver.personality.choice;
 
-import org.liris.smartgov.lez.core.agent.establishment.personality.Decision;
+import org.liris.smartgov.lez.core.agent.driver.personality.Decision;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 
 public class PrivateChoice extends Choice {
@@ -22,7 +22,7 @@ public class PrivateChoice extends Choice {
 		else if (surveillance == Surveillance.EXPENSIVE_TOLL){
 			return Math.random() < 0.75;
 		}
-		//if there is no toll, he accepts to pay nothing
+		//if there is no toll he does not need to change mobility
 		return false;
 	}
 	

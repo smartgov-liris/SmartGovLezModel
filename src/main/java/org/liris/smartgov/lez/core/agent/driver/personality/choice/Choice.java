@@ -1,6 +1,6 @@
-package org.liris.smartgov.lez.core.agent.establishment.personality.choice;
+package org.liris.smartgov.lez.core.agent.driver.personality.choice;
 
-import org.liris.smartgov.lez.core.agent.establishment.personality.Decision;
+import org.liris.smartgov.lez.core.agent.driver.personality.Decision;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 
 public abstract class Choice {
