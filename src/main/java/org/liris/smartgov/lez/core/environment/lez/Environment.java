@@ -81,7 +81,7 @@ public class Environment {
 	public Map<String, Pollution> getPollutionByNeighborhood() {
 		Map<String, Pollution> pollutions = new HashMap<>();
 		for ( Neighborhood neighborhood : neighborhoods.values() ) {
-			pollutions.put(neighborhood.getId(), neighborhood.getPollution());
+			pollutions.put(neighborhood.getID(), neighborhood.getPollution());
 		}
 		return pollutions;
 	}

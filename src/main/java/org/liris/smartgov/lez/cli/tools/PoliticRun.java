@@ -67,7 +67,7 @@ public class PoliticRun {
 		if(cmd.hasOption("c")) {
 			configFile = cmd.getOptionValue("c");
 		} else {
-			configFile = "config.properties";
+			configFile = "input/static_config_lez.properties";
 		}
 		
 		final int maxTicksValue;

@@ -10,14 +10,18 @@ import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 
 import java.util.Hashtable;
+import java.util.List;
+
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.copert.fields.VehicleCategory;
+import org.liris.smartgov.lez.core.environment.Structure;
 import org.liris.smartgov.lez.core.environment.lez.criteria.AllAllowedCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCosts;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 import org.liris.smartgov.lez.core.environment.pollution.Pollution;
+import org.liris.smartgov.lez.politic.policyagent.Position;
 import org.liris.smartgov.simulator.core.environment.graph.astar.Costs;
 import org.liris.smartgov.simulator.urban.geo.environment.graph.DistanceCosts;
 import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
@@ -28,7 +32,7 @@ import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
  * A Low Emission Zone representation.
  *
  */
-public class Neighborhood {
+public class Neighborhood implements Structure {
 	
 	private LatLon[] perimeter;
 	private PointOnGeometryLocator locator;
@@ -120,10 +124,6 @@ public class Neighborhood {
 	
 	public void setSurveillance (Surveillance surveillance) {
 		this.surveillance = surveillance;
-	}
-	
-	public String getId() {
-		return id;
 	}
 	
 	public void increasePollution(Pollutant pollutant, double increment) {
@@ -224,6 +224,22 @@ public class Neighborhood {
 		}
 		
 
+	}
+	
+	@Override
+	public String getID() {
+		return id;
+	}
+	
+	@Override
+	public String getClassName() {
+		return this.getClass().getName();
+	}
+
+	@Override
+	public Position getLocalPerformances(List<String> labels) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

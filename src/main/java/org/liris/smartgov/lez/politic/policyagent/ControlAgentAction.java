@@ -1,4 +1,4 @@
-package org.liris.smartgov.lez.policyagent;
+package org.liris.smartgov.lez.politic.policyagent;
 
 import java.util.ArrayList;
 import java.util.List;

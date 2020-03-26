@@ -1,4 +1,4 @@
-package org.liris.smartgov.lez.policyagent;
+package org.liris.smartgov.lez.politic.policyagent;
 
 /**
  * Stores a couple (state, action, state') to track if two actions have similar effect in the same states.

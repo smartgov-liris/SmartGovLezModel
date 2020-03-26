@@ -1,12 +1,12 @@
-package org.liris.smartgov.lez.policyagent;
+package org.liris.smartgov.lez.politic.policyagent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.liris.smartgov.lez.policyagent.inneragent.InnerAgent;
-import org.liris.smartgov.lez.policyagent.inneragent.LocalLearner;
+import org.liris.smartgov.lez.politic.policyagent.inneragent.InnerAgent;
+import org.liris.smartgov.lez.politic.policyagent.inneragent.LocalLearner;
 
 public abstract class AbstractPolicyAgent {
 	

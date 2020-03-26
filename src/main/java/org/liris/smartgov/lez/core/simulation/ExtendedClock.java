@@ -1,4 +1,4 @@
-package org.liris.smartgov.lez.core.simulation;
+/*package org.liris.smartgov.lez.core.simulation;
 
 import java.util.ArrayList;
 
@@ -18,7 +18,7 @@ public class ExtendedClock extends Clock {
 	 * 
 	 * @param seconds seconds to add to the clock
 	 */
-	public void increment(double seconds) {
+	/*public void increment(double seconds) {
 		super._increment(seconds);
 		while(actions.size() > 0 && this.compareTo(actions.firstKey()) >= 0) {
 			for(DelayedActionHandler handler : actions.pollFirstEntry().getValue()) {
@@ -33,4 +33,4 @@ public class ExtendedClock extends Clock {
 		} 
 		actions.get(action.getDate()).add(action);
 	}
-}
+}*/

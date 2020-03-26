@@ -1,4 +1,4 @@
-package org.liris.smartgov.lez.policyagent;
+package org.liris.smartgov.lez.politic.policyagent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +12,13 @@ import java.util.List;
 public enum PolicyAction {
 
 	NO_ACTION(-1),
-	INCREASE_PRICES(0),
-	DECREASE_PRICES(1),
-	DO_NOTHING(2),
-	INCREASE_PLACES(3),
-	DECREASE_PLACES(4),
+	INCREASE_DELIVERIE_CRITERIA(0),
+	DECREASE_DELIVERIE_CRITERIA(1),
+	INCREASE_PRIVATE_CRITERIA(2),
+	DECREASE_PRIVATE_CRITERIA(3),
+	INCREASE_SURVEILLANCE(4),
+	DECREASE_SURVEILLANCE(5),
+	DO_NOTHING(6),
 	NOTHING(100),
 	SPLIT(101),
 	MERGE(102),
@@ -54,16 +56,20 @@ public enum PolicyAction {
 	
 	public static final PolicyAction getActionFrom(String str) {
 		switch (str) {
-			case "increase":
-				return PolicyAction.INCREASE_PRICES;
-			case "decrease":
-				return PolicyAction.DECREASE_PRICES;
+			case "increase_private_c":
+				return PolicyAction.INCREASE_PRIVATE_CRITERIA;
+			case "decrease_private_c":
+				return PolicyAction.DECREASE_PRIVATE_CRITERIA;
+			case "increase_deliverie_c":
+				return PolicyAction.INCREASE_DELIVERIE_CRITERIA;
+			case "decrease_deliverie_c":
+				return PolicyAction.DECREASE_DELIVERIE_CRITERIA;
+			case "increase_surveillance":
+				return PolicyAction.INCREASE_SURVEILLANCE;
+			case "decrease_surveillance":
+				return PolicyAction.DECREASE_SURVEILLANCE;
 			case "do_nothing":
 				return PolicyAction.DO_NOTHING;
-			case "add":
-				return PolicyAction.INCREASE_PLACES;
-			case "remove":
-				return PolicyAction.DECREASE_PLACES;
 			default:
 				return null;
 		}

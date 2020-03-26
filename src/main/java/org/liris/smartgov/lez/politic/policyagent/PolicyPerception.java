@@ -1,4 +1,4 @@
-package org.liris.smartgov.lez.policyagent;
+package org.liris.smartgov.lez.politic.policyagent;
 
 public class PolicyPerception {
 
