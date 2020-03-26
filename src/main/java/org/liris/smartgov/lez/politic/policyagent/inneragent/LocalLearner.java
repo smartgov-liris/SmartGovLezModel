@@ -1,14 +1,14 @@
-package org.liris.smartgov.lez.policyagent.inneragent;
+package org.liris.smartgov.lez.politic.policyagent.inneragent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.liris.smartgov.lez.core.environment.Structure;
-import org.liris.smartgov.lez.policyagent.PolicyAction;
-import org.liris.smartgov.lez.policyagent.PolicyAgent;
-import org.liris.smartgov.lez.policyagent.PolicyPerception;
-import org.liris.smartgov.lez.policyagent.Position;
-import org.liris.smartgov.lez.policyagent.learning.strategy.Strategy;
+import org.liris.smartgov.lez.politic.policyagent.PolicyAction;
+import org.liris.smartgov.lez.politic.policyagent.PolicyAgent;
+import org.liris.smartgov.lez.politic.policyagent.PolicyPerception;
+import org.liris.smartgov.lez.politic.policyagent.Position;
+import org.liris.smartgov.lez.politic.policyagent.learning.strategy.Strategy;
 
 public class LocalLearner extends InnerAgent {
 	

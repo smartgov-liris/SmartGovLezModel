@@ -1,11 +1,12 @@
-package org.liris.smartgov.lez.policyagent.learning.strategy;
+package org.liris.smartgov.lez.politic.policyagent.learning.strategy;
 
 import java.io.File;
 import java.util.List;
 
+import org.liris.smartgov.lez.politic.policyagent.PolicyAction;
+import org.liris.smartgov.lez.politic.policyagent.Position;
+
 import environment.city.EnvVar;
-import org.liris.smartgov.lez.policyagent.PolicyAction;
-import org.liris.smartgov.lez.policyagent.Position;
 import simulation.FilePath;
 import simulation.manager.AbstractManager;
 import simulation.socket.ClientCommunication;

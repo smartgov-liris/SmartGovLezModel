@@ -1,11 +1,11 @@
-package org.liris.smartgov.lez.policyagent.inneragent;
+package org.liris.smartgov.lez.politic.policyagent.inneragent;
 
 import java.util.List;
 
-import org.liris.smartgov.lez.policyagent.PolicyAction;
-import org.liris.smartgov.lez.policyagent.PolicyPerception;
-import org.liris.smartgov.lez.policyagent.learning.strategy.NNBest;
-import org.liris.smartgov.lez.policyagent.learning.strategy.Strategy;
+import org.liris.smartgov.lez.politic.policyagent.PolicyAction;
+import org.liris.smartgov.lez.politic.policyagent.PolicyPerception;
+import org.liris.smartgov.lez.politic.policyagent.learning.strategy.NNBest;
+import org.liris.smartgov.lez.politic.policyagent.learning.strategy.Strategy;
 
 public abstract class InnerAgent {
 	

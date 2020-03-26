@@ -1,8 +1,8 @@
-package org.liris.smartgov.lez.policyagent.learning.strategy;
+package org.liris.smartgov.lez.politic.policyagent.learning.strategy;
 
 import java.util.List;
 
-import org.liris.smartgov.lez.policyagent.PolicyAction;
+import org.liris.smartgov.lez.politic.policyagent.PolicyAction;
 
 /**
  * Strategy for the exploration/exploitation tradeoff in reinforcement
