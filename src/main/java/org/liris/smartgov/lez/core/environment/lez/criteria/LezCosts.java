@@ -1,6 +1,7 @@
 package org.liris.smartgov.lez.core.environment.lez.criteria;
 
 import org.liris.smartgov.lez.core.agent.driver.DriverBody;
+import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
 import org.liris.smartgov.simulator.core.agent.moving.MovingAgentBody;
 import org.liris.smartgov.simulator.core.environment.graph.Arc;
@@ -22,7 +23,13 @@ import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
  *
  */
 public class LezCosts implements Costs {
+	
+	Vehicle vehicle;
 
+	public LezCosts (Vehicle vehicle) {
+		this.vehicle = vehicle;
+	}
+	
 	/**
 	 * Returns the normal geographical distance in meters between the specified nodes,
 	 * as if there were no LEZ.
@@ -47,18 +54,10 @@ public class LezCosts implements Costs {
 	 */
 	@Override
 	public double cost(Arc arc) {
-		return arc.getLength();
-	}
-
-	@Override
-	public double cost(Arc arc, MovingAgentBody body) {
-		if (! ((PollutableOsmArc)arc).isAllowed( ((DriverBody) body).getVehicle() ) ) {
-			//if the vehicle is not allowed in the zone
+		if (! ((PollutableOsmArc)arc).isAllowed(vehicle)) {
 			return Double.MAX_VALUE;
 		}
-		else {
-			return cost(arc);
-		}
+		return arc.getLength();
 	}
 	
 }

@@ -11,8 +11,10 @@ import org.liris.smartgov.lez.core.environment.Structure;
 import org.liris.smartgov.lez.core.simulation.files.FilePath;
 import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
 import org.liris.smartgov.lez.politic.PoliticalVariables;
+import org.liris.smartgov.lez.politic.policyagent.inneragent.DeepLocalLearner;
 import org.liris.smartgov.lez.politic.policyagent.inneragent.InnerAgent;
-import org.liris.smartgov.lez.politic.policyagent.inneragent.LocalLearner;;
+import org.liris.smartgov.lez.politic.policyagent.inneragent.LocalLearner;
+import org.liris.smartgov.lez.politic.policyagent.learning.strategy.NNBest;;
 
 public class PolicyAgent extends AbstractPolicyAgent {
 
@@ -260,21 +262,21 @@ public class PolicyAgent extends AbstractPolicyAgent {
 	@Override
 	public void live() {
 		//if(EnvVar.manager.getCurrentTrialIndex() >= 5 ) {
-		if(EnvVar.manager.getCurrentTrialIndex() >= PoliticalVariables.variables.get("simulations_per_action")) {
+		if(PoliticalVariables.manager.getCurrentTrialIndex() >= Integer.parseInt(PoliticalVariables.variables.get("simulations_per_action"))) {
 			updateLocalLearnerPerceptions();
 			updateGain();
 			updateActionsSequence();
 			updateScoreOfLocalLearners();
 			PolicyAction action = PolicyAction.NO_ACTION;
 			PolicyAction specialAction = PolicyAction.NOTHING;
-			if(EnvVar.manager.getCurrentlyExperimenting()) {
+			if(PoliticalVariables.manager.getCurrentlyExperimenting()) {
 				if(currentlyExperimenting) {
 					if(leaderExperimentation) {
 						updateHighestGain();
 						specialAction = updateControlGroup();
 					}
 					List<String> lines = new ArrayList<>();
-					lines.add(EnvVar.manager.getCurrentIteration() + ") " + this.id + " is currently experimenting " + actionCurrentlyTested + " action.");
+					lines.add(PoliticalVariables.manager.getCurrentIteration() + ") " + this.id + " is currently experimenting " + actionCurrentlyTested + " action.");
 					FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "Experimentation.txt", lines);
 				}
 			} else {
@@ -289,7 +291,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 	}
 	
 	private void updateActionsSequence() {
-		if(EnvVar.manager.isRecentlyReset()) {
+		if(PoliticalVariables.manager.isRecentlyReset()) {
 			sequenceAlreadyChecked = false;
 			sequence = new ActionsSequence();
 		} else if(!sequence.isHighestGainReached()) {
@@ -301,7 +303,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		if(sequence.isHighestGainReached() && sequenceAlreadyChecked) {
 			System.out.println(sequence);
 			List<String> lines = new ArrayList<>();
-			lines.add(EnvVar.manager.getCurrentIteration() + ")" + sequence + "; " + highestGain);
+			lines.add(PoliticalVariables.manager.getCurrentIteration() + ")" + sequence + "; " + highestGain);
 			FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, LOCAL_SEQUENCE_FILE, lines);
 		}
 	}
@@ -340,11 +342,11 @@ public class PolicyAgent extends AbstractPolicyAgent {
 	
 	private void updateHighestGain() {
 		if(actionCurrentlyTested == PolicyAction.SPLIT) {
-			double cumulHighestGain = highestGain + EnvVar.policyAgents.get(Integer.valueOf(policyAgentIDSplit)).getHighestGain();
+			double cumulHighestGain = highestGain + PoliticalVariables.policyAgents.get(Integer.valueOf(policyAgentIDSplit)).getHighestGain();
 			if(highestGainDuringSplit < cumulHighestGain) {
 				highestGainDuringSplit = cumulHighestGain;
 			}
-			double currentGain = lastGain + EnvVar.policyAgents.get(Integer.valueOf(policyAgentIDSplit)).getLastGain();
+			double currentGain = lastGain + PoliticalVariables.policyAgents.get(Integer.valueOf(policyAgentIDSplit)).getLastGain();
 			if(currentGain > highestGainBeforeSplit) {
 				highestGainReachedCounter++;
 			}
@@ -405,7 +407,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 	
 	private void saveGlobalPerception(double currentReward) {
 		String policyId = "policyagent_" + id + "_global";
-		String iteration = String.valueOf(EnvVar.manager.getCurrentIteration()) + ")";
+		String iteration = String.valueOf(PoliticalVariables.manager.getCurrentIteration()) + ")";
 		String value = iteration + lastGain + "," + lastAction + "," + currentReward;
 		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, policyId+".txt", value);
 	}
@@ -437,7 +439,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		int maxNumber = -1;
 		boolean activeConcensus = false;
 		List<String> lines = new ArrayList<>();
-		lines.add("------[Iteration: " + EnvVar.manager.getCurrentIteration() + "]------");
+		lines.add("------[Iteration: " + PoliticalVariables.manager.getCurrentIteration() + "]------");
 		lines.add("Total voters: " + getLocalLearners().size() + ".");
 		for(Entry<PolicyAction, Integer> entry : nbPerActions.entrySet()) {
 			System.out.println("Action: " + entry.getKey() + ", Voters: " + entry.getValue() + ", Score: " + averageTrust.get(entry.getKey()));
@@ -520,7 +522,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 	}
 	
 	private void updatePreviousIterationsGains(double currentGain) {
-		if(EnvVar.manager.isRecentlyReset()) {
+		if(PoliticalVariables.manager.isRecentlyReset()) {
 			previousIterationsGains.clear();
 		}
 		previousIterationsGains.add(currentGain);
@@ -575,12 +577,22 @@ public class PolicyAgent extends AbstractPolicyAgent {
 				values.add(gain.getKey());
 			}
 		}
-		return GISComputation.min(values);
+		return this.min(values);
 		//*/
 		
 		/*/ Min gain
 		return GISComputation.min(gains);
 		//*/
+	}
+	
+	public Double min(List<Double> numbers) {
+		Double minDouble = Double.MAX_VALUE;
+		for(int i = 0; i < numbers.size(); i++) {
+			if(numbers.get(i) < minDouble) {
+				minDouble = numbers.get(i);
+			}
+		}
+		return minDouble;
 	}
 
 	public void applyActionToStructure(PolicyAction policyAction) {
@@ -696,7 +708,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 			}
 		}
 		for(InnerAgent innerAgent : innerAgents) {
-			EnvVar.innerAgentsGlobal.add(innerAgent);
+			PoliticalVariables.innerAgentsGlobal.add(innerAgent);
 		}
 		//*/
 		/*/
@@ -840,7 +852,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 	}
 	
 	public void fetchAnswersFromAgents() {
-		String allAnswersForOneIteration = String.valueOf(EnvVar.manager.getCurrentIteration()) + ")";
+		String allAnswersForOneIteration = String.valueOf(PoliticalVariables.manager.getCurrentIteration()) + ")";
 		for(LocalLearner localLearner : getLocalLearners()) {
 			if(localLearner instanceof DeepLocalLearner) {
 				String answer = ((DeepLocalLearner) localLearner).getExplorationMethod().getLastAnswer();
@@ -860,10 +872,10 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		List<List<LocalLearner>> groupsIDs = groupIdentificationBasedOnTrust();
 		resetTrust();
 		Perimeter splitPerimeter = createPerimeterWithAgents(groupsIDs.get(0));
-		policyAgentIDSplit = EnvVar.requestPolicyAgentID();
+		policyAgentIDSplit = PoliticalVariables.requestPolicyAgentID();
 		
-		if(Integer.parseInt(policyAgentIDSplit) < EnvVar.policyAgents.size()) {
-			EnvVar.policyAgents.set(Integer.parseInt(policyAgentIDSplit), 
+		if(Integer.parseInt(policyAgentIDSplit) < PoliticalVariables.policyAgents.size()) {
+			PoliticalVariables.policyAgents.set(Integer.parseInt(policyAgentIDSplit), 
 					new PolicyAgent(
 							policyAgentIDSplit, 
 							splitPerimeter, 
@@ -875,7 +887,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 					);
 		} else {
 			//Need to be sure that the ID of the newly created PolicyAgent is equal to its position in the list.
-			EnvVar.policyAgents.add(new PolicyAgent(
+			PoliticalVariables.policyAgents.add(new PolicyAgent(
 					policyAgentIDSplit, 
 					splitPerimeter, 
 					actions, 
@@ -892,7 +904,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		splitValidationCounter = 0;
 		bufferTrustAreaCounter = 0;
 		highestGainReachedCounter = 0;
-		EnvVar.manager.setCurrentlyExperimenting(true);
+		PoliticalVariables.manager.setCurrentlyExperimenting(true);
 		currentlyExperimenting = true;
 		leaderExperimentation = true;
 		actionCurrentlyTested = PolicyAction.SPLIT;
@@ -905,7 +917,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		highestSumGainBeforeMerge = highestGain;
 		highestGainBeforeMerge = highestGain;
 		for(int i = 0; i < IDs.size(); i++) {
-			PolicyAgent policyAgent = EnvVar.policyAgents.get(IDs.get(i));
+			PolicyAgent policyAgent = PoliticalVariables.policyAgents.get(IDs.get(i));
 			policyAgent.resetTrust();
 			perimetersPerIDForMerge.put(policyAgent.getId(), new Perimeter(policyAgent.getPerimeter()));
 			innerAgentsPerIDForMerge.put(policyAgent.getId(), policyAgent.getInnerAgents());
@@ -918,13 +930,13 @@ public class PolicyAgent extends AbstractPolicyAgent {
 			} else {
 				str += policyAgent.getId() + ",";
 			}
-			EnvVar.storePolicyAgentIDForMerge(id, IDs.get(i));
+			PoliticalVariables.storePolicyAgentIDForMerge(id, IDs.get(i));
 			//EnvVar.updatePolicyAgentsList(IDs.get(i)); //Remove agent from plot 
 			policyAgentBeforeMerge += policyAgent.getId() + ",";
 			//EnvVar.updatePolicyAgentBuffer(String.valueOf(IDs.get(i)));
 		}
 		highestGain = 0.0;
-		EnvVar.manager.setCurrentlyExperimenting(true);
+		PoliticalVariables.manager.setCurrentlyExperimenting(true);
 		currentlyExperimenting = true;
 		leaderExperimentation = true;
 		actionCurrentlyTested = PolicyAction.MERGE;
@@ -946,11 +958,11 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		highestGain = highestGainBeforeSplit;
 		String str = "[" + id + "," + policyAgentIDSplit + "->" + id + "],";
 		int policyAgentIndex = Integer.valueOf(policyAgentIDSplit);
-		PolicyAgent policyAgent = EnvVar.policyAgents.get(policyAgentIndex);
+		PolicyAgent policyAgent = PoliticalVariables.policyAgents.get(policyAgentIndex);
 		perimeter.mergePerimeters(policyAgent.getPerimeter());
 		innerAgents.addAll(policyAgent.getInnerAgents());
-		EnvVar.removePolicyAgentFromList(policyAgentIndex);
-		EnvVar.manager.setCurrentlyExperimenting(false);
+		PoliticalVariables.removePolicyAgentFromList(policyAgentIndex);
+		PoliticalVariables.manager.setCurrentlyExperimenting(false);
 		resetTrust();
 		resetSpecialActionTrial();
 		return ROLLBACK_STR + str;
@@ -973,7 +985,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 					id)
 					);
 			//*/
-			EnvVar.policyAgents.set(Integer.valueOf(id),
+			PoliticalVariables.policyAgents.set(Integer.valueOf(id),
 					new PolicyAgent(
 					id, 
 					perimetersPerIDForMerge.get(id), 
@@ -982,15 +994,15 @@ public class PolicyAgent extends AbstractPolicyAgent {
 					innerAgentsPerIDForMerge.get(id),
 					epsilon)
 					);
-			EnvVar.updatePolicyAgentBuffer(id);
-			EnvVar.policyAgents.get(Integer.valueOf(id)).setHighestGain(higherGainPerIDForMerge.get(id));
+			PoliticalVariables.updatePolicyAgentBuffer(id);
+			PoliticalVariables.policyAgents.get(Integer.valueOf(id)).setHighestGain(higherGainPerIDForMerge.get(id));
 			innerAgents.removeAll(innerAgentsPerIDForMerge.get(id));
 			perimeter.removeStructures(perimetersPerIDForMerge.get(id).getStructures());
 		}
 		//String str = "[" + id + "->" + policyAgentIDSplit + "," + id + "],";
 		str += id + "],";
-		EnvVar.clearMergeAgents(id);
-		EnvVar.manager.setCurrentlyExperimenting(false);
+		PoliticalVariables.clearMergeAgents(id);
+		PoliticalVariables.manager.setCurrentlyExperimenting(false);
 		//TODO not correct, create several agents
 		resetTrust();
 		
@@ -1006,16 +1018,16 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		if(actionCurrentlyTested == PolicyAction.SPLIT) {
 			if(!policyAgentIDSplit.equals("")) {
 				str += "," + policyAgentIDSplit;
-				EnvVar.policyAgents.get(Integer.valueOf(policyAgentIDSplit)).resetSpecialActionTrial(); //Remove experimenting tag
+				PoliticalVariables.policyAgents.get(Integer.valueOf(policyAgentIDSplit)).resetSpecialActionTrial(); //Remove experimenting tag
 			}
 		} else if(actionCurrentlyTested == PolicyAction.MERGE) {
-			EnvVar.clearMergeAgents(id);
+			PoliticalVariables.clearMergeAgents(id);
 			for(String id : policyAgentBeforeSplit.split(",")) {
 				str += "," + id;
 			}
 		}
 		resetSpecialActionTrial();
-		EnvVar.manager.setCurrentlyExperimenting(false);
+		PoliticalVariables.manager.setCurrentlyExperimenting(false);
 		return KEEP_STR + str + "],";
 		/*
 		String str = "[" + id;
@@ -1266,7 +1278,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 			}
 
 			List<String> lines = new ArrayList<>();
-			lines.add(EnvVar.manager.getCurrentIteration() + ") " + str);
+			lines.add(PoliticalVariables.manager.getCurrentIteration() + ") " + str);
 			FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, LOCAL_IDS_SEQUENCE_FILE, lines);
 		}
 	}
@@ -1275,7 +1287,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		//TODO new control agents are not considered in the observation of similar action sequences.
 		List<Integer> IDs = new ArrayList<>();
 		//boolean similarSequences = false;
-		for(PolicyAgent policyAgent : EnvVar.policyAgents) {
+		for(PolicyAgent policyAgent : PoliticalVariables.policyAgents) {
 			if(policyAgent != null) {
 				if(!policyAgent.getId().equals(id)) {
 					if(!policyAgent.isCurrentlyExperimenting()) {
@@ -1283,7 +1295,7 @@ public class PolicyAgent extends AbstractPolicyAgent {
 						if(policyAgent.getSequence().isHighestGainReached()) {
 							
 						//if(!policyAgent.getSequences().isEmpty()) {
-							str = EnvVar.manager.getCurrentIteration() + ") Compare sequences of agent " + this.id + " with agent " + policyAgent.getId() + ": (size: " + sequence.size() + ") " + sequence + " vs (size: "
+							str = PoliticalVariables.manager.getCurrentIteration() + ") Compare sequences of agent " + this.id + " with agent " + policyAgent.getId() + ": (size: " + sequence.size() + ") " + sequence + " vs (size: "
 									+ policyAgent.getSequence().size() + ") " + policyAgent.getSequence() + ".";
 							//for(int indexOfSequence = 0; indexOfSequence < policyAgent.getSequences().size(); indexOfSequence++) {
 								if(policyAgent.getSequence().compareTo(sequence)) {

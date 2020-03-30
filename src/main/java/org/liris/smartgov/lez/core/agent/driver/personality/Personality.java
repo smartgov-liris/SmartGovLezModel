@@ -12,6 +12,7 @@ public class Personality {
 	private boolean changedVehicle;
 	private boolean hasFrauded;
 	private boolean changedMobility;
+	private int price;
 	private int initialTime;
 	private int timeLost;
 	private String vehicleId;
@@ -29,10 +30,23 @@ public class Personality {
 		this.vehicleId = vehicleId;
 		initialTime = 0;
 		timeLost = 0;
+		price = 0;
 	}
 	
 	public Decision getDecision(Surveillance surveillance, int placesVehicleForbidden) {
-		return choice.getDecision(surveillance, placesVehicleForbidden);
+		Decision decision = choice.getDecision(surveillance, placesVehicleForbidden);
+		if (decision != Decision.CHANGE_MOBILITY) {
+			if (surveillance == Surveillance.CHEAP_TOLL) {
+				price = 1;
+			}
+			if (surveillance == Surveillance.MEDIUM_TOLL) {
+				price = 2;
+			}
+			if (surveillance == Surveillance.EXPENSIVE_TOLL) {
+				price = 3;
+			}
+		}
+		return decision;
 	}
 	
 	public String getVehicleId() {
@@ -62,6 +76,6 @@ public class Personality {
 	}
 	
 	public int getSatisfactionOfAgent() {
-		return satisfaction.getSatisfaction(changedMobility, hasFrauded, changedVehicle, timeLost);
+		return satisfaction.getSatisfaction(changedMobility, hasFrauded, changedVehicle, timeLost, price);
 	}
 }

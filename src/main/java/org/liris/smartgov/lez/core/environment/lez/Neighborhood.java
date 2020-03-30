@@ -150,7 +150,7 @@ public class Neighborhood implements Structure {
 		
 		if(isAllowed(vehicle))
 			return new DistanceCosts();
-		return new LezCosts();
+		return new LezCosts(vehicle);
 	}
 	
 	public boolean isAllowed (Vehicle vehicle) {
