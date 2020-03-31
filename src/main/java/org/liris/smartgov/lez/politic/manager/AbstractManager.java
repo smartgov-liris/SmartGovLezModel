@@ -94,10 +94,6 @@ public abstract class AbstractManager {
 		TOTAL_NUMBER_OF_SIMULATIONS = Integer.parseInt(PoliticalVariables.variables.get("total_number_of_simulations"));
 		NUMBER_OF_SIMULATIONS_BEFORE_RESTART = Integer.parseInt(PoliticalVariables.variables.get("simulation_before_restart"));
 	}
-
-	protected abstract void clearAgents();
-
-	protected abstract void resetStateOfSimulation();
 	
 	protected abstract void init();
 	
