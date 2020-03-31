@@ -37,9 +37,7 @@ public class PoliticalVariables {
 	public PoliticalVariables (LezContext context) {
 		
 		loadVariables(context.getFileLoader().load("politicalLayer"));
-		manager = new ManagerQLearningScenario();
-		
-		
+		manager = new ManagerQLearningScenario();	
 	}
 	
 	public void loadVariables (File configFile) {
