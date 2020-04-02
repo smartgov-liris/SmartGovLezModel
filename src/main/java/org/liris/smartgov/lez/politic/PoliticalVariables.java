@@ -17,7 +17,7 @@ import org.liris.smartgov.lez.politic.manager.ManagerQLearningScenario;
 import org.liris.smartgov.lez.politic.policyagent.PolicyAgent;
 import org.liris.smartgov.lez.politic.policyagent.inneragent.DeepLocalLearner;
 import org.liris.smartgov.lez.politic.policyagent.inneragent.InnerAgent;
-
+import org.liris.smartgov.simulator.core.environment.SmartGovContext;
 import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
 
 
@@ -34,10 +34,15 @@ public class PoliticalVariables {
 	public static Queue<Integer> policyAgentStockId = new LinkedList<>(); //id of available policy agents for creation
 	public static Map<String, List<Integer>> policyAgentIDMerged = new HashMap<>();
 	
-	public PoliticalVariables (LezContext context) {
+	public PoliticalVariables (SmartGovContext context) {
 		
-		loadVariables(context.getFileLoader().load("politicalLayer"));
-		manager = new ManagerQLearningScenario();	
+		try {
+			loadVariables(((LezContext)context).getFileLoader().load("politicalLayer"));
+			manager = new ManagerQLearningScenario();	
+		}
+		catch (ClassCastException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void loadVariables (File configFile) {

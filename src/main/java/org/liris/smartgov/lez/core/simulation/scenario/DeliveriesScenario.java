@@ -33,6 +33,7 @@ import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArcFactory;
 import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.input.establishment.EstablishmentLoader;
 import org.liris.smartgov.lez.politic.PoliticalCreator;
+import org.liris.smartgov.lez.politic.PoliticalVariables;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.agent.core.Agent;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
@@ -151,7 +152,7 @@ public class DeliveriesScenario extends PollutionScenario {
 				establishment.setPersonality(vehicleId, new Personality(establishment.getActivity(), vehicleId));
 			}
 		}
-		
+		PoliticalVariables pv = new PoliticalVariables(context);
 		PoliticalCreator.createPoliticalLayer(getEnvironment());
 		
 		return establishments;

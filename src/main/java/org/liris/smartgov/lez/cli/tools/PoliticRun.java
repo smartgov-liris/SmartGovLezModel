@@ -75,7 +75,7 @@ public class PoliticRun {
 		if(cmd.hasOption("t")) {
 			maxTicksValue = Integer.valueOf(cmd.getOptionValue("t"));
 		} else {
-			maxTicksValue = 3600 * 24;
+			maxTicksValue = 3600 * 9;
 		}
 		
 		LezContext ctxt = new LezContext(configFile);

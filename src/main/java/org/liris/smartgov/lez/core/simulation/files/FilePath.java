@@ -32,6 +32,6 @@ public abstract class FilePath {
 	public static String currentAgentDetailsFolder;
 	public static String currentLocalLearnerCallbackFolder;
 	
-	public static String outputFolder             = "output" + File.separator;
+	public static String outputFolder             = "output_political" + File.separator;
 	
 }

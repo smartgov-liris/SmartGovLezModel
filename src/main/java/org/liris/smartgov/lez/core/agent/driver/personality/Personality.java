@@ -31,6 +31,7 @@ public class Personality {
 			choice = new CompanyChoice();
 		}
 		changedVehicle = false;
+		satisfaction = new Satisfaction();
 		hasFrauded = false;
 		changedMobility = false;
 		this.vehicleId = vehicleId;

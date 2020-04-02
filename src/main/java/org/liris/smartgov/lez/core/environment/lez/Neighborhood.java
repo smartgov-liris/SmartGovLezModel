@@ -60,6 +60,7 @@ public class Neighborhood implements Structure {
 		this.privateLezCriteria = privateLezCriteria;
 		pollution = new Pollution();
 		this.surveillance = surveillance;
+		satisfactions = new ArrayList<>();
 		
 		GeometryFactory factory = new GeometryFactory();
 		
