@@ -2,23 +2,23 @@ package org.liris.smartgov.lez.politic.policyagent;
 
 public class PolicyPerception {
 
-	private Position position = new Position();
+	private FeaturesDouble position = new FeaturesDouble();
 	
-	public PolicyPerception(Position variables) {
+	public PolicyPerception(FeaturesDouble variables) {
 		this.position = variables;
 	}
 	
-	public Position getPosition() {
+	public FeaturesDouble getPosition() {
 		return this.position;
 	}
 	
 	@Override
 	public String toString() {
 		String str = "[";
-		for(int i = 0; i < position.getCoordinates().size() - 1; i++) {
-			str += position.getCoordinates().get(i) + ", ";
+		for(int i = 0; i < position.getFeatures().size() - 1; i++) {
+			str += position.getFeatures().get(i) + ", ";
 		}
-		str += position.getCoordinates().get(position.getCoordinates().size() - 1) + "]";
+		str += position.getFeatures().get(position.getFeatures().size() - 1) + "]";
 		return str;
 	}
 	

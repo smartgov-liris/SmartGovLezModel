@@ -197,6 +197,8 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 			journeyTime += ExtendedDate.getTimeBetween(departures[position - 1], SmartGov.getRuntime().getClock().time());
 			if (position == 4) {
 				personality.giveTime(journeyTime);
+				personality.computeSatisfactionOfAgent();
+				personality.giveSatisfactionToNeighborhoods();
 			}
 		});
 		

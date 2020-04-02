@@ -392,17 +392,17 @@ public class PolicyAgent extends AbstractPolicyAgent {
 	 * Actually stores the global reward over all structures
 	 */
 	private double setGlobalPerception() {
-		Position globalReward = new Position();
-		globalReward.addCoordinate(0.0);
+		FeaturesDouble globalReward = new FeaturesDouble();
+		globalReward.addFeature(0.0);
 		for(int indexOfStructure = 0; indexOfStructure < perimeter.getStructures().size(); indexOfStructure++) {
-			Position position = new Position();
-			List<Position> tempValues = new ArrayList<>();
+			FeaturesDouble position = new FeaturesDouble();
+			List<FeaturesDouble> tempValues = new ArrayList<>();
 			tempValues.add(perimeter.getStructures().get(indexOfStructure).getLocalPerformances(labelsForGlobalPerceptions));
 			position = PolicyAgent.averagePosition(tempValues);
-			globalReward.addPosition(position);
+			globalReward.addFeaturesDouble(position);
 		}
-		System.out.println("Global gain is: " + globalReward.getCoordinates().get(0));
-		return globalReward.getCoordinates().get(0);
+		System.out.println("Global gain is: " + globalReward.getFeatures().get(0));
+		return globalReward.getFeatures().get(0);
 	}
 	
 	private void saveGlobalPerception(double currentReward) {
@@ -627,64 +627,12 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		//*/
 		List<List<String>> allLabels = new ArrayList<>();
 		
-		List<String> labels1 = new ArrayList<>();
-		labels1.add("utility");
-		labels1.add("satisfaction");
 		
-		List<String> labels2 = new ArrayList<>();
-		labels2.add("distance");
-		labels2.add("timesearching");
+		List<String> labels0 = new ArrayList<>();
+		labels0.add("Pollution");
+		labels0.add("Satisfaction");
 		
-		List<String> labels3 = new ArrayList<>();
-		labels3.add("satisfaction");
-		labels3.add("distance");
-		
-		List<String> labels4 = new ArrayList<>();
-		labels4.add("timesearching");
-		labels4.add("satisfaction");
-		
-		List<String> labels5 = new ArrayList<>();
-		labels5.add("occupation");
-		labels5.add("satisfaction");
-
-		List<String> labels6 = new ArrayList<>();
-		labels6.add("utility");
-		labels6.add("timesearching");
-		
-		List<String> labels7 = new ArrayList<>();
-		labels7.add("utility");
-		labels7.add("satisfaction");
-		labels7.add("distance");
-		labels7.add("timesearching");
-		labels7.add("occupation");
-		
-		List<String> labels8 = new ArrayList<>();
-		labels8.add("price");
-		labels8.add("numberOfPlaces");
-		labels8.add("reward");
-		
-		List<String> labels9 = new ArrayList<>();
-		labels9.add("utility");
-		labels9.add("satisfaction");
-		labels9.add("distance");
-		labels9.add("timesearching");
-		labels9.add("occupation");
-		labels9.add("price");
-		labels9.add("numberOfPlaces");
-		labels9.add("reward");
-		
-		List<String> labels10 = new ArrayList<>();
-		labels10.add("reward");
-		
-		//allLabels.add(labels1);
-		//allLabels.add(labels2);
-		//allLabels.add(labels3);
-		//allLabels.add(labels4);
-		//allLabels.add(labels5);
-		//allLabels.add(labels6);
-		//allLabels.add(labels7);
-		//allLabels.add(labels8);
-		allLabels.add(labels9);
+		allLabels.add(labels0);
 		
 		List<PolicyAction> policyActions = new ArrayList<>();
 		for(int i = 0; i < actions.size(); i++) {
@@ -838,15 +786,15 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		updateLocalLearners(askLocalLearners());
 	}
 
-	public static Position averagePosition(List<Position> positions) {
-		Position averagePosition = new Position();
+	public static FeaturesDouble averagePosition(List<FeaturesDouble> positions) {
+		FeaturesDouble averagePosition = new FeaturesDouble();
 		
-		for(int indexOfDimension = 0; indexOfDimension < positions.get(0).getCoordinates().size(); indexOfDimension++) {
+		for(int indexOfDimension = 0; indexOfDimension < positions.get(0).getFeatures().size(); indexOfDimension++) {
 			double averageForDimension = 0.0;
 			for(int indexOfPosition = 0; indexOfPosition < positions.size(); indexOfPosition++) {
-				averageForDimension += positions.get(indexOfPosition).getCoordinates().get(indexOfDimension);
+				averageForDimension += positions.get(indexOfPosition).getFeatures().get(indexOfDimension);
 			}
-			averagePosition.addCoordinate(averageForDimension/positions.size());
+			averagePosition.addFeature(averageForDimension/positions.size());
 		}
 		return averagePosition;
 	}
@@ -1146,8 +1094,8 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		if(gainStatic) {
 			for(LocalLearner localLearner : getLocalLearners()) {
 				if(localLearner.getExplorationMethod() instanceof NNBest) {
-					int size = localLearner.getCurrentPerception().getPosition().getCoordinates().size();
-					localLearner.getCurrentPerception().getPosition().getCoordinates().set(size - 1, -1.0);
+					int size = localLearner.getCurrentPerception().getPosition().getFeatures().size();
+					localLearner.getCurrentPerception().getPosition().getFeatures().set(size - 1, -1.0);
 					localLearner.setLastReward(-1.0);
 					((NNBest) localLearner.getExplorationMethod()).setLastPerception(localLearner.getCurrentPerception().getPosition());
 				}

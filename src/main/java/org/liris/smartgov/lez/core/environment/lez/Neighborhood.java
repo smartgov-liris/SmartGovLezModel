@@ -9,6 +9,7 @@ import org.locationtech.jts.geom.Location;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import org.liris.smartgov.lez.core.environment.lez.criteria.LezCosts;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 import org.liris.smartgov.lez.core.environment.pollution.Pollution;
-import org.liris.smartgov.lez.politic.policyagent.Position;
+import org.liris.smartgov.lez.politic.policyagent.FeaturesDouble;
 import org.liris.smartgov.simulator.core.environment.graph.astar.Costs;
 import org.liris.smartgov.simulator.urban.geo.environment.graph.DistanceCosts;
 import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
@@ -41,6 +42,7 @@ public class Neighborhood implements Structure {
 	private String id;
 	private Pollution pollution;
 	private Surveillance surveillance;
+	private List<Double> satisfactions;
 	
 	/**
 	 * Lez constructor.
@@ -134,6 +136,10 @@ public class Neighborhood implements Structure {
 		return pollution;
 	}
 	
+	public void giveSatisfaction ( double satisfaction ) {
+		satisfactions.add(satisfaction);
+	}
+	
 	/**
 	 * Returns the cost function associated to this vehicle, depending
 	 * on its permission to enter the LEZ or not.
@@ -201,17 +207,6 @@ public class Neighborhood implements Structure {
 		return new NoLez();
 	}
 	
-	public Hashtable<Integer, LatLon> createTable(LatLon[] coordinates) {
-		
-		Hashtable<Integer, LatLon> perimeter = new Hashtable<Integer, LatLon>();		
-		int id = 0;
-		for (LatLon coordinate : coordinates) {
-			perimeter.put(id, coordinate);
-			id++;
-		}
-		return perimeter;
-	}
-	
 	private static class NoLez extends Neighborhood {
 		
 		/*
@@ -237,9 +232,21 @@ public class Neighborhood implements Structure {
 	}
 
 	@Override
-	public Position getLocalPerformances(List<String> labels) {
-		// TODO Auto-generated method stub
-		return null;
+	public FeaturesDouble getLocalPerformances(List<String> labels) {
+		//compute pollution
+		double pollution = this.pollution.get(Pollutant.N2O).getValue() +
+				this.pollution.get(Pollutant.CO).getValue() +
+				this.pollution.get(Pollutant.PM).getValue();
+		
+		double satisfaction = 0;
+		for ( double satisfactionScore : satisfactions ) {
+			satisfaction += satisfactionScore;
+		}
+		
+		List<Double> features = new ArrayList<>();
+		features.add(pollution);
+		features.add(satisfaction);
+		return new FeaturesDouble(features);
 	}
 
 }

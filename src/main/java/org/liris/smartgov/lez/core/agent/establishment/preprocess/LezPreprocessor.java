@@ -4,6 +4,7 @@ import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.liris.smartgov.lez.core.agent.driver.behavior.DriverBehavior;
@@ -46,6 +47,9 @@ public class LezPreprocessor {
 		for(Vehicle vehicle : establishment.getFleet().values()) {
 			Round round = establishment.getRounds().get(vehicle.getId());
 			
+			//stocks the neighborhoods that forbid the vehicle and has the highest level of surveillance
+			List<Neighborhood> causeNeighborhoods = new ArrayList<>();
+			
 			//counts the number of places in the journey where the vehicle is forbidden
 			int placesVehicleForbidden = 0;
 			Surveillance surveillance = Surveillance.NO_SURVEILLANCE;
@@ -54,6 +58,7 @@ public class LezPreprocessor {
 				//if the origin establishment does not allow the vehicle
 				placesVehicleForbidden ++;
 				surveillance = environment.getNeighborhood(establishment.getClosestOsmNode()).getSurveillance();
+				causeNeighborhoods.add(environment.getNeighborhood(establishment.getClosestOsmNode()));
 			}
 			
 			int i = 0;
@@ -64,13 +69,24 @@ public class LezPreprocessor {
 					placesVehicleForbidden ++;
 					if (neighborhood.getSurveillance().ordinal() > surveillance.ordinal()) {
 						surveillance = neighborhood.getSurveillance();
+						//we reset the cause neighborhoods and add this one
+						causeNeighborhoods = new ArrayList<>();
+						causeNeighborhoods.add(neighborhood);
+					}
+					else if ( neighborhood.getSurveillance().ordinal() == surveillance.ordinal() ) {
+						causeNeighborhoods.add(neighborhood);
 					}
 				}
 				i++;
 			}
 			
+			//if no neighborhood has been added, the satisfaction will be attributed to the origin neighborhood
+			if ( causeNeighborhoods.isEmpty() ) {
+				causeNeighborhoods.add(environment.getNeighborhood(establishment.getClosestOsmNode()));
+			}
+			
 			Personality personality = establishment.getPersonalities().get(vehicle.getId());
-			Decision decision = personality.getDecision(surveillance, placesVehicleForbidden);
+			Decision decision = personality.getDecision(surveillance, placesVehicleForbidden, causeNeighborhoods);
 			if(decision == Decision.CHANGE_VEHICLE) {
 				CopertSelector selector = new CopertSelector();
 				selector.put(CopertHeader.CATEGORY, vehicle.getCategory());

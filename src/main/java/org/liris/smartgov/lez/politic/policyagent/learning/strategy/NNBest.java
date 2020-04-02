@@ -7,7 +7,7 @@ import org.liris.smartgov.lez.core.simulation.files.FilePath;
 import org.liris.smartgov.lez.politic.PoliticalVariables;
 import org.liris.smartgov.lez.politic.manager.AbstractManager;
 import org.liris.smartgov.lez.politic.policyagent.PolicyAction;
-import org.liris.smartgov.lez.politic.policyagent.Position;
+import org.liris.smartgov.lez.politic.policyagent.FeaturesDouble;
 import org.liris.smartgov.lez.politic.socket.ClientCommunication;
 
 /**
@@ -30,7 +30,7 @@ public class NNBest extends Strategy {
 	 */
 	private static final int SAVE = 10;
 
-	private Position lastPerception;
+	private FeaturesDouble lastPerception;
 	private String id;
 	private int saveCounter;
 	private int experienceCounter;
@@ -154,10 +154,10 @@ public class NNBest extends Strategy {
 	@Override
 	public PolicyAction chooseAction() {
 		String answer = "";
-		double reward = lastPerception.getCoordinates().get(lastPerception.getCoordinates().size() - 1);
-		Position currentState = new Position();
-		for(int i = 0; i < lastPerception.getCoordinates().size() - 1; i++) {
-			currentState.addCoordinate(lastPerception.getCoordinates().get(i));
+		double reward = lastPerception.getFeatures().get(lastPerception.getFeatures().size() - 1);
+		FeaturesDouble currentState = new FeaturesDouble();
+		for(int i = 0; i < lastPerception.getFeatures().size() - 1; i++) {
+			currentState.addFeature(lastPerception.getFeatures().get(i));
 		}
 		//*/
 		if(learning) {
@@ -197,7 +197,7 @@ public class NNBest extends Strategy {
 		return parseActionFromRequest(answer);
 	}
 
-	public void setLastPerception(Position lastPerception) {
+	public void setLastPerception(FeaturesDouble lastPerception) {
 		this.lastPerception = lastPerception;
 	}
 

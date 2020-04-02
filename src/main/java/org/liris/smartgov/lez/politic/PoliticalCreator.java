@@ -21,9 +21,9 @@ import org.liris.smartgov.lez.politic.socket.Server;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 
 public class PoliticalCreator {
-	int simulationIndex = 1;
+	static int simulationIndex = 1;
 	
-	public void createPoliticalLayer(Environment environment) {
+	public static void createPoliticalLayer(Environment environment) {
 		createFolder();
 		startServer();
 		createPolicyAgent(environment);
@@ -34,7 +34,7 @@ public class PoliticalCreator {
 	 * Create a specific folder using current date and increment folder 
 	 * index using previous folders of the same date.
 	 */
-	protected void createFolder() {
+	protected static void createFolder() {
 		ZoneId z = ZoneId.of("Europe/Paris");
 		LocalDate ld = LocalDate.now(z);
 		int dayOfMonth  = ld.getDayOfMonth();
@@ -70,7 +70,7 @@ public class PoliticalCreator {
 		
 	}
 	
-	protected void startServer() {
+	protected static void startServer() {
 		//create folder for current simulation
 		//createFolder();
 		FilePath.currentAgentDetailsFolder = FilePath.humanAgentFolder + "scenario//" + 
@@ -98,7 +98,7 @@ public class PoliticalCreator {
 		//*/
 	}
 	
-	public void createPolicyAgent(Environment environment) {
+	public static void createPolicyAgent(Environment environment) {
 		List<PolicyAction> actions = new ArrayList<>();
 		actions.add(PolicyAction.DECREASE_DELIVERIE_CRITERIA);
 		actions.add(PolicyAction.INCREASE_DELIVERIE_CRITERIA);

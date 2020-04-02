@@ -124,6 +124,8 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 				triggerRoundEndListeners(new RoundEnd());
 				journeyTime += ExtendedDate.getTimeBetween(departures[1], SmartGov.getRuntime().getClock().time());
 				personality.giveTime(journeyTime);
+				personality.computeSatisfactionOfAgent();
+				personality.giveSatisfactionToNeighborhoods();
 			}
 		});
 		

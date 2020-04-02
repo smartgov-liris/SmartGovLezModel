@@ -2,7 +2,7 @@ package org.liris.smartgov.lez.core.environment;
 
 import java.util.List;
 
-import org.liris.smartgov.lez.politic.policyagent.Position;
+import org.liris.smartgov.lez.politic.policyagent.FeaturesDouble;
 
 /**
  * A structure is a specific world object use to describe important elements of the environment.
@@ -18,6 +18,6 @@ public interface Structure {
 	
 	public String getClassName();
 	
-	public Position getLocalPerformances(List<String> labels);
+	public FeaturesDouble getLocalPerformances(List<String> labels);
 	
 }

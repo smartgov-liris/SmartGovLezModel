@@ -19,6 +19,7 @@ import org.liris.smartgov.lez.core.simulation.ExtendedSimulationBuilder;
 import org.liris.smartgov.lez.core.simulation.ExtendedSimulationRuntime;
 import org.liris.smartgov.lez.core.simulation.ExtendedSmartGov;
 import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
+import org.liris.smartgov.lez.politic.PoliticalVariables;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.environment.graph.Arc;
 import org.liris.smartgov.simulator.core.events.EventHandler;
@@ -129,10 +130,10 @@ public class PoliticRun {
 					for (Pollution pollution : pollutionMap.values()) {
 						logger.info(pollution.get(Pollutant.CO));
 					}*/
+					PoliticalVariables.manager.live();
 					ctxt.resetPollution();
 					ctxt.reload();
 			        smartGov.restart(ctxt);
-			        
 			        
 				} /*else {
 					File outputFolder = new File(

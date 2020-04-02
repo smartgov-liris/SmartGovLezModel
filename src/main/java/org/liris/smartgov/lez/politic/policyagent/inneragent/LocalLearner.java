@@ -7,7 +7,7 @@ import org.liris.smartgov.lez.core.environment.Structure;
 import org.liris.smartgov.lez.politic.policyagent.PolicyAction;
 import org.liris.smartgov.lez.politic.policyagent.PolicyAgent;
 import org.liris.smartgov.lez.politic.policyagent.PolicyPerception;
-import org.liris.smartgov.lez.politic.policyagent.Position;
+import org.liris.smartgov.lez.politic.policyagent.FeaturesDouble;
 import org.liris.smartgov.lez.politic.policyagent.learning.strategy.Strategy;
 
 public class LocalLearner extends InnerAgent {
@@ -47,15 +47,15 @@ public class LocalLearner extends InnerAgent {
 
 	@Override
 	public void setPerception() {
-		Position position = new Position();
-		List<Position> tempValues = new ArrayList<>();
+		FeaturesDouble position = new FeaturesDouble();
+		List<FeaturesDouble> tempValues = new ArrayList<>();
 		for(int i = 0; i < structures.size(); i++) {
 			tempValues.add(structures.get(i).getLocalPerformances(labels));
 		}
 		position = PolicyAgent.averagePosition(tempValues);
 		currentPerception = new PolicyPerception(position);
-		Position perception = currentPerception.getPosition();
-		lastReward = perception.getCoordinates().get(perception.getCoordinates().size() - 1);
+		FeaturesDouble perception = currentPerception.getPosition();
+		lastReward = perception.getFeatures().get(perception.getFeatures().size() - 1);
 	}
 	
 	public PolicyAction proposeAction() {

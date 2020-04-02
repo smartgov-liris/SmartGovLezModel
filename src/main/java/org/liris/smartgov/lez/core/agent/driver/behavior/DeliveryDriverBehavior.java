@@ -166,6 +166,9 @@ public class DeliveryDriverBehavior extends DriverBehavior {
 				//we give to the personality the total time of the round
 				personality.giveTime(ExtendedDate.getTimeBetween(round.getDeparture(), 
 						SmartGov.getRuntime().getClock().time()));
+				//we give the total satisfaction to the concerned neighborhoods
+				personality.computeSatisfactionOfAgent();
+				personality.giveSatisfactionToNeighborhoods();
 			}
 			currentPosition++;
 		});
