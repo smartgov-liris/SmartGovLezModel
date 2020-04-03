@@ -18,11 +18,15 @@ import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.copert.fields.VehicleCategory;
 import org.liris.smartgov.lez.core.environment.Structure;
 import org.liris.smartgov.lez.core.environment.lez.criteria.AllAllowedCriteria;
+import org.liris.smartgov.lez.core.environment.lez.criteria.CritAir;
+import org.liris.smartgov.lez.core.environment.lez.criteria.CritAirCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCosts;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 import org.liris.smartgov.lez.core.environment.pollution.Pollution;
+import org.liris.smartgov.lez.politic.policyagent.ActionableByPolicyAgent;
 import org.liris.smartgov.lez.politic.policyagent.FeaturesDouble;
+import org.liris.smartgov.lez.politic.policyagent.PolicyAction;
 import org.liris.smartgov.simulator.core.environment.graph.astar.Costs;
 import org.liris.smartgov.simulator.urban.geo.environment.graph.DistanceCosts;
 import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
@@ -33,7 +37,7 @@ import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
  * A Low Emission Zone representation.
  *
  */
-public class Neighborhood implements Structure {
+public class Neighborhood implements Structure , ActionableByPolicyAgent{
 	
 	private LatLon[] perimeter;
 	private PointOnGeometryLocator locator;
@@ -248,6 +252,54 @@ public class Neighborhood implements Structure {
 		features.add(pollution);
 		features.add(satisfaction);
 		return new FeaturesDouble(features);
+	}
+
+	@Override
+	public List<PolicyAction> getAvailablePolicyActions() {
+		List<PolicyAction> availableActions = new ArrayList<>();
+		availableActions.add(PolicyAction.DO_NOTHING);
+		if ( ((CritAirCriteria)deliveryLezCriteria).getCritAir() != CritAir.CRITAIR_1 ) {
+			availableActions.add(PolicyAction.INCREASE_DELIVERIE_CRITERIA);
+		}
+		if ( ((CritAirCriteria)deliveryLezCriteria).getCritAir() != CritAir.NONE ) {
+			availableActions.add(PolicyAction.DECREASE_DELIVERIE_CRITERIA);
+		}
+		if ( ((CritAirCriteria)privateLezCriteria).getCritAir() != CritAir.CRITAIR_1 ) {
+			availableActions.add(PolicyAction.INCREASE_PRIVATE_CRITERIA);
+		}
+		if ( ((CritAirCriteria)privateLezCriteria).getCritAir() != CritAir.NONE ) {
+			availableActions.add(PolicyAction.INCREASE_PRIVATE_CRITERIA);
+		}
+		if (surveillance != Surveillance.EXPENSIVE_TOLL) {
+			availableActions.add(PolicyAction.INCREASE_SURVEILLANCE);
+		}
+		if ( surveillance != Surveillance.NO_SURVEILLANCE ) {
+			availableActions.add(PolicyAction.DECREASE_SURVEILLANCE);
+		}
+		return availableActions;
+	}
+
+	@Override
+	public void doPolicyAction(PolicyAction policyAction) {
+		switch (policyAction) {
+		case INCREASE_DELIVERIE_CRITERIA:
+			((CritAirCriteria)deliveryLezCriteria).increaseCriteria();
+		case DECREASE_DELIVERIE_CRITERIA:
+			((CritAirCriteria)deliveryLezCriteria).decreaseCriteria();
+		case INCREASE_PRIVATE_CRITERIA:
+			((CritAirCriteria)privateLezCriteria).increaseCriteria();
+		case DECREASE_PRIVATE_CRITERIA:
+			((CritAirCriteria)privateLezCriteria).decreaseCriteria();
+		case INCREASE_SURVEILLANCE:
+			if ( surveillance != Surveillance.EXPENSIVE_TOLL ) {
+				surveillance = Surveillance.values()[surveillance.ordinal() + 1];
+			}
+		case DECREASE_SURVEILLANCE:
+			if ( surveillance != Surveillance.NO_SURVEILLANCE ) {
+				surveillance = Surveillance.values()[surveillance.ordinal() - 1];
+			}
+		default:
+	}
 	}
 
 }

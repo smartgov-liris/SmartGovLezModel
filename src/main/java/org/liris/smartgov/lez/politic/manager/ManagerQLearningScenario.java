@@ -39,6 +39,7 @@ public class ManagerQLearningScenario extends AbstractManager {
 		indexOfAction = 0;
 		
 		initialStateConfig = new HashMap<>();
+		parseConfigFile();
 
 		if (Integer.parseInt(PoliticalVariables.variables.get("learning")) == 1) {
 			currentPhase = "learning";

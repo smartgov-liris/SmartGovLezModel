@@ -38,7 +38,7 @@ public class PoliticalVariables {
 		
 		try {
 			loadVariables(((LezContext)context).getFileLoader().load("politicalLayer"));
-			manager = new ManagerQLearningScenario();	
+			manager = new ManagerQLearningScenario();
 		}
 		catch (ClassCastException e) {
 			e.printStackTrace();

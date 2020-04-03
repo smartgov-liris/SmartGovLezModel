@@ -90,27 +90,6 @@ public class Environment {
 		return new noLezEnvironment();
 	}
 	
-	
-	public void increaseDeliveryCriteria (String id) {
-		Neighborhood neighborhood = getNeighborhood(id);
-		((CritAirCriteria)neighborhood.getDeliveryLezCriteria()).increaseCriteria();
-	}
-	
-	public void increasePrivateCriteria (String id) {
-		Neighborhood neighborhood = getNeighborhood(id);
-		((CritAirCriteria)neighborhood.getPrivateLezCriteria()).increaseCriteria();
-	}
-	
-	public void decreaseDeliveryCriteria (String id) {
-		Neighborhood neighborhood = getNeighborhood(id);
-		((CritAirCriteria)neighborhood.getDeliveryLezCriteria()).decreaseCriteria();
-	}
-	
-	public void decreasePrivateCriteria (String id) {
-		Neighborhood neighborhood = getNeighborhood(id);
-		((CritAirCriteria)neighborhood.getPrivateLezCriteria()).decreaseCriteria();
-	}
-	
 	private static class noLezEnvironment extends Environment {
 		public Neighborhood getNeighborhood(OsmNode node) {
 			if (neighborhoods.isEmpty()) {

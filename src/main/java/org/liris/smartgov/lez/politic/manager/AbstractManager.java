@@ -87,7 +87,7 @@ public abstract class AbstractManager {
 
 	public abstract void live();
 	
-	protected void parseConfigFile(Map<String, String> configFile){
+	protected void parseConfigFile(){
 		NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES = Integer.parseInt(PoliticalVariables.variables.get("simulations_per_action"));
 		NUMBER_OF_ITERATIONS_BEFORE_RESTART = NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES * Integer.parseInt(PoliticalVariables.variables.get("actions_per_scenario"));
 		NUMBER_OF_ITERATIONS_BEFORE_SAVE = NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES;
