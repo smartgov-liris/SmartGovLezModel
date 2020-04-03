@@ -475,7 +475,6 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		}
 		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, LOCAL_VOTE_FILE, lines);
 		decayEpsilon();
-		
 		return action;
 	}
 	

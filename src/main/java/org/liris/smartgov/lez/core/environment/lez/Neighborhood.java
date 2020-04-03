@@ -23,6 +23,7 @@ import org.liris.smartgov.lez.core.environment.lez.criteria.CritAirCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCosts;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
+import org.liris.smartgov.lez.core.environment.lez.criteria.SurveillanceManager;
 import org.liris.smartgov.lez.core.environment.pollution.Pollution;
 import org.liris.smartgov.lez.politic.policyagent.ActionableByPolicyAgent;
 import org.liris.smartgov.lez.politic.policyagent.FeaturesDouble;
@@ -45,7 +46,8 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 	private LezCriteria privateLezCriteria;
 	private String id;
 	private Pollution pollution;
-	private Surveillance surveillance;
+	private Pollution referencePollution;
+	private SurveillanceManager surveillance;
 	private List<Double> satisfactions;
 	
 	/**
@@ -63,7 +65,7 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		this.deliveryLezCriteria = deliveryLezCriteria;
 		this.privateLezCriteria = privateLezCriteria;
 		pollution = new Pollution();
-		this.surveillance = surveillance;
+		this.surveillance = new SurveillanceManager(surveillance);
 		satisfactions = new ArrayList<>();
 		
 		GeometryFactory factory = new GeometryFactory();
@@ -104,7 +106,7 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 	}
 	
 	public Surveillance getSurveillance() {
-		return surveillance;
+		return surveillance.getSurveillance();
 	}
 	
 	/**
@@ -130,7 +132,7 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 	}
 	
 	public void setSurveillance (Surveillance surveillance) {
-		this.surveillance = surveillance;
+		this.surveillance.setSurveillance(surveillance);
 	}
 	
 	public void increasePollution(Pollutant pollutant, double increment) {
@@ -174,6 +176,9 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 	}
 	
 	public void resetPollution() {
+		if (referencePollution == null) {
+			referencePollution = pollution;
+		}
 		pollution = new Pollution();
 	}
 
@@ -239,9 +244,9 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 	@Override
 	public FeaturesDouble getLocalPerformances(List<String> labels) {
 		//compute pollution
-		double pollution = this.pollution.get(Pollutant.N2O).getValue() +
-				this.pollution.get(Pollutant.CO).getValue() +
-				this.pollution.get(Pollutant.PM).getValue();
+		double pollution = referencePollution.get(Pollutant.N2O).getValue() - this.pollution.get(Pollutant.N2O).getValue() +
+				referencePollution.get(Pollutant.CO).getValue() - this.pollution.get(Pollutant.CO).getValue() +
+				referencePollution.get(Pollutant.PM).getValue() - this.pollution.get(Pollutant.PM).getValue();
 		
 		double satisfaction = 0;
 		for ( double satisfactionScore : satisfactions ) {
@@ -268,12 +273,12 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 			availableActions.add(PolicyAction.INCREASE_PRIVATE_CRITERIA);
 		}
 		if ( ((CritAirCriteria)privateLezCriteria).getCritAir() != CritAir.NONE ) {
-			availableActions.add(PolicyAction.INCREASE_PRIVATE_CRITERIA);
+			availableActions.add(PolicyAction.DECREASE_PRIVATE_CRITERIA);
 		}
-		if (surveillance != Surveillance.EXPENSIVE_TOLL) {
+		if (surveillance.getSurveillance() != Surveillance.EXPENSIVE_TOLL) {
 			availableActions.add(PolicyAction.INCREASE_SURVEILLANCE);
 		}
-		if ( surveillance != Surveillance.NO_SURVEILLANCE ) {
+		if ( surveillance.getSurveillance() != Surveillance.NO_SURVEILLANCE ) {
 			availableActions.add(PolicyAction.DECREASE_SURVEILLANCE);
 		}
 		return availableActions;
@@ -281,23 +286,26 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 
 	@Override
 	public void doPolicyAction(PolicyAction policyAction) {
+		System.out.println("JE PASSE LAAAAAAAAAAAAAAAAAAAAAA");
 		switch (policyAction) {
 		case INCREASE_DELIVERIE_CRITERIA:
 			((CritAirCriteria)deliveryLezCriteria).increaseCriteria();
+			System.out.println("Increase deliverie");
 		case DECREASE_DELIVERIE_CRITERIA:
 			((CritAirCriteria)deliveryLezCriteria).decreaseCriteria();
+			System.out.println("Decrease deliverie");
 		case INCREASE_PRIVATE_CRITERIA:
 			((CritAirCriteria)privateLezCriteria).increaseCriteria();
+			System.out.println("Increase private");
 		case DECREASE_PRIVATE_CRITERIA:
 			((CritAirCriteria)privateLezCriteria).decreaseCriteria();
+			System.out.println("Decrease private");
 		case INCREASE_SURVEILLANCE:
-			if ( surveillance != Surveillance.EXPENSIVE_TOLL ) {
-				surveillance = Surveillance.values()[surveillance.ordinal() + 1];
-			}
+			surveillance.increaseSurveillance();
+			System.out.println("Increase surveillance");
 		case DECREASE_SURVEILLANCE:
-			if ( surveillance != Surveillance.NO_SURVEILLANCE ) {
-				surveillance = Surveillance.values()[surveillance.ordinal() - 1];
-			}
+			surveillance.decreaseSurveillance();
+			System.out.println("Decrease surveillance");
 		default:
 	}
 	}
