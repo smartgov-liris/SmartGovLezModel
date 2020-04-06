@@ -19,7 +19,8 @@ import org.liris.smartgov.lez.core.simulation.ExtendedSimulationBuilder;
 import org.liris.smartgov.lez.core.simulation.ExtendedSimulationRuntime;
 import org.liris.smartgov.lez.core.simulation.ExtendedSmartGov;
 import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
-import org.liris.smartgov.lez.politic.PoliticalVariables;
+import org.liris.smartgov.lez.politic.PoliticalVar;
+import org.liris.smartgov.lez.politic.manager.ManagerQLearningScenario;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.environment.graph.Arc;
 import org.liris.smartgov.simulator.core.events.EventHandler;
@@ -111,18 +112,12 @@ public class PoliticRun {
 					long simulationEnd = System.nanoTime();
 					logger.info("It took " + (int)((simulationEnd - simulationStart) / 1E9) + " seconds to play the simulation" );
 					
-					try {
-						Thread.sleep(2000);
-						logger.info("\n\n\n"
-								+ "_________________________________ \n"
-								+ "|                               | \n"
-								+ "|     Relaunching simulation    | \n"
-								+ "|                               | \n"
-								+ "|_______________________________| \n\n");
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+					logger.info("\n\n\n"
+							+ "_________________________________ \n"
+							+ "|                               | \n"
+							+ "|     Relaunching simulation    | \n"
+							+ "|                               | \n"
+							+ "|_______________________________| \n\n");
 					
 					/*Map<String, Pollution> pollutionMap = ((DeliveriesScenario)ctxt.getScenario())
 							.getEnvironment().getPollutionByNeighborhood();
@@ -130,8 +125,12 @@ public class PoliticRun {
 					for (Pollution pollution : pollutionMap.values()) {
 						logger.info(pollution.get(Pollutant.CO));
 					}*/
-					PoliticalVariables.manager.live();
-					ctxt.resetPollution();
+					PoliticalVar.manager.live();
+					if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).needToRestart ) {
+						((ManagerQLearningScenario)(PoliticalVar.manager)).needToRestart = false;
+						ctxt.resetConfiguration();
+					}
+					ctxt.resetVariables();
 					ctxt.reload();
 			        smartGov.restart(ctxt);
 			        

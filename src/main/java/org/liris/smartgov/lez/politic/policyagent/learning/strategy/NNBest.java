@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.liris.smartgov.lez.core.simulation.files.FilePath;
-import org.liris.smartgov.lez.politic.PoliticalVariables;
+import org.liris.smartgov.lez.politic.PoliticalVar;
 import org.liris.smartgov.lez.politic.manager.AbstractManager;
 import org.liris.smartgov.lez.politic.policyagent.PolicyAction;
 import org.liris.smartgov.lez.politic.policyagent.FeaturesDouble;
@@ -58,12 +58,12 @@ public class NNBest extends Strategy {
 		String memoryToCopyPath = "";
 		String modelToCopyPath = "";
 		
-		if(Integer.parseInt(PoliticalVariables.variables.get("learning")) == 0) {
+		if(Integer.parseInt(PoliticalVar.variables.get("learning")) == 0) {
 			learning = false;
 			validation = true;
 		}
 		
-		if(PoliticalVariables.variables.get("server_debug").equals("0")) {
+		if(PoliticalVar.variables.get("server_debug").equals("0")) {
 			memoryFilePath = FilePath.currentLocalLearnerFolder + memoryFileName;
 			modelFilePath  = FilePath.currentLocalLearnerFolder + modelFileName;
 			memoryToCopyPath = FilePath.currentLocalLearnerFolder;
@@ -78,11 +78,11 @@ public class NNBest extends Strategy {
 			callbackFilePath = FilePath.backPath + FilePath.currentLocalLearnerFolder + "callbacks" + File.separator;
 		}
 
-		batchSize = Integer.parseInt(PoliticalVariables.variables.get("batch_size"));
-		if(PoliticalVariables.variables.get("initNN").equals("1")) {
+		batchSize = Integer.parseInt(PoliticalVar.variables.get("batch_size"));
+		if(PoliticalVar.variables.get("initNN").equals("1")) {
 			stillExploration = true;
 
-			if(PoliticalVariables.variables.get("callbacks").equals("1")) {
+			if(PoliticalVar.variables.get("callbacks").equals("1")) {
 				answer = ClientCommunication.communicationWithServer(
 						"create_model," + 
 								id + "," + 
@@ -98,7 +98,7 @@ public class NNBest extends Strategy {
 								nbActions + "," +
 								memoryFilePath);
 			}
-		} else if(PoliticalVariables.variables.get("initNN").equals("0")){
+		} else if(PoliticalVar.variables.get("initNN").equals("0")){
 			/*/
 			stillExploration = false;
 			answer = ClientCommunication.communicationWithServer("load_model," + id + "," + stateSize + "," + nbActions + "," +
@@ -164,7 +164,7 @@ public class NNBest extends Strategy {
 			replayModelMessage();
 		}
 		//*/
-		if(!PoliticalVariables.manager.isRecentlyReset()) {
+		if(!PoliticalVar.manager.isRecentlyReset()) {
 			answer = ClientCommunication.communicationWithServer(
 					"next_step," + 
 							id + "," + 
@@ -226,7 +226,7 @@ public class NNBest extends Strategy {
 					"save_model," + 
 							id + "," + 
 							modelFilePath);
-			if(PoliticalVariables.variables.get("server_debug").equals("1")) {
+			if(PoliticalVar.variables.get("server_debug").equals("1")) {
 				System.out.println(saveMessage);
 			}
 		} else {
@@ -241,7 +241,7 @@ public class NNBest extends Strategy {
 						"replay_model," + 
 								id + "," + 
 								batchSize);
-				if(PoliticalVariables.variables.get("server_debug").equals("1")) {
+				if(PoliticalVar.variables.get("server_debug").equals("1")) {
 					System.out.println(replayMessage);
 				}
 			}
@@ -255,14 +255,14 @@ public class NNBest extends Strategy {
 	 * @return
 	 */
 	private String getFileForExtension(String extension) {
-		String folders = PoliticalVariables.variables.get("model_folder");
+		String folders = PoliticalVar.variables.get("model_folder");
 		for(String folder : folders.split(",")) {
 			File path = new File(FilePath.localLearnerFolder + folder);
 			for (final File fileEntry : path.listFiles()) {
 				if (!fileEntry.isDirectory()) {
 					String filename = fileEntry.getName();
 					if(filename.contains("_" + id + extension)) {
-						if(PoliticalVariables.variables.get("server_debug").equals("0")) {
+						if(PoliticalVar.variables.get("server_debug").equals("0")) {
 							return FilePath.localLearnerFolder + folder + "\\" + filename;
 						} else {
 							return FilePath.backPath + FilePath.localLearnerFolder + folder + "\\" + filename;

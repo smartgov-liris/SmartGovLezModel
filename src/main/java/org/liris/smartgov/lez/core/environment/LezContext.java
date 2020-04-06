@@ -9,6 +9,10 @@ import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
 import org.liris.smartgov.lez.core.environment.lez.Environment;
+import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
+import org.liris.smartgov.lez.core.environment.lez.criteria.CritAir;
+import org.liris.smartgov.lez.core.environment.lez.criteria.CritAirCriteria;
+import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
 import org.liris.smartgov.lez.core.simulation.scenario.RandomTrafficPollutionScenario;
 import org.liris.smartgov.lez.input.lez.CritAirLezDeserializer;
@@ -40,13 +44,21 @@ public class LezContext extends OsmContext {
 		ongoingRounds = new TreeMap<>();
 	}
 	
-	public void resetPollution() {
+	public void resetVariables() {
 		if (getScenario() instanceof DeliveriesScenario) {
 			//if we are in the deliveries scenario, we also reset pollution of neighborhoods
-			((DeliveriesScenario)getScenario()).getEnvironment().resetNeighborhoodPollution();
+			((DeliveriesScenario)getScenario()).getEnvironment().resetNeighborhoodVariables();
 		}
 		for (Arc arc : arcs.values()) {
 			((PollutableOsmArc)arc).resetPollution();
+		}
+	}
+	
+	public void resetConfiguration() {
+		for (Neighborhood neighborhood : ((DeliveriesScenario)getScenario()).getEnvironment().getNeighborhoods().values() ) {
+			neighborhood.setDeliveryLezCriteria(new CritAirCriteria(CritAir.NONE));
+			neighborhood.setPrivateLezCriteria(new CritAirCriteria(CritAir.NONE));
+			neighborhood.setSurveillance(Surveillance.NO_SURVEILLANCE);
 		}
 	}
 

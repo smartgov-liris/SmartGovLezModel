@@ -49,6 +49,9 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 	private Pollution referencePollution;
 	private SurveillanceManager surveillance;
 	private List<Double> satisfactions;
+	private int nbFraud;
+	private int nbChangedMobilities;
+	private int nbChangedVehicles;
 	
 	/**
 	 * Lez constructor.
@@ -67,6 +70,9 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		pollution = new Pollution();
 		this.surveillance = new SurveillanceManager(surveillance);
 		satisfactions = new ArrayList<>();
+		nbFraud = 0;
+		nbChangedMobilities = 0;
+		nbChangedVehicles = 0;
 		
 		GeometryFactory factory = new GeometryFactory();
 		
@@ -143,8 +149,17 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		return pollution;
 	}
 	
-	public void giveSatisfaction ( double satisfaction ) {
+	public void giveSatisfaction ( double satisfaction, boolean changedVehicle, boolean changedMobility, boolean fraud ) {
 		satisfactions.add(satisfaction);
+		if ( changedVehicle ) {
+			nbChangedVehicles += 1;
+		}
+		if ( changedMobility ) {
+			nbChangedMobilities += 1;
+		}
+		if ( fraud ) {
+			nbFraud += 1;
+		}
 	}
 	
 	/**
@@ -175,11 +190,15 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		}
 	}
 	
-	public void resetPollution() {
+	public void resetVariables() {
 		if (referencePollution == null) {
 			referencePollution = pollution;
 		}
 		pollution = new Pollution();
+		satisfactions = new ArrayList<>();
+		nbFraud = 0;
+		nbChangedMobilities = 0;
+		nbChangedVehicles = 0;
 	}
 
 	/*
@@ -243,19 +262,47 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 
 	@Override
 	public FeaturesDouble getLocalPerformances(List<String> labels) {
-		//compute pollution
-		double pollution = referencePollution.get(Pollutant.N2O).getValue() - this.pollution.get(Pollutant.N2O).getValue() +
-				referencePollution.get(Pollutant.CO).getValue() - this.pollution.get(Pollutant.CO).getValue() +
-				referencePollution.get(Pollutant.PM).getValue() - this.pollution.get(Pollutant.PM).getValue();
-		
-		double satisfaction = 0;
-		for ( double satisfactionScore : satisfactions ) {
-			satisfaction += satisfactionScore;
-		}
-		
 		List<Double> features = new ArrayList<>();
-		features.add(pollution);
-		features.add(satisfaction);
+		
+		for ( String label : labels ) {
+			if ( label.equals("Pollution") ) {
+				//compute pollution
+				double pollution = referencePollution.get(Pollutant.N2O).getValue() - this.pollution.get(Pollutant.N2O).getValue() +
+						referencePollution.get(Pollutant.CO).getValue() - this.pollution.get(Pollutant.CO).getValue() +
+						referencePollution.get(Pollutant.PM).getValue() - this.pollution.get(Pollutant.PM).getValue();
+				features.add(pollution);
+			}
+			else if ( label.equals("Satisfaction") ) {
+				double satisfaction = 0;
+				for ( double satisfactionScore : satisfactions ) {
+					satisfaction += satisfactionScore;
+				}
+				
+				features.add(satisfaction);
+			}
+			else if ( label.equals("ChangedVehicles") ) {
+				features.add((double)nbChangedVehicles);
+			}
+			else if ( label.equals("changedMobilities") ) {
+				features.add((double)nbChangedMobilities);
+			}
+			else if ( label.equals("frauded") ) {
+				features.add((double)nbFraud);
+			}
+			else if (label.equals("gain")) {
+				//compute pollution
+				double pollution = referencePollution.get(Pollutant.N2O).getValue() - this.pollution.get(Pollutant.N2O).getValue() +
+						referencePollution.get(Pollutant.CO).getValue() - this.pollution.get(Pollutant.CO).getValue() +
+						referencePollution.get(Pollutant.PM).getValue() - this.pollution.get(Pollutant.PM).getValue();
+				//compute satisfaction
+				double satisfaction = 0;
+				for ( double satisfactionScore : satisfactions ) {
+					satisfaction += satisfactionScore;
+				}
+				System.out.println("Satisfaction : " + satisfaction + ", pollution : " + pollution);
+				features.add(pollution + satisfaction);
+			}
+		}
 		return new FeaturesDouble(features);
 	}
 
@@ -286,26 +333,25 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 
 	@Override
 	public void doPolicyAction(PolicyAction policyAction) {
-		System.out.println("JE PASSE LAAAAAAAAAAAAAAAAAAAAAA");
 		switch (policyAction) {
 		case INCREASE_DELIVERIE_CRITERIA:
 			((CritAirCriteria)deliveryLezCriteria).increaseCriteria();
-			System.out.println("Increase deliverie");
+			break;
 		case DECREASE_DELIVERIE_CRITERIA:
 			((CritAirCriteria)deliveryLezCriteria).decreaseCriteria();
-			System.out.println("Decrease deliverie");
+			break;
 		case INCREASE_PRIVATE_CRITERIA:
 			((CritAirCriteria)privateLezCriteria).increaseCriteria();
-			System.out.println("Increase private");
+			break;
 		case DECREASE_PRIVATE_CRITERIA:
 			((CritAirCriteria)privateLezCriteria).decreaseCriteria();
-			System.out.println("Decrease private");
+			break;
 		case INCREASE_SURVEILLANCE:
 			surveillance.increaseSurveillance();
-			System.out.println("Increase surveillance");
+			break;
 		case DECREASE_SURVEILLANCE:
 			surveillance.decreaseSurveillance();
-			System.out.println("Decrease surveillance");
+			break;
 		default:
 	}
 	}

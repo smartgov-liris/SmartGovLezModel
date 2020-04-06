@@ -58,12 +58,12 @@ public class PoliticalCreator {
 			}
 		//}
 		
-		String scenarioID = Integer.parseInt(PoliticalVariables.variables.get("scenarioID")) > 0 ? "_" + PoliticalVariables.variables.get("scenarioID") : "";
+		String scenarioID = Integer.parseInt(PoliticalVar.variables.get("scenarioID")) > 0 ? "_" + PoliticalVar.variables.get("scenarioID") : "";
 		String dirName = "";
-		if(PoliticalVariables.variables.get("simulation_debug").equals("0")) {
-			dirName = date + "_" + simulationIndex + "_" + PoliticalVariables.variables.get("scenario") + scenarioID + File.separator;
+		if(PoliticalVar.variables.get("simulation_debug").equals("0")) {
+			dirName = date + "_" + simulationIndex + "_" + PoliticalVar.variables.get("scenario") + scenarioID + File.separator;
 		} else {
-			dirName = date + "_" + simulationIndex + "_debug_" + PoliticalVariables.variables.get("scenario") + scenarioID + File.separator;
+			dirName = date + "_" + simulationIndex + "_debug_" + PoliticalVar.variables.get("scenario") + scenarioID + File.separator;
 		}
 		new File(FilePath.localLearnerFolder + dirName).mkdirs();
 		FilePath.currentLocalLearnerFolder = FilePath.localLearnerFolder + dirName;
@@ -74,12 +74,12 @@ public class PoliticalCreator {
 		//create folder for current simulation
 		//createFolder();
 		FilePath.currentAgentDetailsFolder = FilePath.humanAgentFolder + "scenario//" + 
-				PoliticalVariables.variables.get("scenario") + "//" +
-				PoliticalVariables.variables.get("scenarioID") + "//";
+				PoliticalVar.variables.get("scenario") + "//" +
+				PoliticalVar.variables.get("scenarioID") + "//";
 		//Update server port with simulationIndex
 		//*/
 		ClientCommunication.port += simulationIndex;
-		if(PoliticalVariables.variables.get("server_debug").equals("0")) {
+		if(PoliticalVar.variables.get("server_debug").equals("0")) {
 			Server.startServer(FilePath.externalSourceFolder + "server.py -p " + ClientCommunication.port, "python");
 		} else {
 			//Use this when bug in python server
@@ -114,6 +114,6 @@ public class PoliticalCreator {
 		
 		Perimeter perimeter = new Perimeter(structures);
 		
-		PoliticalVariables.policyAgents.add(new PolicyAgent("0", perimeter, actions));
+		PoliticalVar.policyAgents.add(new PolicyAgent("0", perimeter, actions));
 	}
 }

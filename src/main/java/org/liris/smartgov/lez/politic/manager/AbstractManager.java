@@ -14,7 +14,7 @@ import org.joda.time.LocalTime;
 import org.liris.smartgov.lez.core.simulation.files.FileName;
 import org.liris.smartgov.lez.core.simulation.files.FilePath;
 import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
-import org.liris.smartgov.lez.politic.PoliticalVariables;
+import org.liris.smartgov.lez.politic.PoliticalVar;
 
 
 
@@ -88,11 +88,11 @@ public abstract class AbstractManager {
 	public abstract void live();
 	
 	protected void parseConfigFile(){
-		NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES = Integer.parseInt(PoliticalVariables.variables.get("simulations_per_action"));
-		NUMBER_OF_ITERATIONS_BEFORE_RESTART = NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES * Integer.parseInt(PoliticalVariables.variables.get("actions_per_scenario"));
+		NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES = Integer.parseInt(PoliticalVar.variables.get("simulations_per_action"));
+		NUMBER_OF_ITERATIONS_BEFORE_RESTART = NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES * Integer.parseInt(PoliticalVar.variables.get("actions_per_scenario"));
 		NUMBER_OF_ITERATIONS_BEFORE_SAVE = NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES;
-		TOTAL_NUMBER_OF_SIMULATIONS = Integer.parseInt(PoliticalVariables.variables.get("total_number_of_simulations"));
-		NUMBER_OF_SIMULATIONS_BEFORE_RESTART = Integer.parseInt(PoliticalVariables.variables.get("simulation_before_restart"));
+		TOTAL_NUMBER_OF_SIMULATIONS = Integer.parseInt(PoliticalVar.variables.get("total_number_of_simulations"));
+		NUMBER_OF_SIMULATIONS_BEFORE_RESTART = Integer.parseInt(PoliticalVar.variables.get("simulation_before_restart"));
 	}
 	
 	protected abstract void init();

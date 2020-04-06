@@ -89,7 +89,7 @@ public class Personality {
 	
 	public void giveSatisfactionToNeighborhoods() {
 		for ( Neighborhood neighborhood : causeNeighborhoods) {
-			neighborhood.giveSatisfaction( satisfactionScore / causeNeighborhoods.size() );
+			neighborhood.giveSatisfaction( satisfactionScore / causeNeighborhoods.size(), changedVehicle, changedMobility, hasFrauded );
 		}
 	}
 	

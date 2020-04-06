@@ -67,9 +67,9 @@ public class Environment {
 		return neighborhoods;
 	}
 	
-	public void resetNeighborhoodPollution() {
+	public void resetNeighborhoodVariables() {
 		for (Neighborhood neighborhood : neighborhoods.values()) {
-			neighborhood.resetPollution();
+			neighborhood.resetVariables();
 		}
 	}
 	

@@ -18,42 +18,36 @@ import org.joda.time.LocalTime;
 import org.liris.smartgov.lez.core.simulation.files.FileName;
 import org.liris.smartgov.lez.core.simulation.files.FilePath;
 import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
-import org.liris.smartgov.lez.politic.PoliticalVariables;
+import org.liris.smartgov.lez.core.simulation.files.JSONWriter;
+import org.liris.smartgov.lez.politic.PoliticalVar;
+import org.liris.smartgov.lez.politic.policyagent.PolicyAction;
 import org.liris.smartgov.lez.politic.policyagent.PolicyAgent;
 
 public class ManagerQLearningScenario extends AbstractManager {
-
-	//Behavior change
-	private int windowSize = 5;
-	private double lowBoundForStateChange = 0.6;
-	private double highBoundForStateChange = 1.0;
 	
 	private String currentPhase;
-	
-	//Initial state
-	private Map<String, String> initialStateConfig;
+	public boolean needToRestart;
 	
 	public ManagerQLearningScenario(){
 		super();
 		
 		indexOfAction = 0;
 		
-		initialStateConfig = new HashMap<>();
 		parseConfigFile();
 
-		if (Integer.parseInt(PoliticalVariables.variables.get("learning")) == 1) {
+		if (Integer.parseInt(PoliticalVar.variables.get("learning")) == 1) {
 			currentPhase = "learning";
 			leaveObservationPhase();
-			for(PolicyAgent policyAgent : PoliticalVariables.policyAgents) {
+			for(PolicyAgent policyAgent : PoliticalVar.policyAgents) {
 				policyAgent.applyRandomActionToStructures();
 			}
-		} else if(Integer.parseInt(PoliticalVariables.variables.get("validation")) == 1) {
+		} else if(Integer.parseInt(PoliticalVar.variables.get("validation")) == 1) {
 			currentPhase = "validation";
 			validationPhase = true;
 			recentlyReset = true;
 		}
-		if(PoliticalVariables.variables.get("split").equals("1")) {
-			PoliticalVariables.policyAgents.get(0).splitControlGroup();
+		if(PoliticalVar.variables.get("split").equals("1")) {
+			PoliticalVar.policyAgents.get(0).splitControlGroup();
 		}
 	}
 
@@ -71,7 +65,8 @@ public class ManagerQLearningScenario extends AbstractManager {
 			if(NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES == currentTrialIndex){
 				currentIteration++;
 				saveTime();
-				currentTrialIndex = 0;
+				currentTrialIndex = 1;
+				randomStateGenerator(true);
 			} else {
 				currentTrialIndex++;
 			}
@@ -80,7 +75,7 @@ public class ManagerQLearningScenario extends AbstractManager {
 	}
 	
 	private void callPolicyAgents() {
-		for(PolicyAgent policyAgent : PoliticalVariables.policyAgents) {
+		for(PolicyAgent policyAgent : PoliticalVar.policyAgents) {
 			if(policyAgent != null) {
 				policyAgent.live();
 			}
@@ -114,7 +109,72 @@ public class ManagerQLearningScenario extends AbstractManager {
 		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, FileName.MANAGER_LOGS, datelog);
 	}
 	
+	protected void randomStateGenerator(boolean generateRandomState) {
+		if(generateRandomState) {
+			//Try with a limited number of trials and a cumulative reward
+			if(NUMBER_OF_SIMULATIONS_BEFORE_RESTART == currentSimulationIndex) {
+				//TODO do something that that restarts the simulation with basic configuration
+				needToRestart = true;
+			} else {
+				List<String> actions = new ArrayList<>();
+				List<PolicyAgent> agentsWithSpecificActions = new ArrayList<>();
 
+				boolean keepAction = false;
+				
+				for(PolicyAgent policyAgent : PoliticalVar.policyAgents) {
+					if(policyAgent != null) {
+						//1) Do the special action first
+						PolicyAction currentSpecificAction = policyAgent.getLastSpecialAction();
+						if(currentSpecificAction != PolicyAction.NOTHING) {
+							agentsWithSpecificActions.add(policyAgent);
+						}
+						if(currentSpecificAction == PolicyAction.KEEP) {
+							keepAction = true;
+						}
+					}
+				}
+				//*/ TODO: Bug source ? Double fusion 29/06/19
+				for(int i = 0; i < agentsWithSpecificActions.size(); i++) {
+					if(agentsWithSpecificActions.get(i) != null) {
+						PolicyAgent policyAgent = agentsWithSpecificActions.get(i);
+						actions.add(policyAgent.applyPolicyAction(policyAgent.getLastSpecialAction()));
+					}
+				}
+				//*/
+				if(keepAction) {
+					JSONWriter.writePolicyAgents(FilePath.currentLocalLearnerFolder, 
+							currentIteration + "_" + FileName.PolicyAgentsFile,
+							PoliticalVar.policyAgents);
+				}
+				
+				for(PolicyAgent policyAgent : PoliticalVar.policyAgents) {
+					if(policyAgent != null) {
+						//2) Do the normal action of the remaining agents
+						PolicyAction currentAction = policyAgent.getLastAction();
+						actions.add(policyAgent.applyPolicyAction(currentAction));
+						if(currentPhase.equals("learning")) {
+							policyAgent.updateLocalLearners(currentAction);
+						}
+					}
+				}
+				recentlyReset = false;
+				currentSimulationIndex++;
+				saveActionsPerIteration(actions);
+			}
+		} else {
+			//No limited number of trials before hard reset
+			for(PolicyAgent policyAgent : PoliticalVar.policyAgents) {
+				if(policyAgent != null) {
+					if(currentPhase.equals("learning")) {
+						policyAgent.askAndUpdateLocalLearners();
+					} else if(currentPhase.equals("validation")) {
+						policyAgent.askLocalLearners();
+					}
+				}
+			}
+			currentSimulationIndex++;
+		}
+	}
 	
 	protected void saveActionsPerIteration(List<String> actions) {
 		List<String> lines = new ArrayList<>();
@@ -130,7 +190,7 @@ public class ManagerQLearningScenario extends AbstractManager {
 		System.out.println("Save parameters for current simulations.");
 		List<String> lines = new ArrayList<>();
 		lines.add("Time: " + timeStamp + ".");
-		for(Entry<String, String> value : PoliticalVariables.variables.entrySet()) {
+		for(Entry<String, String> value : PoliticalVar.variables.entrySet()) {
 			lines.add(value.getKey() + ": " + value.getValue());
 		}
 		FilesManagement.writeToFile(FilePath.currentLocalLearnerFolder, FileName.MANAGER_PARAMETERS_FILE, lines);

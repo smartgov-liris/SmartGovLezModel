@@ -90,7 +90,7 @@ public class LezPreprocessor {
 			if(decision == Decision.CHANGE_VEHICLE) {
 				CopertSelector selector = new CopertSelector();
 				selector.put(CopertHeader.CATEGORY, vehicle.getCategory());
-				if (vehicle.getCategory() != VehicleCategory.HEAVY_DUTY_TRUCK) {
+				if (vehicle.getCategory() == VehicleCategory.HEAVY_DUTY_TRUCK) {
 					//only Diesel is available for heavy duty trucks
 					selector.put(CopertHeader.FUEL, Fuel.DIESEL);
 				} else {
