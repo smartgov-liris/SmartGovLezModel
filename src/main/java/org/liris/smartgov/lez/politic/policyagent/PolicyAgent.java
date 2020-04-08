@@ -394,7 +394,6 @@ public class PolicyAgent extends AbstractPolicyAgent {
 	private double setGlobalPerception() {
 		FeaturesDouble globalReward = new FeaturesDouble();
 		globalReward.addFeature(0.0);
-		globalReward.addFeature(0.0);
 		for(int indexOfStructure = 0; indexOfStructure < perimeter.getStructures().size(); indexOfStructure++) {
 			FeaturesDouble position = new FeaturesDouble();
 			List<FeaturesDouble> tempValues = new ArrayList<>();

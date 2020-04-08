@@ -27,6 +27,7 @@ public class ManagerQLearningScenario extends AbstractManager {
 	
 	private String currentPhase;
 	public boolean needToRestart;
+	protected String globalGainFile = "global_gain.txt";
 	
 	public ManagerQLearningScenario(){
 		super();
@@ -53,7 +54,11 @@ public class ManagerQLearningScenario extends AbstractManager {
 
 	@Override
 	public void live() {
-			
+		List<String> lines = new ArrayList<>();
+		lines.add("");
+		lines.add("--- Nouvelle simulation ---");
+		lines.add("");
+		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "Pollution.txt", lines);
 		if(observationPhase) {
 			callPolicyAgents();
 			if(NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES == currentTrialIndex){
@@ -62,11 +67,12 @@ public class ManagerQLearningScenario extends AbstractManager {
 			currentTrialIndex++;
 		} else {
 			callPolicyAgents();
-			if(NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES == currentTrialIndex){
+			if(NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES == currentTrialIndex){	
+				saveGlobalGain();
 				currentIteration++;
 				saveTime();
 				currentTrialIndex = 1;
-				randomStateGenerator(true);
+				//randomStateGenerator(true);
 			} else {
 				currentTrialIndex++;
 			}
@@ -88,6 +94,18 @@ public class ManagerQLearningScenario extends AbstractManager {
 		learningPhase = true;
 	}
 
+	private void saveGlobalGain() {
+		List<String> lines = new ArrayList<>();
+		double gain = 0.0;
+		for(PolicyAgent policyAgent : PoliticalVar.policyAgents) {
+			if(policyAgent != null) {
+				gain = policyAgent.getLastGain();
+			}
+		}
+		lines.add(currentIteration + "," + gain);
+		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, globalGainFile, lines);
+	}
+	
 	@Override
 	protected void init() {
 		this.iterationCounter = 1;
@@ -113,7 +131,6 @@ public class ManagerQLearningScenario extends AbstractManager {
 		if(generateRandomState) {
 			//Try with a limited number of trials and a cumulative reward
 			if(NUMBER_OF_SIMULATIONS_BEFORE_RESTART == currentSimulationIndex) {
-				//TODO do something that that restarts the simulation with basic configuration
 				needToRestart = true;
 			} else {
 				List<String> actions = new ArrayList<>();

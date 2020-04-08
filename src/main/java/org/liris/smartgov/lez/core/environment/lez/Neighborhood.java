@@ -25,6 +25,8 @@ import org.liris.smartgov.lez.core.environment.lez.criteria.LezCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 import org.liris.smartgov.lez.core.environment.lez.criteria.SurveillanceManager;
 import org.liris.smartgov.lez.core.environment.pollution.Pollution;
+import org.liris.smartgov.lez.core.simulation.files.FilePath;
+import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
 import org.liris.smartgov.lez.politic.policyagent.ActionableByPolicyAgent;
 import org.liris.smartgov.lez.politic.policyagent.FeaturesDouble;
 import org.liris.smartgov.lez.politic.policyagent.PolicyAction;
@@ -260,6 +262,13 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		return this.getClass().getName();
 	}
 
+	public double getAbsPollution() {
+		double pollution = this.pollution.get(Pollutant.N2O).getAbsValue() + 
+				this.pollution.get(Pollutant.CO).getAbsValue() +
+				this.pollution.get(Pollutant.PM).getAbsValue();
+		return pollution / 1000;
+	}
+	
 	@Override
 	public FeaturesDouble getLocalPerformances(List<String> labels) {
 		List<Double> features = new ArrayList<>();
@@ -267,10 +276,10 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		for ( String label : labels ) {
 			if ( label.equals("Pollution") ) {
 				//compute pollution
-				double pollution = referencePollution.get(Pollutant.N2O).getValue() - this.pollution.get(Pollutant.N2O).getValue() +
-						referencePollution.get(Pollutant.CO).getValue() - this.pollution.get(Pollutant.CO).getValue() +
-						referencePollution.get(Pollutant.PM).getValue() - this.pollution.get(Pollutant.PM).getValue();
-				features.add(pollution);
+				double pollution = referencePollution.get(Pollutant.N2O).getAbsValue() - this.pollution.get(Pollutant.N2O).getAbsValue() +
+						referencePollution.get(Pollutant.CO).getAbsValue() - this.pollution.get(Pollutant.CO).getAbsValue() +
+						referencePollution.get(Pollutant.PM).getAbsValue() - this.pollution.get(Pollutant.PM).getAbsValue();
+				features.add(pollution/1000);
 			}
 			else if ( label.equals("Satisfaction") ) {
 				double satisfaction = 0;
@@ -291,15 +300,15 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 			}
 			else if (label.equals("gain")) {
 				//compute pollution
-				double pollution = referencePollution.get(Pollutant.N2O).getValue() - this.pollution.get(Pollutant.N2O).getValue() +
-						referencePollution.get(Pollutant.CO).getValue() - this.pollution.get(Pollutant.CO).getValue() +
-						referencePollution.get(Pollutant.PM).getValue() - this.pollution.get(Pollutant.PM).getValue();
+				double pollution = (referencePollution.get(Pollutant.N2O).getAbsValue() - this.pollution.get(Pollutant.N2O).getAbsValue()) +
+						(referencePollution.get(Pollutant.CO).getAbsValue() - this.pollution.get(Pollutant.CO).getAbsValue()) +
+						(referencePollution.get(Pollutant.PM).getAbsValue() - this.pollution.get(Pollutant.PM).getAbsValue());
+				pollution = pollution/1000;
 				//compute satisfaction
 				double satisfaction = 0;
 				for ( double satisfactionScore : satisfactions ) {
 					satisfaction += satisfactionScore;
 				}
-				System.out.println("Satisfaction : " + satisfaction + ", pollution : " + pollution);
 				features.add(pollution + satisfaction);
 			}
 		}

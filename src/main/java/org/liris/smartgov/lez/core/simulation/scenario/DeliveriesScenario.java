@@ -167,6 +167,9 @@ public class DeliveriesScenario extends PollutionScenario {
 		} else {
 			for (Establishment establishment: establishments.values()) {
 				establishment.resetFleet();
+				for ( Personality personality : establishment.getPersonalities().values() ) {
+					personality.resetPersonality();
+				}
 			}
 		}
 		
@@ -225,6 +228,7 @@ public class DeliveriesScenario extends PollutionScenario {
 		private String vehicleId;
 		private Establishment establishment;
 		private LezContext context;
+		private static Map<String, String> savedBehaviorType = new HashMap<>();
 		
 		private OsmAgent builtAgent;
 		private DriverBehavior builtBehavior;
@@ -257,23 +261,40 @@ public class DeliveriesScenario extends PollutionScenario {
 			else {
 				//Private agent
 				if (establishment.getRounds().get(vehicleId).getEstablishments().size() < 2) {
-					//if only one establishment, might be either a worker (2/3) or a worker home at noon (1/3)
-					if (random.nextInt(4) == 0) {
-						builtBehavior = new WorkerHomeAtNoonBehavior(
-								driver,
-								establishment.getRounds().get(vehicleId),
-								establishment.getPersonalities().get(vehicleId),
-								context,
-								random);
+					//there can be two types of agents, worker home at noon or worker
+					String type;
+					//we chose his type or we take it back from a previous simulation
+					if (savedBehaviorType.get(vehicleId) == null) {
+						if (random.nextInt(4) == 0) {
+							type = "WorkerHomeAtNoonBehavior";
+							savedBehaviorType.put(vehicleId, "WorkerHomeAtNoonBehavior");
+						}
+						else {
+							type = "WorkerBehavior";
+							savedBehaviorType.put(vehicleId, "WorkerBehavior");
+						}
 					}
 					else {
+						type = savedBehaviorType.get(vehicleId);
+					}
+					
+					//we create the chosen type of agent
+					if (type.equals("WorkerBehavior")) {
 						builtBehavior = new WorkerBehavior(
 								driver,
 								establishment.getRounds().get(vehicleId),
 								establishment.getPersonalities().get(vehicleId),
 								context, 
 								random);
+					} else {
+						builtBehavior = new WorkerHomeAtNoonBehavior(
+								driver,
+								establishment.getRounds().get(vehicleId),
+								establishment.getPersonalities().get(vehicleId),
+								context,
+								random);						
 					}
+					
 				} else {
 					builtBehavior = new WorkerOneActivityBehavior(
 							driver,

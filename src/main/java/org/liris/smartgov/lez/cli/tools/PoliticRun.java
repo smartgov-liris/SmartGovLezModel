@@ -1,5 +1,7 @@
 package org.liris.smartgov.lez.cli.tools;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
@@ -14,10 +16,13 @@ import org.apache.logging.log4j.Logger;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.environment.LezContext;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
+import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.lez.core.environment.pollution.Pollution;
 import org.liris.smartgov.lez.core.simulation.ExtendedSimulationBuilder;
 import org.liris.smartgov.lez.core.simulation.ExtendedSimulationRuntime;
 import org.liris.smartgov.lez.core.simulation.ExtendedSmartGov;
+import org.liris.smartgov.lez.core.simulation.files.FilePath;
+import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
 import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
 import org.liris.smartgov.lez.politic.PoliticalVar;
 import org.liris.smartgov.lez.politic.manager.ManagerQLearningScenario;
@@ -76,7 +81,7 @@ public class PoliticRun {
 		if(cmd.hasOption("t")) {
 			maxTicksValue = Integer.valueOf(cmd.getOptionValue("t"));
 		} else {
-			maxTicksValue = 3600 * 9;
+			maxTicksValue = 3600 * 24;
 		}
 		
 		LezContext ctxt = new LezContext(configFile);
@@ -126,6 +131,20 @@ public class PoliticRun {
 						logger.info(pollution.get(Pollutant.CO));
 					}*/
 					PoliticalVar.manager.live();
+					double pollution = 0;
+					List<String> labels = new ArrayList<>();
+					labels.add("Pollution2");
+					for ( Neighborhood n : ((DeliveriesScenario) ctxt.getScenario()).getEnvironment().getNeighborhoods().values() ) {
+						try {
+						pollution += n.getAbsPollution();
+						} catch(NullPointerException e) {
+							
+						}
+					}
+					List<String> lines = new ArrayList<>();
+					lines.add("Pollution : " + pollution);
+					FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "Pollution.txt", lines);
+					
 					if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).needToRestart ) {
 						((ManagerQLearningScenario)(PoliticalVar.manager)).needToRestart = false;
 						ctxt.resetConfiguration();

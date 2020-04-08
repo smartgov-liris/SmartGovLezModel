@@ -18,7 +18,7 @@ public class Personality {
 	private int price;
 	private int initialTime;
 	private int timeLost;
-	private int satisfactionScore;
+	private double satisfactionScore;
 	private String vehicleId;
 	private List<Neighborhood> causeNeighborhoods;
 	
@@ -30,14 +30,23 @@ public class Personality {
 		else {
 			choice = new CompanyChoice();
 		}
-		changedVehicle = false;
 		satisfaction = new Satisfaction();
+		changedVehicle = false;
 		hasFrauded = false;
 		changedMobility = false;
 		this.vehicleId = vehicleId;
 		initialTime = 0;
 		timeLost = 0;
 		price = 0;
+	}
+	
+	public void resetPersonality() {
+		hasFrauded = false;
+		changedMobility = false;
+		changedVehicle = false;
+		timeLost = 0;
+		price = 0;
+		satisfactionScore = 0;
 	}
 	
 	public Decision getDecision(Surveillance surveillance, int placesVehicleForbidden, List<Neighborhood> causeNeighborhoods) {
@@ -80,6 +89,9 @@ public class Personality {
 		}
 		else {
 			timeLost = initialTime - time;
+			if (timeLost != 0) {
+				System.out.println("AHAHAAAA Init : " + initialTime + ", mtnt : " + time);
+			}
 		}
 	}
 	
@@ -89,7 +101,7 @@ public class Personality {
 	
 	public void giveSatisfactionToNeighborhoods() {
 		for ( Neighborhood neighborhood : causeNeighborhoods) {
-			neighborhood.giveSatisfaction( satisfactionScore / causeNeighborhoods.size(), changedVehicle, changedMobility, hasFrauded );
+			neighborhood.giveSatisfaction( (double) satisfactionScore / causeNeighborhoods.size(), changedVehicle, changedMobility, hasFrauded );
 		}
 	}
 	

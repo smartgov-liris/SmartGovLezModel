@@ -16,9 +16,9 @@ public class ExtendedDate extends Date {
 	 * @return
 	 */
 	public static int getTimeBetween(Date date1, Date date2) {
-		return Math.abs  ( (date2.getDay() - date1.getDay()) * 86400 ) +
+		return Math.abs ( ( (date2.getDay() - date1.getDay()) * 86400 ) +
 				( (date2.getHour() - date1.getHour()) * 3600 ) +
 				( (date2.getMinutes() - date1.getMinutes() ) * 60 ) + 
-				(int)( date2.getSeconds() - date1.getSeconds() ) ;
+				(int)( date2.getSeconds() - date1.getSeconds() )) ;
 	}
 }
