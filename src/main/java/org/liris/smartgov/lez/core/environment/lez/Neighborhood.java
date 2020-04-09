@@ -266,7 +266,15 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		double pollution = this.pollution.get(Pollutant.N2O).getAbsValue() + 
 				this.pollution.get(Pollutant.CO).getAbsValue() +
 				this.pollution.get(Pollutant.PM).getAbsValue();
-		return pollution / 1000;
+		return pollution;
+	}
+	
+	public double getAbsSatisfaction() {
+		double satisfaction = 0.0;
+		for (double s : satisfactions) {
+			satisfaction += s;
+		}
+		return satisfaction;
 	}
 	
 	@Override
@@ -303,12 +311,13 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 				double pollution = (referencePollution.get(Pollutant.N2O).getAbsValue() - this.pollution.get(Pollutant.N2O).getAbsValue()) +
 						(referencePollution.get(Pollutant.CO).getAbsValue() - this.pollution.get(Pollutant.CO).getAbsValue()) +
 						(referencePollution.get(Pollutant.PM).getAbsValue() - this.pollution.get(Pollutant.PM).getAbsValue());
-				pollution = pollution/1000;
+				pollution = pollution/70;
 				//compute satisfaction
 				double satisfaction = 0;
 				for ( double satisfactionScore : satisfactions ) {
 					satisfaction += satisfactionScore;
 				}
+				satisfaction = satisfaction/ 1000;
 				features.add(pollution + satisfaction);
 			}
 		}

@@ -26,7 +26,7 @@ import org.liris.smartgov.lez.politic.policyagent.PolicyAgent;
 public class ManagerQLearningScenario extends AbstractManager {
 	
 	private String currentPhase;
-	public boolean needToRestart;
+	public boolean needToStop;
 	protected String globalGainFile = "global_gain.txt";
 	
 	public ManagerQLearningScenario(){
@@ -45,7 +45,6 @@ public class ManagerQLearningScenario extends AbstractManager {
 		} else if(Integer.parseInt(PoliticalVar.variables.get("validation")) == 1) {
 			currentPhase = "validation";
 			validationPhase = true;
-			recentlyReset = true;
 		}
 		if(PoliticalVar.variables.get("split").equals("1")) {
 			PoliticalVar.policyAgents.get(0).splitControlGroup();
@@ -54,11 +53,11 @@ public class ManagerQLearningScenario extends AbstractManager {
 
 	@Override
 	public void live() {
-		List<String> lines = new ArrayList<>();
+		/*List<String> lines = new ArrayList<>();
 		lines.add("");
 		lines.add("--- Nouvelle simulation ---");
 		lines.add("");
-		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "Pollution.txt", lines);
+		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "Pollution.txt", lines);*/
 		if(observationPhase) {
 			callPolicyAgents();
 			if(NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES == currentTrialIndex){
@@ -72,7 +71,8 @@ public class ManagerQLearningScenario extends AbstractManager {
 				currentIteration++;
 				saveTime();
 				currentTrialIndex = 1;
-				//randomStateGenerator(true);
+				randomStateGenerator(true);
+				
 			} else {
 				currentTrialIndex++;
 			}
@@ -108,13 +108,10 @@ public class ManagerQLearningScenario extends AbstractManager {
 	
 	@Override
 	protected void init() {
-		this.iterationCounter = 1;
-		this.restartCounter = 0;
-		
-		iterationCounter = 0;
+		restartCounter = 0;
 		currentTrialIndex = 0;
-		currentSimulationIndex = 0;
 		currentSimulationIndex = 1;
+		needToStop = false;
 		saveManagerCounters();
 		timeStamp = createTimeStamp();
 	}
@@ -129,9 +126,15 @@ public class ManagerQLearningScenario extends AbstractManager {
 	
 	protected void randomStateGenerator(boolean generateRandomState) {
 		if(generateRandomState) {
+			System.out.println("Restart : " + NUMBER_OF_SIMULATIONS_BEFORE_RESTART + ", index : " + currentSimulationIndex);
 			//Try with a limited number of trials and a cumulative reward
 			if(NUMBER_OF_SIMULATIONS_BEFORE_RESTART == currentSimulationIndex) {
-				needToRestart = true;
+				recentlyReset = true;
+				restartCounter ++;
+				if ( restartCounter > Integer.parseInt(PoliticalVar.variables.get("nb_sequences")) ) {
+					needToStop = true;
+				}
+				currentSimulationIndex = 0;
 			} else {
 				List<String> actions = new ArrayList<>();
 				List<PolicyAgent> agentsWithSpecificActions = new ArrayList<>();

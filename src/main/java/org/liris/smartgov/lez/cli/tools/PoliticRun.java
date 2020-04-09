@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.environment.LezContext;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
+import org.liris.smartgov.lez.core.environment.lez.EnvironmentSerializer;
 import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.lez.core.environment.pollution.Pollution;
 import org.liris.smartgov.lez.core.simulation.ExtendedSimulationBuilder;
@@ -113,9 +114,27 @@ public class PoliticRun {
 			@Override
 			public void handle(SimulationStopped event) {
 				
-				if (true) {
-					long simulationEnd = System.nanoTime();
-					logger.info("It took " + (int)((simulationEnd - simulationStart) / 1E9) + " seconds to play the simulation" );
+				long simulationEnd = System.nanoTime();
+				logger.info("It took " + (int)((simulationEnd - simulationStart) / 1E9) + " seconds to play the simulation" );
+				
+				/*Map<String, Pollution> pollutionMap = ((DeliveriesScenario)ctxt.getScenario())
+						.getEnvironment().getPollutionByNeighborhood();
+				
+				for (Pollution pollution : pollutionMap.values()) {
+					logger.info(pollution.get(Pollutant.CO));
+				}*/
+				PoliticalVar.manager.live();
+				
+				if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).needToStop ) {
+					EnvironmentSerializer.SerializeEnvironment(FilePath.outputFolder,
+							((DeliveriesScenario) ctxt.getScenario()).getEnvironment());
+				}
+				else {
+					if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).isRecentlyReset() ) {
+						FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "reset.txt", 
+								String.valueOf( PoliticalVar.manager.getCurrentIteration()));
+						ctxt.resetConfiguration();
+					}
 					
 					logger.info("\n\n\n"
 							+ "_________________________________ \n"
@@ -124,36 +143,12 @@ public class PoliticRun {
 							+ "|                               | \n"
 							+ "|_______________________________| \n\n");
 					
-					/*Map<String, Pollution> pollutionMap = ((DeliveriesScenario)ctxt.getScenario())
-							.getEnvironment().getPollutionByNeighborhood();
-					
-					for (Pollution pollution : pollutionMap.values()) {
-						logger.info(pollution.get(Pollutant.CO));
-					}*/
-					PoliticalVar.manager.live();
-					double pollution = 0;
-					List<String> labels = new ArrayList<>();
-					labels.add("Pollution2");
-					for ( Neighborhood n : ((DeliveriesScenario) ctxt.getScenario()).getEnvironment().getNeighborhoods().values() ) {
-						try {
-						pollution += n.getAbsPollution();
-						} catch(NullPointerException e) {
-							
-						}
-					}
-					List<String> lines = new ArrayList<>();
-					lines.add("Pollution : " + pollution);
-					FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "Pollution.txt", lines);
-					
-					if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).needToRestart ) {
-						((ManagerQLearningScenario)(PoliticalVar.manager)).needToRestart = false;
-						ctxt.resetConfiguration();
-					}
 					ctxt.resetVariables();
 					ctxt.reload();
 			        smartGov.restart(ctxt);
+				}
 			        
-				} /*else {
+			        /*else {
 					File outputFolder = new File(
 							smartGov.getContext().getFileLoader().load("outputDir"),
 							"simulation"

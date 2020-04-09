@@ -164,13 +164,13 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 						);
 				nextAction = MoverAction.ENTER(round.getOrigin());
 				position += 1;
-				triggerRoundEndListeners(new RoundEnd());
 			}
 			journeyTime += ExtendedDate.getTimeBetween(departures[position - 1], SmartGov.getRuntime().getClock().time());
 			if (position == 3) {
 				personality.giveTime(journeyTime);
 				personality.computeSatisfactionOfAgent();
 				personality.giveSatisfactionToNeighborhoods();
+				triggerRoundEndListeners(new RoundEnd());
 			}
 		});
 		

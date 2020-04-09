@@ -121,11 +121,11 @@ public class WorkerBehavior extends PrivateDriverBehavior {
 						+ " is back home "
 						);
 				nextAction = MoverAction.ENTER(round.getOrigin());
-				triggerRoundEndListeners(new RoundEnd());
 				journeyTime += ExtendedDate.getTimeBetween(departures[1], SmartGov.getRuntime().getClock().time());
 				personality.giveTime(journeyTime);
 				personality.computeSatisfactionOfAgent();
 				personality.giveSatisfactionToNeighborhoods();
+				triggerRoundEndListeners(new RoundEnd());
 			}
 		});
 		

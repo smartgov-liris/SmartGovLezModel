@@ -22,6 +22,7 @@ import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertSelector;
 import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
+import org.liris.smartgov.lez.core.environment.lez.criteria.CritAir;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 import org.liris.smartgov.simulator.urban.osm.agent.OsmAgent;
 
@@ -61,6 +62,7 @@ public class LezPreprocessor {
 				causeNeighborhoods.add(environment.getNeighborhood(establishment.getClosestOsmNode()));
 			}
 			
+			
 			int i = 0;
 			while( i < round.getEstablishments().size()) {
 				Neighborhood neighborhood = environment.getNeighborhood(round.getEstablishments().get(i).getClosestOsmNode());
@@ -79,6 +81,15 @@ public class LezPreprocessor {
 				}
 				i++;
 			}
+			
+			//copert file does not have any critair1 for heavy duty truck, so we suppose they're accepted even if the criteria is CRITAIR_1
+			if (vehicle.getCategory() == VehicleCategory.HEAVY_DUTY_TRUCK && vehicle.getCritAir() == CritAir.CRITAIR_2) {
+				placesVehicleForbidden = 0;
+				if ( surveillance.ordinal() < Surveillance.CHEAP_TOLL.ordinal() ) {
+					causeNeighborhoods.clear();
+				}
+			}
+			
 			
 			//if no neighborhood has been added, the satisfaction will be attributed to the origin neighborhood
 			if ( causeNeighborhoods.isEmpty() ) {

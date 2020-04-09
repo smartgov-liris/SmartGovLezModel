@@ -162,13 +162,13 @@ public class DeliveryDriverBehavior extends DriverBehavior {
 				
 				// Go back the origin parking area and end round
 				nextAction = MoverAction.ENTER(round.getOrigin());
-				triggerRoundEndListeners(new RoundEnd());
 				//we give to the personality the total time of the round
 				personality.giveTime(ExtendedDate.getTimeBetween(round.getDeparture(), 
 						SmartGov.getRuntime().getClock().time()));
 				//we give the total satisfaction to the concerned neighborhoods
 				personality.computeSatisfactionOfAgent();
 				personality.giveSatisfactionToNeighborhoods();
+				triggerRoundEndListeners(new RoundEnd());
 			}
 			currentPosition++;
 		});
