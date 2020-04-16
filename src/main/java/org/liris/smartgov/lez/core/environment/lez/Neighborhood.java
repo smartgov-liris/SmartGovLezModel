@@ -201,6 +201,7 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		nbFraud = 0;
 		nbChangedMobilities = 0;
 		nbChangedVehicles = 0;
+		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "");
 	}
 
 	/*
@@ -287,7 +288,7 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 				double pollution = referencePollution.get(Pollutant.N2O).getAbsValue() - this.pollution.get(Pollutant.N2O).getAbsValue() +
 						referencePollution.get(Pollutant.CO).getAbsValue() - this.pollution.get(Pollutant.CO).getAbsValue() +
 						referencePollution.get(Pollutant.PM).getAbsValue() - this.pollution.get(Pollutant.PM).getAbsValue();
-				features.add(pollution/1000);
+				features.add(pollution);
 			}
 			else if ( label.equals("Satisfaction") ) {
 				double satisfaction = 0;
@@ -311,12 +312,17 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 				double pollution = (referencePollution.get(Pollutant.N2O).getAbsValue() - this.pollution.get(Pollutant.N2O).getAbsValue()) +
 						(referencePollution.get(Pollutant.CO).getAbsValue() - this.pollution.get(Pollutant.CO).getAbsValue()) +
 						(referencePollution.get(Pollutant.PM).getAbsValue() - this.pollution.get(Pollutant.PM).getAbsValue());
-				pollution = pollution/70;
+				pollution = pollution/700;
 				//compute satisfaction
 				double satisfaction = 0;
 				for ( double satisfactionScore : satisfactions ) {
 					satisfaction += satisfactionScore;
 				}
+				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "Neighborhood " + id);
+				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "   Satisfaction : " + satisfaction);
+				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "   N2O Ref : " + referencePollution.get(Pollutant.N2O).getAbsValue() + ", now : " + this.pollution.get(Pollutant.N2O).getAbsValue());
+				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "   CO Ref : " + referencePollution.get(Pollutant.CO).getAbsValue() + ", now : " + this.pollution.get(Pollutant.CO).getAbsValue());
+				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "   PM Ref : " + referencePollution.get(Pollutant.PM).getAbsValue() + ", now : " + this.pollution.get(Pollutant.PM).getAbsValue());
 				satisfaction = satisfaction/ 1000;
 				features.add(pollution + satisfaction);
 			}

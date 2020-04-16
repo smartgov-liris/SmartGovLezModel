@@ -89,9 +89,6 @@ public class Personality {
 		}
 		else {
 			timeLost = initialTime - time;
-			if (timeLost != 0) {
-				System.out.println("AHAHAAAA Init : " + initialTime + ", mtnt : " + time);
-			}
 		}
 	}
 	

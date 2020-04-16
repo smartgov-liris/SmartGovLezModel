@@ -3,6 +3,7 @@ package org.liris.smartgov.lez.core.environment;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
@@ -61,6 +62,24 @@ public class LezContext extends OsmContext {
 			neighborhood.setSurveillance(Surveillance.NO_SURVEILLANCE);
 		}
 	}
+	
+	public void setRandomConfiguration() {
+		CritAir deliveryCriteria = randomEnum(CritAir.class);
+		CritAir privateCriteria = randomEnum(CritAir.class);
+		Surveillance surveillance = randomEnum(Surveillance.class);
+		
+		for (Neighborhood neighborhood : ((DeliveriesScenario)getScenario()).getEnvironment().getNeighborhoods().values() ) {
+			neighborhood.setDeliveryLezCriteria(new CritAirCriteria(deliveryCriteria));
+			neighborhood.setPrivateLezCriteria(new CritAirCriteria(privateCriteria));
+			neighborhood.setSurveillance(surveillance);
+		}
+	}
+	
+    public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
+    	Random random = new Random();
+        int x = random.nextInt(clazz.getEnumConstants().length);
+        return clazz.getEnumConstants()[x];
+    }
 
 	
 	@Override

@@ -82,13 +82,13 @@ public class DeliveryDriverBehavior extends DriverBehavior {
 			
 			if (currentPosition <= round.getEstablishments().size() - 1) {
 				Establishment currentEstablishment = round.getEstablishments().get(currentPosition);
-				Run.logger.info(
+				/*Run.logger.info(
 						"[" + SmartGov.getRuntime().getClock().getHour()
 						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 						+ "Agent " + getAgentBody().getAgent().getId()
 						+ " has reached establishment [" + currentEstablishment.getId()
 						+ "] " + currentEstablishment.getName()
-						);
+						);*/
 				if (currentPosition < round.getEstablishments().size() - 1) {
 					// Go to the next node of the round
 					Node currentNode = currentEstablishment.getClosestOsmNode();
@@ -98,13 +98,13 @@ public class DeliveryDriverBehavior extends DriverBehavior {
 						// Sometimes, two consecutive establishment has the same closest osm node.
 						currentPosition++;
 						currentEstablishment = round.getEstablishments().get(currentPosition);
-						Run.logger.info(
+						/*Run.logger.info(
 								"[" + SmartGov.getRuntime().getClock().getHour()
 								+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 								+ "Agent " + getAgentBody().getAgent().getId()
 								+ " has reached establishment [" + currentEstablishment.getId()
 								+ "] " + currentEstablishment.getName()
-								);
+								);*/
 						currentNode = round.getEstablishments().get(currentPosition).getClosestOsmNode();
 						nextNode = round.getEstablishments().get(currentPosition + 1).getClosestOsmNode();
 					}

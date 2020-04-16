@@ -126,7 +126,6 @@ public class ManagerQLearningScenario extends AbstractManager {
 	
 	protected void randomStateGenerator(boolean generateRandomState) {
 		if(generateRandomState) {
-			System.out.println("Restart : " + NUMBER_OF_SIMULATIONS_BEFORE_RESTART + ", index : " + currentSimulationIndex);
 			//Try with a limited number of trials and a cumulative reward
 			if(NUMBER_OF_SIMULATIONS_BEFORE_RESTART == currentSimulationIndex) {
 				recentlyReset = true;

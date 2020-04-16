@@ -6,6 +6,9 @@ import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
 import org.liris.smartgov.lez.core.environment.graph.PollutionIncreasedEvent;
+import org.liris.smartgov.lez.core.simulation.files.FilePath;
+import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
+import org.liris.smartgov.lez.politic.PoliticalVar;
 import org.liris.smartgov.simulator.core.agent.moving.MovingAgentBody;
 import org.liris.smartgov.simulator.urban.geo.agent.GeoAgentBody;
 import org.liris.smartgov.simulator.urban.geo.agent.mover.BasicGeoMover;
@@ -92,8 +95,10 @@ public class PollutantCarMover extends CarMover {
 					.getVehicle()
 					.getEmissions(pollutant, traveledDistance / time, traveledDistance);
 			for (PollutableOsmArc arc : arcsCrossed) {
-				if (traveledDistance != 0) {
-					arc.increasePollution(pollutant, emissions * arc.getLength() / traveledDistance);
+				if (emissions > 0.0) {
+					if (traveledDistance != 0) {
+						arc.increasePollution(pollutant, emissions * arc.getLength() / traveledDistance);
+					}
 				}
 			}
 		}

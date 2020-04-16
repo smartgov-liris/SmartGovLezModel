@@ -123,7 +123,7 @@ public class LezPreprocessor {
 			}
 			else if (decision == Decision.CHANGE_MOBILITY) {
 				establishment.replaceVehicle(vehicle.getId(), null);
-				personality.changeVehicle();
+				personality.changeMobility();
 				mobilityChanged ++;
 			}
 			else if (decision == Decision.DO_NOTHING && placesVehicleForbidden > 0) {

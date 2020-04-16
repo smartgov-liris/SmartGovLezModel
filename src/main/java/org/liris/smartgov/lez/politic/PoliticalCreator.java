@@ -106,7 +106,9 @@ public class PoliticalCreator {
 		actions.add(PolicyAction.INCREASE_PRIVATE_CRITERIA);
 		actions.add(PolicyAction.DECREASE_SURVEILLANCE);
 		actions.add(PolicyAction.INCREASE_SURVEILLANCE);
-		actions.add(PolicyAction.DO_NOTHING);		
+		actions.add(PolicyAction.DO_NOTHING);
+		
+		List<PolicyAction> specialActions = getSpecialPolicyActions() ;
 		List<Structure> structures = new ArrayList<>();
 		for(Structure structure : environment.getNeighborhoods().values()) {
 			structures.add(structure);
@@ -114,6 +116,15 @@ public class PoliticalCreator {
 		
 		Perimeter perimeter = new Perimeter(structures);
 		
-		PoliticalVar.policyAgents.add(new PolicyAgent("0", perimeter, actions));
+		PoliticalVar.policyAgents.add(new PolicyAgent("0", perimeter, actions, specialActions));
 	}
+	
+	protected static List<PolicyAction> getSpecialPolicyActions() {
+		List<PolicyAction> policyActions = new ArrayList<>();
+		policyActions.add(PolicyAction.MERGE);
+		policyActions.add(PolicyAction.ROLLBACK);
+		policyActions.add(PolicyAction.KEEP);
+		return policyActions;
+	}
+	
 }

@@ -54,9 +54,9 @@ public class LezCosts implements Costs {
 	 */
 	@Override
 	public double cost(Arc arc) {
-		if (! ((PollutableOsmArc)arc).isAllowed(vehicle)) {
+		/*if (! ((PollutableOsmArc)arc).isAllowed(vehicle)) {
 			return Double.MAX_VALUE;
-		}
+		}*/
 		return arc.getLength();
 	}
 	

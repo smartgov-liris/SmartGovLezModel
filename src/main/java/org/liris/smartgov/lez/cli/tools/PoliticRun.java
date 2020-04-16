@@ -123,7 +123,6 @@ public class PoliticRun {
 				for (Pollution pollution : pollutionMap.values()) {
 					logger.info(pollution.get(Pollutant.CO));
 				}*/
-				PoliticalVar.manager.live();
 				
 				if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).needToStop ) {
 					EnvironmentSerializer.SerializeEnvironment(FilePath.outputFolder,
@@ -133,8 +132,11 @@ public class PoliticRun {
 					if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).isRecentlyReset() ) {
 						FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "reset.txt", 
 								String.valueOf( PoliticalVar.manager.getCurrentIteration()));
-						ctxt.resetConfiguration();
+						//ctxt.resetConfiguration();
+						ctxt.setRandomConfiguration();
 					}
+					
+					PoliticalVar.manager.live();
 					
 					logger.info("\n\n\n"
 							+ "_________________________________ \n"
@@ -142,6 +144,15 @@ public class PoliticRun {
 							+ "|     Relaunching simulation    | \n"
 							+ "|                               | \n"
 							+ "|_______________________________| \n\n");
+					
+			        double CO = 0.0;
+			        for ( Neighborhood n : ( (DeliveriesScenario)  smartGov.getContext().getScenario()).getEnvironment().getNeighborhoods().values() ) {
+			        	double nb = n.getPollution().get(Pollutant.CO).getAbsValue();
+			        	if ( !Double.isNaN(nb))
+			        		CO += nb;
+			        }
+					FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "popollution.txt", 
+							String.valueOf(CO));
 					
 					ctxt.resetVariables();
 					ctxt.reload();

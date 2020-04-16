@@ -43,15 +43,6 @@ public class CopertParser {
 	}
 	
 	/**
-	 * Loads and parse a CopertTree from the input table.
-	 * 
-	 * @param copertParametersFile copert table file path
-	 */
-	public CopertParser(File copertParametersFile) {
-		this(copertParametersFile, new Random());
-	}
-	
-	/**
 	 * @return Root CopertTree
 	 */
 	public CopertTree getCopertTree() {
