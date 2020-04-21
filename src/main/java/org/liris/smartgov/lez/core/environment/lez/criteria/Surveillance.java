@@ -7,5 +7,5 @@ public enum Surveillance {
 	BARRIER,
 	CHEAP_TOLL,
 	MEDIUM_TOLL,
-	EXPENSIVE_TOLL
+	EXPENSIVE_TOLL;
 }

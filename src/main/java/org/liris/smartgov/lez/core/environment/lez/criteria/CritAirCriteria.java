@@ -20,11 +20,19 @@ public class CritAirCriteria implements LezCriteria {
 	}
 	
 	public void increaseCriteria () {
-		allowed = CritAir.values()[allowed.ordinal() - 1];
+		if ( allowed != CritAir.CRITAIR_1) {
+			allowed = CritAir.values()[allowed.ordinal() - 1];
+		}
 	}
 	
 	public void decreaseCriteria () {
-		allowed = CritAir.values()[allowed.ordinal() + 1];
+		if ( allowed != CritAir.NONE ) {
+			allowed = CritAir.values()[allowed.ordinal() + 1];
+		}
+	}
+	
+	public CritAir getCritAir() {
+		return allowed;
 	}
 
 }

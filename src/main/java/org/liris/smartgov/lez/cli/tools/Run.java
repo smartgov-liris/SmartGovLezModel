@@ -59,7 +59,8 @@ public class Run {
 			return;
 		}
 
-		String configFile = "config.properties";
+		//String configFile = "config.properties";
+		String configFile = "input/static_config_lez.properties";
 		if(cmd.hasOption("c")) {
 			configFile = cmd.getOptionValue("c");
 		}

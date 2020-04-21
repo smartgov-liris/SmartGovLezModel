@@ -2,6 +2,7 @@ HELP.md
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
+/input_political/
 
 ### STS ###
 .apt_generated
@@ -44,3 +45,6 @@ simturb_ways.json
 #Output
 *.log
 output
+
+#extsrc
+*.pyc

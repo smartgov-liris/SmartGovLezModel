@@ -32,6 +32,8 @@ import org.liris.smartgov.lez.core.environment.LezContext;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArcFactory;
 import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.input.establishment.EstablishmentLoader;
+import org.liris.smartgov.lez.politic.PoliticalCreator;
+import org.liris.smartgov.lez.politic.PoliticalVar;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.agent.core.Agent;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
@@ -57,6 +59,7 @@ public class DeliveriesScenario extends PollutionScenario {
 	 */
 	public static final String name = "LezDeliveries";
 	private Map<String, Establishment> establishments;
+	private Map<String, Integer> simpleIds;
 	
 	
 	
@@ -94,6 +97,7 @@ public class DeliveriesScenario extends PollutionScenario {
 	 */
 	public DeliveriesScenario(Environment environment) {
 		super(environment);
+		simpleIds = new HashMap<>();
 	}
 	
 	@Override
@@ -150,6 +154,8 @@ public class DeliveriesScenario extends PollutionScenario {
 				establishment.setPersonality(vehicleId, new Personality(establishment.getActivity(), vehicleId));
 			}
 		}
+		PoliticalVar pv = new PoliticalVar(context);
+		PoliticalCreator.createPoliticalLayer(getEnvironment());
 		
 		return establishments;
 	}
@@ -163,8 +169,12 @@ public class DeliveriesScenario extends PollutionScenario {
 		} else {
 			for (Establishment establishment: establishments.values()) {
 				establishment.resetFleet();
+				for ( Personality personality : establishment.getPersonalities().values() ) {
+					personality.resetPersonality();
+				}
 			}
 		}
+		resetRandom();
 		
 		PoliticRun.logger.info("Applying lez...");
 		LezPreprocessor preprocessor = new LezPreprocessor(getEnvironment(), parser);
@@ -183,18 +193,21 @@ public class DeliveriesScenario extends PollutionScenario {
 		PoliticRun.logger.info("[LEZ] Total number of mobility changed: " + totalMobilityChanged);
 		PoliticRun.logger.info("[LEZ] Total number of agents who chose to fraud : " + totalFrauds);
 		
-		
-		int agentId = 0;
 		Collection<OsmAgent> agents = new ArrayList<>();
 		Collection<BuildAgentThread> threads = new ArrayList<>();
 		
-		Random random = new Random(111111);
-		
+		Random rand = new Random(111111);
+		int agentId = 0;
 		for (Establishment establishment : establishments.values()) {
 			for (String vehicleId :  establishment.getRounds().keySet()) {
+				if ( ! reload ) {
+					simpleIds.put(establishment.getId() + vehicleId, agentId);
+					agentId++;
+				}
 				if ( establishment.getFleet().get(vehicleId) != null ) {
 					//if he didn't change mobility
-					BuildAgentThread thread = new BuildAgentThread(agentId++, vehicleId, establishment, (LezContext) context, random);
+					BuildAgentThread thread = new BuildAgentThread(simpleIds.get(establishment.getId() + vehicleId),
+							vehicleId, establishment, (LezContext) context, rand);
 					threads.add(thread);
 					thread.start();
 				}
@@ -221,6 +234,7 @@ public class DeliveriesScenario extends PollutionScenario {
 		private String vehicleId;
 		private Establishment establishment;
 		private LezContext context;
+		private static Map<String, String> savedBehaviorType = new HashMap<>();
 		
 		private OsmAgent builtAgent;
 		private DriverBehavior builtBehavior;
@@ -253,23 +267,40 @@ public class DeliveriesScenario extends PollutionScenario {
 			else {
 				//Private agent
 				if (establishment.getRounds().get(vehicleId).getEstablishments().size() < 2) {
-					//if only one establishment, might be either a worker (2/3) or a worker home at noon (1/3)
-					if (random.nextInt(4) == 0) {
-						builtBehavior = new WorkerHomeAtNoonBehavior(
-								driver,
-								establishment.getRounds().get(vehicleId),
-								establishment.getPersonalities().get(vehicleId),
-								context,
-								random);
+					//there can be two types of agents, worker home at noon or worker all day at work
+					String type;
+					//we chose his type or we take it back from a previous simulation
+					if (savedBehaviorType.get(String.valueOf(agentId)) == null) {
+						if (random.nextInt(4) == 0) {
+							type = "WorkerHomeAtNoonBehavior";
+							savedBehaviorType.put(String.valueOf(agentId), "WorkerHomeAtNoonBehavior");
+						}
+						else {
+							type = "WorkerBehavior";
+							savedBehaviorType.put(String.valueOf(agentId), "WorkerBehavior");
+						}
 					}
 					else {
+						type = savedBehaviorType.get(String.valueOf(agentId));
+					}
+					
+					//we create the chosen type of agent
+					if (type.equals("WorkerBehavior")) {
 						builtBehavior = new WorkerBehavior(
 								driver,
 								establishment.getRounds().get(vehicleId),
 								establishment.getPersonalities().get(vehicleId),
 								context, 
 								random);
+					} else {
+						builtBehavior = new WorkerHomeAtNoonBehavior(
+								driver,
+								establishment.getRounds().get(vehicleId),
+								establishment.getPersonalities().get(vehicleId),
+								context,
+								random);						
 					}
+					
 				} else {
 					builtBehavior = new WorkerOneActivityBehavior(
 							driver,
@@ -309,7 +340,9 @@ public class DeliveriesScenario extends PollutionScenario {
 					+ establishment.getName()
 					);*/
 				context.ongoingRounds.remove(builtAgent.getId());
-				PoliticRun.logger.info("Rounds still ongoing : " + context.ongoingRounds.size());
+				PoliticRun.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]" +
+						"Rounds still ongoing : " + context.ongoingRounds.size());
 				if(context.ongoingRounds.isEmpty()) {
 					SmartGov.getRuntime().stop();
 				}

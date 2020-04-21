@@ -7,6 +7,8 @@ import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.driver.personality.Personality;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.simulation.ExtendedDate;
+import org.liris.smartgov.lez.core.simulation.files.FilePath;
+import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.agent.moving.behavior.MoverAction;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
@@ -67,13 +69,12 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 			new DelayedActionHandler(
 					departure,
 					() -> {
-						if (Integer.parseInt(getAgentBody().getAgent().getId()) <= 100) {
-							Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
-									+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
-									+ "Agent " + getAgentBody().getAgent().getId()
-									+ " leaves his home "
-									);
-						}
+
+						/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+								+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
+								+ "Agent " + getAgentBody().getAgent().getId()
+								+ " leaves his home "
+								);*/
 						nextAction = MoverAction.LEAVE(round.getOrigin());
 						triggerRoundDepartureListeners(new RoundDeparture());
 					}
@@ -90,11 +91,11 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 			new DelayedActionHandler(
 					departure,
 					() -> {
-						Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+						/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 								+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 								+ "Agent " + getAgentBody().getAgent().getId()
 								+ " left work "
-								);
+								);*/
 						
 						nextAction = MoverAction.LEAVE(round.getEstablishments().get(0));
 						triggerRoundDepartureListeners(new RoundDeparture());
@@ -112,11 +113,11 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 			new DelayedActionHandler(
 					departure,
 					() -> {
-						Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+						/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 								+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 								+ "Agent " + getAgentBody().getAgent().getId()
 								+ " left work "
-								);
+								);*/
 						if ( position != 2 ) {
 							//we could implement another behavior in this case instead of throwing an exception
 							throw new IllegalStateException("Agent received a new place to go but he did not reach the previous one");
@@ -128,26 +129,25 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 					)
 			);
 		
-		
 		((DriverBody) getAgentBody()).addOnDestinationReachedListener((event) -> {
 			if ( position == 0 ) {
 				//he arrives to work
-				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+				/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 						+ "Agent " + getAgentBody().getAgent().getId()
 						+ " arrived at work "
-						);
+						);*/
 				refresh(round.getEstablishments().get(0).getClosestOsmNode(),
 						round.getEstablishments().get(1).getClosestOsmNode());
 				nextAction = MoverAction.ENTER(round.getEstablishments().get(0));
 				position += 1;
 			} else  if (position == 1){
 				//he just arrived at his activity
-				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+				/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 						+ "Agent " + getAgentBody().getAgent().getId()
 						+ " arrived at his activity "
-						);
+						);*/
 				
 				refresh(round.getEstablishments().get(1).getClosestOsmNode(),
 						round.getOrigin().getClosestOsmNode());
@@ -157,18 +157,20 @@ public class WorkerOneActivityBehavior extends PrivateDriverBehavior {
 			}
 			else {
 				//he is back home
-				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+				/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 						+ "Agent " + getAgentBody().getAgent().getId()
 						+ " is back home "
-						);
+						);*/
 				nextAction = MoverAction.ENTER(round.getOrigin());
 				position += 1;
-				triggerRoundEndListeners(new RoundEnd());
 			}
 			journeyTime += ExtendedDate.getTimeBetween(departures[position - 1], SmartGov.getRuntime().getClock().time());
 			if (position == 3) {
 				personality.giveTime(journeyTime);
+				personality.computeSatisfactionOfAgent();
+				personality.giveSatisfactionToNeighborhoods();
+				triggerRoundEndListeners(new RoundEnd());
 			}
 		});
 		

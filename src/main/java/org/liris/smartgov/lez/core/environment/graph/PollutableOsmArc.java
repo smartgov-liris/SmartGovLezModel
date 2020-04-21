@@ -76,7 +76,7 @@ public class PollutableOsmArc extends OsmArc {
 	}
 	
 	public String getNeighborhoodId() {
-		return neighborhood.getId();
+		return neighborhood.getID();
 	}
 	
 	public boolean isAllowed (Vehicle vehicle) {

@@ -67,9 +67,9 @@ public class Environment {
 		return neighborhoods;
 	}
 	
-	public void resetNeighborhoodPollution() {
+	public void resetNeighborhoodVariables() {
 		for (Neighborhood neighborhood : neighborhoods.values()) {
-			neighborhood.resetPollution();
+			neighborhood.resetVariables();
 		}
 	}
 	
@@ -81,34 +81,13 @@ public class Environment {
 	public Map<String, Pollution> getPollutionByNeighborhood() {
 		Map<String, Pollution> pollutions = new HashMap<>();
 		for ( Neighborhood neighborhood : neighborhoods.values() ) {
-			pollutions.put(neighborhood.getId(), neighborhood.getPollution());
+			pollutions.put(neighborhood.getID(), neighborhood.getPollution());
 		}
 		return pollutions;
 	}
 	
 	public static Environment none() {
 		return new noLezEnvironment();
-	}
-	
-	
-	public void increaseDeliveryCriteria (String id) {
-		Neighborhood neighborhood = getNeighborhood(id);
-		((CritAirCriteria)neighborhood.getDeliveryLezCriteria()).increaseCriteria();
-	}
-	
-	public void increasePrivateCriteria (String id) {
-		Neighborhood neighborhood = getNeighborhood(id);
-		((CritAirCriteria)neighborhood.getPrivateLezCriteria()).increaseCriteria();
-	}
-	
-	public void decreaseDeliveryCriteria (String id) {
-		Neighborhood neighborhood = getNeighborhood(id);
-		((CritAirCriteria)neighborhood.getDeliveryLezCriteria()).decreaseCriteria();
-	}
-	
-	public void decreasePrivateCriteria (String id) {
-		Neighborhood neighborhood = getNeighborhood(id);
-		((CritAirCriteria)neighborhood.getPrivateLezCriteria()).decreaseCriteria();
 	}
 	
 	private static class noLezEnvironment extends Environment {

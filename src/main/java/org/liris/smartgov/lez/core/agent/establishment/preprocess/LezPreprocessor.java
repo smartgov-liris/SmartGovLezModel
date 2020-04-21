@@ -4,6 +4,7 @@ import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.liris.smartgov.lez.core.agent.driver.behavior.DriverBehavior;
@@ -21,6 +22,7 @@ import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertSelector;
 import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
+import org.liris.smartgov.lez.core.environment.lez.criteria.CritAir;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 import org.liris.smartgov.simulator.urban.osm.agent.OsmAgent;
 
@@ -46,6 +48,9 @@ public class LezPreprocessor {
 		for(Vehicle vehicle : establishment.getFleet().values()) {
 			Round round = establishment.getRounds().get(vehicle.getId());
 			
+			//stocks the neighborhoods that forbid the vehicle and has the highest level of surveillance
+			List<Neighborhood> causeNeighborhoods = new ArrayList<>();
+			
 			//counts the number of places in the journey where the vehicle is forbidden
 			int placesVehicleForbidden = 0;
 			Surveillance surveillance = Surveillance.NO_SURVEILLANCE;
@@ -54,7 +59,9 @@ public class LezPreprocessor {
 				//if the origin establishment does not allow the vehicle
 				placesVehicleForbidden ++;
 				surveillance = environment.getNeighborhood(establishment.getClosestOsmNode()).getSurveillance();
+				causeNeighborhoods.add(environment.getNeighborhood(establishment.getClosestOsmNode()));
 			}
+			
 			
 			int i = 0;
 			while( i < round.getEstablishments().size()) {
@@ -64,17 +71,37 @@ public class LezPreprocessor {
 					placesVehicleForbidden ++;
 					if (neighborhood.getSurveillance().ordinal() > surveillance.ordinal()) {
 						surveillance = neighborhood.getSurveillance();
+						//we reset the cause neighborhoods and add this one
+						causeNeighborhoods = new ArrayList<>();
+						causeNeighborhoods.add(neighborhood);
+					}
+					else if ( neighborhood.getSurveillance().ordinal() == surveillance.ordinal() ) {
+						causeNeighborhoods.add(neighborhood);
 					}
 				}
 				i++;
 			}
 			
+			//copert file does not have any critair1 for heavy duty truck, so we suppose they're accepted even if the criteria is CRITAIR_1
+			if (vehicle.getCategory() == VehicleCategory.HEAVY_DUTY_TRUCK && vehicle.getCritAir() == CritAir.CRITAIR_2) {
+				placesVehicleForbidden = 0;
+				if ( surveillance.ordinal() < Surveillance.CHEAP_TOLL.ordinal() ) {
+					causeNeighborhoods.clear();
+				}
+			}
+			
+			
+			//if no neighborhood has been added, the satisfaction will be attributed to the origin neighborhood
+			if ( causeNeighborhoods.isEmpty() ) {
+				causeNeighborhoods.add(environment.getNeighborhood(establishment.getClosestOsmNode()));
+			}
+			
 			Personality personality = establishment.getPersonalities().get(vehicle.getId());
-			Decision decision = personality.getDecision(surveillance, placesVehicleForbidden);
+			Decision decision = personality.getDecision(surveillance, placesVehicleForbidden, causeNeighborhoods);
 			if(decision == Decision.CHANGE_VEHICLE) {
 				CopertSelector selector = new CopertSelector();
 				selector.put(CopertHeader.CATEGORY, vehicle.getCategory());
-				if (vehicle.getCategory() != VehicleCategory.HEAVY_DUTY_TRUCK) {
+				if (vehicle.getCategory() == VehicleCategory.HEAVY_DUTY_TRUCK) {
 					//only Diesel is available for heavy duty trucks
 					selector.put(CopertHeader.FUEL, Fuel.DIESEL);
 				} else {
@@ -96,7 +123,7 @@ public class LezPreprocessor {
 			}
 			else if (decision == Decision.CHANGE_MOBILITY) {
 				establishment.replaceVehicle(vehicle.getId(), null);
-				personality.changeVehicle();
+				personality.changeMobility();
 				mobilityChanged ++;
 			}
 			else if (decision == Decision.DO_NOTHING && placesVehicleForbidden > 0) {

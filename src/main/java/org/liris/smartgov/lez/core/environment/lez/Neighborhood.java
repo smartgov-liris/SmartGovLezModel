@@ -9,15 +9,27 @@ import org.locationtech.jts.geom.Location;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
+
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.copert.fields.VehicleCategory;
+import org.liris.smartgov.lez.core.environment.Structure;
 import org.liris.smartgov.lez.core.environment.lez.criteria.AllAllowedCriteria;
+import org.liris.smartgov.lez.core.environment.lez.criteria.CritAir;
+import org.liris.smartgov.lez.core.environment.lez.criteria.CritAirCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCosts;
 import org.liris.smartgov.lez.core.environment.lez.criteria.LezCriteria;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
+import org.liris.smartgov.lez.core.environment.lez.criteria.SurveillanceManager;
 import org.liris.smartgov.lez.core.environment.pollution.Pollution;
+import org.liris.smartgov.lez.core.simulation.files.FilePath;
+import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
+import org.liris.smartgov.lez.politic.policyagent.ActionableByPolicyAgent;
+import org.liris.smartgov.lez.politic.policyagent.FeaturesDouble;
+import org.liris.smartgov.lez.politic.policyagent.PolicyAction;
 import org.liris.smartgov.simulator.core.environment.graph.astar.Costs;
 import org.liris.smartgov.simulator.urban.geo.environment.graph.DistanceCosts;
 import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
@@ -28,7 +40,7 @@ import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
  * A Low Emission Zone representation.
  *
  */
-public class Neighborhood {
+public class Neighborhood implements Structure , ActionableByPolicyAgent{
 	
 	private LatLon[] perimeter;
 	private PointOnGeometryLocator locator;
@@ -36,7 +48,12 @@ public class Neighborhood {
 	private LezCriteria privateLezCriteria;
 	private String id;
 	private Pollution pollution;
-	private Surveillance surveillance;
+	private Pollution referencePollution;
+	private SurveillanceManager surveillance;
+	private List<Double> satisfactions;
+	private int nbFraud;
+	private int nbChangedMobilities;
+	private int nbChangedVehicles;
 	
 	/**
 	 * Lez constructor.
@@ -53,7 +70,11 @@ public class Neighborhood {
 		this.deliveryLezCriteria = deliveryLezCriteria;
 		this.privateLezCriteria = privateLezCriteria;
 		pollution = new Pollution();
-		this.surveillance = surveillance;
+		this.surveillance = new SurveillanceManager(surveillance);
+		satisfactions = new ArrayList<>();
+		nbFraud = 0;
+		nbChangedMobilities = 0;
+		nbChangedVehicles = 0;
 		
 		GeometryFactory factory = new GeometryFactory();
 		
@@ -93,7 +114,7 @@ public class Neighborhood {
 	}
 	
 	public Surveillance getSurveillance() {
-		return surveillance;
+		return surveillance.getSurveillance();
 	}
 	
 	/**
@@ -119,11 +140,7 @@ public class Neighborhood {
 	}
 	
 	public void setSurveillance (Surveillance surveillance) {
-		this.surveillance = surveillance;
-	}
-	
-	public String getId() {
-		return id;
+		this.surveillance.setSurveillance(surveillance);
 	}
 	
 	public void increasePollution(Pollutant pollutant, double increment) {
@@ -132,6 +149,19 @@ public class Neighborhood {
 	
 	public Pollution getPollution() {
 		return pollution;
+	}
+	
+	public void giveSatisfaction ( double satisfaction, boolean changedVehicle, boolean changedMobility, boolean fraud ) {
+		satisfactions.add(satisfaction);
+		if ( changedVehicle ) {
+			nbChangedVehicles += 1;
+		}
+		if ( changedMobility ) {
+			nbChangedMobilities += 1;
+		}
+		if ( fraud ) {
+			nbFraud += 1;
+		}
 	}
 	
 	/**
@@ -150,7 +180,7 @@ public class Neighborhood {
 		
 		if(isAllowed(vehicle))
 			return new DistanceCosts();
-		return new LezCosts();
+		return new LezCosts(vehicle);
 	}
 	
 	public boolean isAllowed (Vehicle vehicle) {
@@ -162,8 +192,16 @@ public class Neighborhood {
 		}
 	}
 	
-	public void resetPollution() {
+	public void resetVariables() {
+		if (referencePollution == null) {
+			referencePollution = pollution;
+		}
 		pollution = new Pollution();
+		satisfactions = new ArrayList<>();
+		nbFraud = 0;
+		nbChangedMobilities = 0;
+		nbChangedVehicles = 0;
+		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "");
 	}
 
 	/*
@@ -201,17 +239,6 @@ public class Neighborhood {
 		return new NoLez();
 	}
 	
-	public Hashtable<Integer, LatLon> createTable(LatLon[] coordinates) {
-		
-		Hashtable<Integer, LatLon> perimeter = new Hashtable<Integer, LatLon>();		
-		int id = 0;
-		for (LatLon coordinate : coordinates) {
-			perimeter.put(id, coordinate);
-			id++;
-		}
-		return perimeter;
-	}
-	
 	private static class NoLez extends Neighborhood {
 		
 		/*
@@ -224,6 +251,133 @@ public class Neighborhood {
 		}
 		
 
+	}
+	
+	@Override
+	public String getID() {
+		return id;
+	}
+	
+	@Override
+	public String getClassName() {
+		return this.getClass().getName();
+	}
+
+	public double getAbsPollution() {
+		double pollution = this.pollution.get(Pollutant.N2O).getAbsValue() + 
+				this.pollution.get(Pollutant.CO).getAbsValue() +
+				this.pollution.get(Pollutant.PM).getAbsValue();
+		return pollution;
+	}
+	
+	public double getAbsSatisfaction() {
+		double satisfaction = 0.0;
+		for (double s : satisfactions) {
+			satisfaction += s;
+		}
+		return satisfaction;
+	}
+	
+	@Override
+	public FeaturesDouble getLocalPerformances(List<String> labels) {
+		List<Double> features = new ArrayList<>();
+		
+		for ( String label : labels ) {
+			if ( label.equals("Pollution") ) {
+				//compute pollution
+				double pollution = referencePollution.get(Pollutant.N2O).getAbsValue() - this.pollution.get(Pollutant.N2O).getAbsValue() +
+						referencePollution.get(Pollutant.CO).getAbsValue() - this.pollution.get(Pollutant.CO).getAbsValue() +
+						referencePollution.get(Pollutant.PM).getAbsValue() - this.pollution.get(Pollutant.PM).getAbsValue();
+				features.add(pollution);
+			}
+			else if ( label.equals("Satisfaction") ) {
+				double satisfaction = 0;
+				for ( double satisfactionScore : satisfactions ) {
+					satisfaction += satisfactionScore;
+				}
+				
+				features.add(satisfaction);
+			}
+			else if ( label.equals("ChangedVehicles") ) {
+				features.add((double)nbChangedVehicles);
+			}
+			else if ( label.equals("changedMobilities") ) {
+				features.add((double)nbChangedMobilities);
+			}
+			else if ( label.equals("frauded") ) {
+				features.add((double)nbFraud);
+			}
+			else if (label.equals("gain")) {
+				//compute pollution
+				double pollution = (referencePollution.get(Pollutant.N2O).getAbsValue() - this.pollution.get(Pollutant.N2O).getAbsValue()) +
+						(referencePollution.get(Pollutant.CO).getAbsValue() - this.pollution.get(Pollutant.CO).getAbsValue()) +
+						(referencePollution.get(Pollutant.PM).getAbsValue() - this.pollution.get(Pollutant.PM).getAbsValue());
+				pollution = pollution/700;
+				//compute satisfaction
+				double satisfaction = 0;
+				for ( double satisfactionScore : satisfactions ) {
+					satisfaction += satisfactionScore;
+				}
+				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "Neighborhood " + id);
+				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "   Satisfaction : " + satisfaction);
+				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "   N2O Ref : " + referencePollution.get(Pollutant.N2O).getAbsValue() + ", now : " + this.pollution.get(Pollutant.N2O).getAbsValue());
+				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "   CO Ref : " + referencePollution.get(Pollutant.CO).getAbsValue() + ", now : " + this.pollution.get(Pollutant.CO).getAbsValue());
+				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "   PM Ref : " + referencePollution.get(Pollutant.PM).getAbsValue() + ", now : " + this.pollution.get(Pollutant.PM).getAbsValue());
+				satisfaction = satisfaction/ 1000;
+				features.add(pollution + satisfaction);
+			}
+		}
+		return new FeaturesDouble(features);
+	}
+
+	@Override
+	public List<PolicyAction> getAvailablePolicyActions() {
+		List<PolicyAction> availableActions = new ArrayList<>();
+		availableActions.add(PolicyAction.DO_NOTHING);
+		if ( ((CritAirCriteria)deliveryLezCriteria).getCritAir() != CritAir.CRITAIR_1 ) {
+			availableActions.add(PolicyAction.INCREASE_DELIVERIE_CRITERIA);
+		}
+		if ( ((CritAirCriteria)deliveryLezCriteria).getCritAir() != CritAir.NONE ) {
+			availableActions.add(PolicyAction.DECREASE_DELIVERIE_CRITERIA);
+		}
+		if ( ((CritAirCriteria)privateLezCriteria).getCritAir() != CritAir.CRITAIR_1 ) {
+			availableActions.add(PolicyAction.INCREASE_PRIVATE_CRITERIA);
+		}
+		if ( ((CritAirCriteria)privateLezCriteria).getCritAir() != CritAir.NONE ) {
+			availableActions.add(PolicyAction.DECREASE_PRIVATE_CRITERIA);
+		}
+		if (surveillance.getSurveillance() != Surveillance.EXPENSIVE_TOLL) {
+			availableActions.add(PolicyAction.INCREASE_SURVEILLANCE);
+		}
+		if ( surveillance.getSurveillance() != Surveillance.NO_SURVEILLANCE ) {
+			availableActions.add(PolicyAction.DECREASE_SURVEILLANCE);
+		}
+		return availableActions;
+	}
+
+	@Override
+	public void doPolicyAction(PolicyAction policyAction) {
+		switch (policyAction) {
+		case INCREASE_DELIVERIE_CRITERIA:
+			((CritAirCriteria)deliveryLezCriteria).increaseCriteria();
+			break;
+		case DECREASE_DELIVERIE_CRITERIA:
+			((CritAirCriteria)deliveryLezCriteria).decreaseCriteria();
+			break;
+		case INCREASE_PRIVATE_CRITERIA:
+			((CritAirCriteria)privateLezCriteria).increaseCriteria();
+			break;
+		case DECREASE_PRIVATE_CRITERIA:
+			((CritAirCriteria)privateLezCriteria).decreaseCriteria();
+			break;
+		case INCREASE_SURVEILLANCE:
+			surveillance.increaseSurveillance();
+			break;
+		case DECREASE_SURVEILLANCE:
+			surveillance.decreaseSurveillance();
+			break;
+		default:
+	}
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.liris.smartgov.lez.cli.tools;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
@@ -14,11 +16,17 @@ import org.apache.logging.log4j.Logger;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.environment.LezContext;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
+import org.liris.smartgov.lez.core.environment.lez.EnvironmentSerializer;
+import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.lez.core.environment.pollution.Pollution;
 import org.liris.smartgov.lez.core.simulation.ExtendedSimulationBuilder;
 import org.liris.smartgov.lez.core.simulation.ExtendedSimulationRuntime;
 import org.liris.smartgov.lez.core.simulation.ExtendedSmartGov;
+import org.liris.smartgov.lez.core.simulation.files.FilePath;
+import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
 import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
+import org.liris.smartgov.lez.politic.PoliticalVar;
+import org.liris.smartgov.lez.politic.manager.ManagerQLearningScenario;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.environment.graph.Arc;
 import org.liris.smartgov.simulator.core.events.EventHandler;
@@ -67,7 +75,7 @@ public class PoliticRun {
 		if(cmd.hasOption("c")) {
 			configFile = cmd.getOptionValue("c");
 		} else {
-			configFile = "config.properties";
+			configFile = "input/static_config_lez.properties";
 		}
 		
 		final int maxTicksValue;
@@ -106,35 +114,52 @@ public class PoliticRun {
 			@Override
 			public void handle(SimulationStopped event) {
 				
-				if (true) {
-					long simulationEnd = System.nanoTime();
-					logger.info("It took " + (int)((simulationEnd - simulationStart) / 1E9) + " seconds to play the simulation" );
-					
-					try {
-						Thread.sleep(2000);
-						logger.info("\n\n\n"
-								+ "_________________________________ \n"
-								+ "|                               | \n"
-								+ "|     Relaunching simulation    | \n"
-								+ "|                               | \n"
-								+ "|_______________________________| \n\n");
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+				long simulationEnd = System.nanoTime();
+				logger.info("It took " + (int)((simulationEnd - simulationStart) / 1E9) + " seconds to play the simulation" );
+				
+				/*Map<String, Pollution> pollutionMap = ((DeliveriesScenario)ctxt.getScenario())
+						.getEnvironment().getPollutionByNeighborhood();
+				
+				for (Pollution pollution : pollutionMap.values()) {
+					logger.info(pollution.get(Pollutant.CO));
+				}*/
+				
+				if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).needToStop ) {
+					EnvironmentSerializer.SerializeEnvironment(FilePath.outputFolder,
+							((DeliveriesScenario) ctxt.getScenario()).getEnvironment());
+				}
+				else {
+					if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).isRecentlyReset() ) {
+						FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "reset.txt", 
+								String.valueOf( PoliticalVar.manager.getCurrentIteration()));
+						//ctxt.resetConfiguration();
+						ctxt.setRandomConfiguration();
 					}
 					
-					/*Map<String, Pollution> pollutionMap = ((DeliveriesScenario)ctxt.getScenario())
-							.getEnvironment().getPollutionByNeighborhood();
+					PoliticalVar.manager.live();
 					
-					for (Pollution pollution : pollutionMap.values()) {
-						logger.info(pollution.get(Pollutant.CO));
-					}*/
-					ctxt.resetPollution();
+					logger.info("\n\n\n"
+							+ "_________________________________ \n"
+							+ "|                               | \n"
+							+ "|     Relaunching simulation    | \n"
+							+ "|                               | \n"
+							+ "|_______________________________| \n\n");
+					
+			        double CO = 0.0;
+			        for ( Neighborhood n : ( (DeliveriesScenario)  smartGov.getContext().getScenario()).getEnvironment().getNeighborhoods().values() ) {
+			        	double nb = n.getPollution().get(Pollutant.CO).getAbsValue();
+			        	if ( !Double.isNaN(nb))
+			        		CO += nb;
+			        }
+					FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "popollution.txt", 
+							String.valueOf(CO));
+					
+					ctxt.resetVariables();
 					ctxt.reload();
 			        smartGov.restart(ctxt);
+				}
 			        
-			        
-				} /*else {
+			        /*else {
 					File outputFolder = new File(
 							smartGov.getContext().getFileLoader().load("outputDir"),
 							"simulation"

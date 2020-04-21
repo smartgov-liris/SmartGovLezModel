@@ -17,13 +17,19 @@ repositories {
 
 dependencies {
 	implementation 'com.github.AlbanFl:SmartGovSimulator:master-SNAPSHOT'
-	implementation 'com.github.PaulBreugnot:SmartGovOsmParser:master-SNAPSHOT'
+	implementation 'com.github.smartgov-liris:SmartGovOsmParser:-SNAPSHOT'
 	implementation 'org.apache.commons:commons-csv:1.6'
 	implementation 'org.locationtech.jts:jts-core:1.16.1'
 	implementation 'commons-cli:commons-cli:1.4'
 	implementation 'org.apache.logging.log4j:log4j-api:2.+'
   	implementation 'org.apache.logging.log4j:log4j-core:2.+'
   	implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.+'
+	compile group: 'commons-io', name: 'commons-io', version: '2.6'
+	compile group: 'joda-time', name: 'joda-time', version: '2.3'
+	compile group: 'com.github.cliftonlabs', name: 'json-simple', version: '2.1.2'
+
+
+
 
 	testImplementation 'junit:junit:4.+'
 	testImplementation 'org.hamcrest:hamcrest-all:1.3'

@@ -123,12 +123,15 @@ public class CopertTree {
 		if (keySet.size() == 0) {
 			return null;
 		}
-		if (keySet.size() == 1) {
+		else {
+			return children.get(keySet.iterator().next());
+		}
+		/*if (keySet.size() == 1) {
 			return children.get(keySet.iterator().next());
 		}
 		ArrayList<String> availableChildKeys = new ArrayList<>(keySet);
 		String randomKey = availableChildKeys.get(random.nextInt(availableChildKeys.size()));
-		return children.get(randomKey);
+		return children.get(randomKey);*/
 	}
 	
 	public void put(String value, CopertTree childValue) {

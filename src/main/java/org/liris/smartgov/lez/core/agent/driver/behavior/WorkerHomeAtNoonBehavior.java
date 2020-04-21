@@ -7,6 +7,8 @@ import org.liris.smartgov.lez.core.agent.driver.DriverBody;
 import org.liris.smartgov.lez.core.agent.driver.personality.Personality;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.simulation.ExtendedDate;
+import org.liris.smartgov.lez.core.simulation.files.FilePath;
+import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
 import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.agent.moving.behavior.MoverAction;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
@@ -66,11 +68,11 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 			new DelayedActionHandler(
 					departure,
 					() -> {
-						Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+						/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 								+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 								+ "Agent " + getAgentBody().getAgent().getId()
 								+ " leaves his home "
-								);
+								);*/
 
 						nextAction = MoverAction.LEAVE(round.getOrigin());
 						triggerRoundDepartureListeners(new RoundDeparture());
@@ -88,11 +90,11 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 			new DelayedActionHandler(
 					departure,
 					() -> {
-						Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+						/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 								+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 								+ "Agent " + getAgentBody().getAgent().getId()
 								+ " left work to eat "
-								);
+								);*/
 						nextAction = MoverAction.LEAVE(round.getEstablishments().get(0));
 						triggerRoundDepartureListeners(new RoundDeparture());
 					}
@@ -109,11 +111,11 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 			new DelayedActionHandler(
 					departure,
 					() -> {
-						Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+						/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 								+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 								+ "Agent " + getAgentBody().getAgent().getId()
 								+ " goes back to work "
-								);
+								);*/
 						if ( position != 2 ) {
 							//for now we just throw an exception, but we could think about another behavior
 							throw new IllegalStateException ("Agent " + getAgentBody().getAgent().getId() + " received a new place to go "
@@ -135,11 +137,11 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 			new DelayedActionHandler(
 					departure,
 					() -> {
-						Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+						/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 								+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 								+ "Agent " + getAgentBody().getAgent().getId()
 								+ " left work "
-								);
+								);*/
 						nextAction = MoverAction.LEAVE(round.getEstablishments().get(0));
 						triggerRoundDepartureListeners(new RoundDeparture());
 					}
@@ -149,11 +151,11 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 		((DriverBody) getAgentBody()).addOnDestinationReachedListener((event) -> {
 			if (position == 0) {
 				//he arrived at work in the morning
-				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+				/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 						+ "Agent " + getAgentBody().getAgent().getId()
 						+ " arrived at work "
-						);
+						);*/
 				refresh(round.getEstablishments().get(0).getClosestOsmNode(),
 						round.getOrigin().getClosestOsmNode());
 				nextAction = MoverAction.ENTER(round.getEstablishments().get(0));
@@ -161,42 +163,44 @@ public class WorkerHomeAtNoonBehavior extends PrivateDriverBehavior {
 				
 			} else if (position == 1) {
 				//he is home at noon
-				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+				/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 						+ "Agent " + getAgentBody().getAgent().getId()
 						+ " is home to eat "
-						);
+						);*/
 				refresh(round.getOrigin().getClosestOsmNode(),
 						round.getEstablishments().get(0).getClosestOsmNode());
 				nextAction = MoverAction.ENTER(round.getOrigin());
 				position += 1;
 			} else if (position == 2) {
 				//he is back at work
-				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+				/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 						+ "Agent " + getAgentBody().getAgent().getId()
 						+ " arrived at work for the afternoon "
-						);
+						);*/
 				refresh(round.getEstablishments().get(0).getClosestOsmNode(),
 						round.getOrigin().getClosestOsmNode());
 				nextAction = MoverAction.ENTER(round.getEstablishments().get(0));
 				position += 1;
 			} else {
 				//he is home, he ended his day
-				Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
+				/*Run.logger.info("[" + SmartGov.getRuntime().getClock().getHour()
 						+ ":" + SmartGov.getRuntime().getClock().getMinutes() + "]"
 						+ "Agent " + getAgentBody().getAgent().getId()
 						+ " is back home "
-						);
+						);*/
 				refresh(round.getOrigin().getClosestOsmNode(),
 						round.getEstablishments().get(0).getClosestOsmNode());
 				nextAction = MoverAction.ENTER(round.getOrigin());
 				position += 1;
-				triggerRoundEndListeners(new RoundEnd());
 			}
 			journeyTime += ExtendedDate.getTimeBetween(departures[position - 1], SmartGov.getRuntime().getClock().time());
 			if (position == 4) {
 				personality.giveTime(journeyTime);
+				personality.computeSatisfactionOfAgent();
+				personality.giveSatisfactionToNeighborhoods();
+				triggerRoundEndListeners(new RoundEnd());
 			}
 		});
 		
