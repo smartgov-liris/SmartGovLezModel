@@ -22,16 +22,16 @@ strategy:neuralnet
 batch_size:64
 initNN:1
 epsilon:1.0
-epsilon_decay:0.95
-epsilon_min:0.01
+epsilon_decay:0.9
+epsilon_min:0.12
 consensus:none
 model_folder:-
 agent_file:-
 buffer_trust_area_min:-7
 buffer_trust_area_max:7
 trust_stability:3
-iterations_to_check_split:20
-iterations_to_check_merge:20
+iterations_to_check_split:15
+iterations_to_check_merge:15
 highest_gain_reached:5
 identical_action_sequences:1
 iteration_to_be_highest_gain:1
@@ -47,4 +47,4 @@ server_debug:0
 simulation_debug:0
 split:0
 callbacks:1
-nb_sequences:30
+nb_sequences:20

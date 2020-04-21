@@ -8,8 +8,4 @@ public enum Surveillance {
 	CHEAP_TOLL,
 	MEDIUM_TOLL,
 	EXPENSIVE_TOLL;
-	
-	public void increaseSurveillance () {
-		
-	}
 }

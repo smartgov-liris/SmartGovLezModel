@@ -122,6 +122,7 @@ public class PoliticalCreator {
 	protected static List<PolicyAction> getSpecialPolicyActions() {
 		List<PolicyAction> policyActions = new ArrayList<>();
 		policyActions.add(PolicyAction.MERGE);
+		policyActions.add(PolicyAction.SPLIT);
 		policyActions.add(PolicyAction.ROLLBACK);
 		policyActions.add(PolicyAction.KEEP);
 		return policyActions;
