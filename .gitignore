@@ -48,3 +48,6 @@ output
 
 #extsrc
 *.pyc
+
+#Results of learning
+input_political/localLearner
