@@ -20,6 +20,7 @@ import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerHomeAtNoonBehavior;
 import org.liris.smartgov.lez.core.agent.driver.behavior.WorkerOneActivityBehavior;
 import org.liris.smartgov.lez.core.agent.driver.personality.Personality;
+import org.liris.smartgov.lez.core.agent.driver.personality.PersonalityType;
 import org.liris.smartgov.lez.core.agent.driver.behavior.LezBehavior;
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
@@ -32,6 +33,7 @@ import org.liris.smartgov.lez.core.environment.LezContext;
 import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArcFactory;
 import org.liris.smartgov.lez.core.environment.lez.Environment;
 import org.liris.smartgov.lez.input.establishment.EstablishmentLoader;
+import org.liris.smartgov.lez.input.lez.PopulationDeserializer;
 import org.liris.smartgov.lez.politic.PoliticalCreator;
 import org.liris.smartgov.lez.politic.PoliticalVar;
 import org.liris.smartgov.simulator.SmartGov;
@@ -121,6 +123,8 @@ public class DeliveriesScenario extends PollutionScenario {
 		
 		OsmArcsBuilder.fixDeadEnds((LezContext) context, new PollutableOsmArcFactory(getEnvironment()));
 		
+		
+		
 		Map<String, Establishment> establishments = null;
 		try {
 			establishments = 
@@ -143,15 +147,38 @@ public class DeliveriesScenario extends PollutionScenario {
 		}
 		GeoStrTree kdTree = new GeoStrTree(geoNodes);
 		
+		Map<String, Map<PersonalityType, Double>> populationType = null;
+		try {
+			populationType = PopulationDeserializer.load(context.getFileLoader().load("populationType"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		PoliticRun.logger.info("Searching for the closest node of each establishment.");
 		for (Establishment establishment : establishments.values()) {
-			establishment.setClosestOsmNode((OsmNode) kdTree.getNearestNodeFrom(
+			OsmNode node = (OsmNode) kdTree.getNearestNodeFrom(
 					new LonLat().project(establishment.getLocation())
-					)
-				);
+					);
+			establishment.setClosestOsmNode(node);
+			
+			Map<PersonalityType, Double> personalitiesProba = populationType.get(getEnvironment().getNeighborhood(node).getID());
+			PersonalityType personality;
+			double r = Math.random();
+			if ( r < personalitiesProba.get(PersonalityType.POOR) ) {
+				personality = PersonalityType.POOR;
+			}
+			else if ( r < personalitiesProba.get(PersonalityType.POOR ) + 
+				personalitiesProba.get(PersonalityType.MEDIUM)) {
+				personality = PersonalityType.MEDIUM;
+			}
+			else {
+				personality = PersonalityType.RICH;
+			}
+			
+			
 			//we create personalities of agents
 			for (String vehicleId : establishment.getRounds().keySet()) {
-				establishment.setPersonality(vehicleId, new Personality(establishment.getActivity(), vehicleId));
+				establishment.setPersonality(vehicleId, new Personality(establishment.getActivity(), vehicleId, personality));
 			}
 		}
 		PoliticalVar pv = new PoliticalVar(context);

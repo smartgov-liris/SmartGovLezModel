@@ -1,5 +1,5 @@
 {
-    "nb_squares" : 4,
+    "nb_squares" : 5,
     "dimensions" :
     {
         "north_bound" : 46.146,
@@ -7,7 +7,7 @@
         "west_bound" : 4.4,
         "east_bound" : 5.46
     },
-    "deliveryAllowed" : "NONE",
-    "privateAllowed" : "NONE",
+    "deliveryRestriction" : "NONE",
+    "privateRestriction" : "NONE",
     "surveillance" : "NO_SURVEILLANCE"
 }

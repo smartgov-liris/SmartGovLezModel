@@ -130,7 +130,7 @@ public class ManagerQLearningScenario extends AbstractManager {
 			if(NUMBER_OF_SIMULATIONS_BEFORE_RESTART == currentSimulationIndex) {
 				recentlyReset = true;
 				restartCounter ++;
-				if ( restartCounter > Integer.parseInt(PoliticalVar.variables.get("nb_sequences")) ) {
+				if ( restartCounter > Integer.parseInt(PoliticalVar.variables.get("nb_epoch")) ) {
 					needToStop = true;
 				}
 				currentSimulationIndex = 0;

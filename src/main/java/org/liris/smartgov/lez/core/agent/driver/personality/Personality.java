@@ -5,6 +5,11 @@ import java.util.List;
 import org.liris.smartgov.lez.core.agent.driver.personality.choice.Choice;
 import org.liris.smartgov.lez.core.agent.driver.personality.choice.CompanyChoice;
 import org.liris.smartgov.lez.core.agent.driver.personality.choice.PrivateChoice;
+import org.liris.smartgov.lez.core.agent.driver.personality.satisfaction.CompanySatisfaction;
+import org.liris.smartgov.lez.core.agent.driver.personality.satisfaction.MediumSatisfaction;
+import org.liris.smartgov.lez.core.agent.driver.personality.satisfaction.PoorSatisfaction;
+import org.liris.smartgov.lez.core.agent.driver.personality.satisfaction.RichSatisfaction;
+import org.liris.smartgov.lez.core.agent.driver.personality.satisfaction.Satisfaction;
 import org.liris.smartgov.lez.core.agent.establishment.ST8;
 import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
@@ -23,14 +28,23 @@ public class Personality {
 	private List<Neighborhood> causeNeighborhoods;
 	
 	
-	public Personality (ST8 activity, String vehicleId) {
+	public Personality (ST8 activity, String vehicleId, PersonalityType type) {
 		if (activity != ST8.PRIVATE_HABITATION) {
 			choice = new PrivateChoice();
+			if (type == PersonalityType.POOR) {
+				satisfaction = new PoorSatisfaction();
+			}
+			else if (type == PersonalityType.MEDIUM) {
+				satisfaction = new MediumSatisfaction();
+			}
+			else {
+				satisfaction = new RichSatisfaction();
+			}
 		}
 		else {
 			choice = new CompanyChoice();
+			satisfaction = new CompanySatisfaction();
 		}
-		satisfaction = new Satisfaction();
 		changedVehicle = false;
 		hasFrauded = false;
 		changedMobility = false;

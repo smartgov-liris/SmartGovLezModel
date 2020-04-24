@@ -1,0 +1,32 @@
+{ 
+    "Population_type" :
+    [
+        {
+            "Neighborhoods" : [0, 4, 6, 8, 11, 17, 23, 24],
+            "population" :
+            {
+                "Poor" : 0.5,
+                "Medium" : 0.3,
+                "Rich" : 0.2
+            }
+        },
+        {
+            "Neighborhoods" : [1, 3, 5, 7, 12, 16, 18, 19, 20, 22],
+            "population" :
+            {
+                "Poor" : 0.7,
+                "Medium" : 0.2,
+                "Rich" : 0.1
+            }
+        }, 
+        {
+            "Neighborhoods" : [2, 9, 10, 13, 14, 15, 21],
+            "population" :
+            {
+                "Poor" : 0.3,
+                "Medium" : 0.4,
+                "Rich" : 0.3
+            }
+        }
+    ]
+}

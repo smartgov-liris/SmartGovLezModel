@@ -37,8 +37,6 @@ public class PoliticRun {
 	public static final Logger logger = LogManager.getLogger(PoliticRun.class);
 	
 	
-	
-	
 	public static void main(String[] args) throws ParseException {
 		
 		logger.getLevel();
@@ -144,15 +142,6 @@ public class PoliticRun {
 							+ "|     Relaunching simulation    | \n"
 							+ "|                               | \n"
 							+ "|_______________________________| \n\n");
-					
-			        double CO = 0.0;
-			        for ( Neighborhood n : ( (DeliveriesScenario)  smartGov.getContext().getScenario()).getEnvironment().getNeighborhoods().values() ) {
-			        	double nb = n.getPollution().get(Pollutant.CO).getAbsValue();
-			        	if ( !Double.isNaN(nb))
-			        		CO += nb;
-			        }
-					FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "popollution.txt", 
-							String.valueOf(CO));
 					
 					ctxt.resetVariables();
 					ctxt.reload();

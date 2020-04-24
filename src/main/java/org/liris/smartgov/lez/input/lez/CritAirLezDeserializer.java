@@ -43,8 +43,8 @@ public class CritAirLezDeserializer extends StdDeserializer<Environment> {
 				dimensions.get("west_bound").asDouble(),
 				dimensions.get("east_bound").asDouble(),
 				jsonLez.get("nb_squares").asInt(),
-				CritAir.valueOf(jsonLez.get("deliveryAllowed").asText()),
-				CritAir.valueOf(jsonLez.get("privateAllowed").asText()),
+				CritAir.valueOf(jsonLez.get("deliveryRestriction").asText()),
+				CritAir.valueOf(jsonLez.get("privateRestriction").asText()),
 				Surveillance.valueOf(jsonLez.get("surveillance").asText()));
 	}
 	
