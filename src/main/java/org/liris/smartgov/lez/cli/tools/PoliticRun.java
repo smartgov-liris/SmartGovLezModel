@@ -1,9 +1,5 @@
 package org.liris.smartgov.lez.cli.tools;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -13,12 +9,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.liris.smartgov.lez.core.copert.fields.Pollutant;
 import org.liris.smartgov.lez.core.environment.LezContext;
-import org.liris.smartgov.lez.core.environment.graph.PollutableOsmArc;
 import org.liris.smartgov.lez.core.environment.lez.EnvironmentSerializer;
-import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
-import org.liris.smartgov.lez.core.environment.pollution.Pollution;
 import org.liris.smartgov.lez.core.simulation.ExtendedSimulationBuilder;
 import org.liris.smartgov.lez.core.simulation.ExtendedSimulationRuntime;
 import org.liris.smartgov.lez.core.simulation.ExtendedSmartGov;
@@ -28,9 +20,7 @@ import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
 import org.liris.smartgov.lez.politic.PoliticalVar;
 import org.liris.smartgov.lez.politic.manager.ManagerQLearningScenario;
 import org.liris.smartgov.simulator.SmartGov;
-import org.liris.smartgov.simulator.core.environment.graph.Arc;
 import org.liris.smartgov.simulator.core.events.EventHandler;
-import org.liris.smartgov.simulator.core.simulation.SimulationBuilder;
 import org.liris.smartgov.simulator.core.simulation.events.SimulationStopped;
 
 public class PoliticRun {
@@ -126,12 +116,18 @@ public class PoliticRun {
 					EnvironmentSerializer.SerializeEnvironment(FilePath.outputFolder,
 							((DeliveriesScenario) ctxt.getScenario()).getEnvironment());
 				}
+
 				else {
 					if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).isRecentlyReset() ) {
 						FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "reset.txt", 
 								String.valueOf( PoliticalVar.manager.getCurrentIteration()));
-						//ctxt.resetConfiguration();
-						ctxt.setRandomConfiguration();
+						if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).lastEpoch ) {
+							ctxt.resetConfiguration();
+						}
+						else {
+							ctxt.setRandomConfiguration();
+						}
+
 					}
 					
 					PoliticalVar.manager.live();

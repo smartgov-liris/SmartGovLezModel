@@ -1,20 +1,12 @@
 package org.liris.smartgov.lez.politic.manager;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Scanner;
 import java.util.Map.Entry;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
 import org.liris.smartgov.lez.core.simulation.files.FileName;
 import org.liris.smartgov.lez.core.simulation.files.FilePath;
 import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
@@ -27,6 +19,7 @@ public class ManagerQLearningScenario extends AbstractManager {
 	
 	private String currentPhase;
 	public boolean needToStop;
+	public boolean lastEpoch;
 	protected String globalGainFile = "global_gain.txt";
 	
 	public ManagerQLearningScenario(){
@@ -112,6 +105,7 @@ public class ManagerQLearningScenario extends AbstractManager {
 		currentTrialIndex = 0;
 		currentSimulationIndex = 1;
 		needToStop = false;
+		lastEpoch = false;
 		saveManagerCounters();
 		timeStamp = createTimeStamp();
 	}
@@ -130,8 +124,11 @@ public class ManagerQLearningScenario extends AbstractManager {
 			if(NUMBER_OF_SIMULATIONS_BEFORE_RESTART == currentSimulationIndex) {
 				recentlyReset = true;
 				restartCounter ++;
-				if ( restartCounter > Integer.parseInt(PoliticalVar.variables.get("nb_epoch")) ) {
+				if ( restartCounter == Integer.parseInt(PoliticalVar.variables.get("nb_epoch")) ) {
 					needToStop = true;
+				}
+				else if ( restartCounter == Integer.parseInt(PoliticalVar.variables.get("nb_epoch")) - 1 ) {
+					lastEpoch = true;
 				}
 				currentSimulationIndex = 0;
 			} else {
