@@ -1,2 +1,2 @@
 #!/bin/sh
-gnome-terminal -x ./extsrc/server.py -p $1
+gnome-terminal -x python3 extsrc/server.py -p $1
