@@ -1,0 +1,202 @@
+{
+  "22" : {
+    "perimeter" : [ [ 45.7164, 5.248 ], [ 45.8596, 5.248 ], [ 45.8596, 5.46 ], [ 45.7164, 5.46 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 159.97615013719476,
+    "satisfaction" : 0.0
+  },
+  "23" : {
+    "perimeter" : [ [ 45.8596, 5.248 ], [ 46.0028, 5.248 ], [ 46.0028, 5.46 ], [ 45.8596, 5.46 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 59.1464407616738,
+    "satisfaction" : 0.0
+  },
+  "24" : {
+    "perimeter" : [ [ 46.0028, 5.248 ], [ 46.146, 5.248 ], [ 46.146, 5.46 ], [ 46.0028, 5.46 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 2.460043087198498,
+    "satisfaction" : 0.0
+  },
+  "10" : {
+    "perimeter" : [ [ 45.43, 4.824 ], [ 45.5732, 4.824 ], [ 45.5732, 5.036 ], [ 45.43, 5.036 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 33.47007015966782,
+    "satisfaction" : 0.0
+  },
+  "11" : {
+    "perimeter" : [ [ 45.5732, 4.824 ], [ 45.7164, 4.824 ], [ 45.7164, 5.036 ], [ 45.5732, 5.036 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 896.5196175770649,
+    "satisfaction" : 0.0
+  },
+  "12" : {
+    "perimeter" : [ [ 45.7164, 4.824 ], [ 45.8596, 4.824 ], [ 45.8596, 5.036 ], [ 45.7164, 5.036 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 2888.0464925371366,
+    "satisfaction" : 0.0
+  },
+  "13" : {
+    "perimeter" : [ [ 45.8596, 4.824 ], [ 46.0028, 4.824 ], [ 46.0028, 5.036 ], [ 45.8596, 5.036 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 185.13667506593842,
+    "satisfaction" : 0.0
+  },
+  "14" : {
+    "perimeter" : [ [ 46.0028, 4.824 ], [ 46.146, 4.824 ], [ 46.146, 5.036 ], [ 46.0028, 5.036 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 44.902021135339766,
+    "satisfaction" : 0.0
+  },
+  "15" : {
+    "perimeter" : [ [ 45.43, 5.036 ], [ 45.5732, 5.036 ], [ 45.5732, 5.248 ], [ 45.43, 5.248 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 109.17121620101244,
+    "satisfaction" : 0.0
+  },
+  "16" : {
+    "perimeter" : [ [ 45.5732, 5.036 ], [ 45.7164, 5.036 ], [ 45.7164, 5.248 ], [ 45.5732, 5.248 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 671.0052901330502,
+    "satisfaction" : 0.0
+  },
+  "17" : {
+    "perimeter" : [ [ 45.7164, 5.036 ], [ 45.8596, 5.036 ], [ 45.8596, 5.248 ], [ 45.7164, 5.248 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 582.4053329078228,
+    "satisfaction" : 0.0
+  },
+  "18" : {
+    "perimeter" : [ [ 45.8596, 5.036 ], [ 46.0028, 5.036 ], [ 46.0028, 5.248 ], [ 45.8596, 5.248 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 110.24772664580485,
+    "satisfaction" : 0.0
+  },
+  "19" : {
+    "perimeter" : [ [ 46.0028, 5.036 ], [ 46.146, 5.036 ], [ 46.146, 5.248 ], [ 46.0028, 5.248 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 7.258764630064244,
+    "satisfaction" : 0.0
+  },
+  "0" : {
+    "perimeter" : [ [ 45.43, 4.4 ], [ 45.5732, 4.4 ], [ 45.5732, 4.612 ], [ 45.43, 4.612 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 4.158424426250422,
+    "satisfaction" : 0.0
+  },
+  "1" : {
+    "perimeter" : [ [ 45.5732, 4.4 ], [ 45.7164, 4.4 ], [ 45.7164, 4.612 ], [ 45.5732, 4.612 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 117.95594964440511,
+    "satisfaction" : 0.0
+  },
+  "2" : {
+    "perimeter" : [ [ 45.7164, 4.4 ], [ 45.8596, 4.4 ], [ 45.8596, 4.612 ], [ 45.7164, 4.612 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 64.19821974258687,
+    "satisfaction" : 0.0
+  },
+  "3" : {
+    "perimeter" : [ [ 45.8596, 4.4 ], [ 46.0028, 4.4 ], [ 46.0028, 4.612 ], [ 45.8596, 4.612 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 60.842218432033974,
+    "satisfaction" : 0.0
+  },
+  "4" : {
+    "perimeter" : [ [ 46.0028, 4.4 ], [ 46.146, 4.4 ], [ 46.146, 4.612 ], [ 46.0028, 4.612 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 54.72099197847855,
+    "satisfaction" : 0.0
+  },
+  "5" : {
+    "perimeter" : [ [ 45.43, 4.612 ], [ 45.5732, 4.612 ], [ 45.5732, 4.824 ], [ 45.43, 4.824 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 15.233856795906831,
+    "satisfaction" : 0.0
+  },
+  "6" : {
+    "perimeter" : [ [ 45.5732, 4.612 ], [ 45.7164, 4.612 ], [ 45.7164, 4.824 ], [ 45.5732, 4.824 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 526.7317325788648,
+    "satisfaction" : 0.0
+  },
+  "7" : {
+    "perimeter" : [ [ 45.7164, 4.612 ], [ 45.8596, 4.612 ], [ 45.8596, 4.824 ], [ 45.7164, 4.824 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 1504.2873221895063,
+    "satisfaction" : 0.0
+  },
+  "8" : {
+    "perimeter" : [ [ 45.8596, 4.612 ], [ 46.0028, 4.612 ], [ 46.0028, 4.824 ], [ 45.8596, 4.824 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 641.758090705393,
+    "satisfaction" : 0.0
+  },
+  "9" : {
+    "perimeter" : [ [ 46.0028, 4.612 ], [ 46.146, 4.612 ], [ 46.146, 4.824 ], [ 46.0028, 4.824 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 218.48142117101884,
+    "satisfaction" : 0.0
+  },
+  "20" : {
+    "perimeter" : [ [ 45.43, 5.248 ], [ 45.5732, 5.248 ], [ 45.5732, 5.46 ], [ 45.43, 5.46 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 188.67184139852222,
+    "satisfaction" : 0.0
+  },
+  "21" : {
+    "perimeter" : [ [ 45.5732, 5.248 ], [ 45.7164, 5.248 ], [ 45.7164, 5.46 ], [ 45.5732, 5.46 ] ],
+    "private criteria" : "NONE",
+    "surveillance" : "NO_SURVEILLANCE",
+    "delivery criteria" : "NONE",
+    "pollution" : 232.8095735604292,
+    "satisfaction" : 0.0
+  }
+}
