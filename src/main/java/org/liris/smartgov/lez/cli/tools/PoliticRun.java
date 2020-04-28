@@ -42,6 +42,10 @@ public class PoliticRun {
 		maxTicks.setArgName("int");
 		opts.addOption(maxTicks);
 		
+		Option iterations = new Option("i", "max-iterations", true, "Max iterations of the simulation");
+		iterations.setArgName("int");
+		opts.addOption(iterations);
+		
 		opts.addOption(new Option("p", "pretty-print", false, "Enables JSON pretty printing"));
 		
 		CommandLineParser parser = new DefaultParser();
@@ -64,6 +68,14 @@ public class PoliticRun {
 			configFile = cmd.getOptionValue("c");
 		} else {
 			configFile = "input/static_config_lez.properties";
+		}
+		
+		final int nb_iterations;
+		if( cmd.hasOption("i") ) {
+			nb_iterations = Integer.valueOf(cmd.getOptionValue("i"));
+		}
+		else {
+			nb_iterations = Integer.MAX_VALUE;
 		}
 		
 		final int maxTicksValue;
@@ -112,7 +124,9 @@ public class PoliticRun {
 					logger.info(pollution.get(Pollutant.CO));
 				}*/
 				
-				if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).needToStop ) {
+				if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).needToStop || 
+						PoliticalVar.manager.getCurrentIteration() + 1 >= nb_iterations ) {
+					
 					EnvironmentSerializer.SerializeEnvironment(FilePath.outputFolder,
 							((DeliveriesScenario) ctxt.getScenario()).getEnvironment());
 				}
