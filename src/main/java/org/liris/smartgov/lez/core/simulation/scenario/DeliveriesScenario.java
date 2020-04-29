@@ -62,6 +62,7 @@ public class DeliveriesScenario extends PollutionScenario {
 	public static final String name = "LezDeliveries";
 	private Map<String, Establishment> establishments;
 	private Map<String, Integer> simpleIds;
+	public static int nbAgents;
 	
 	
 	

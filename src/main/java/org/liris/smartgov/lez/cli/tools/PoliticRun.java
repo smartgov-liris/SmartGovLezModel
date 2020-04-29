@@ -46,6 +46,10 @@ public class PoliticRun {
 		iterations.setArgName("int");
 		opts.addOption(iterations);
 		
+		Option agents = new Option("a", "nb-agents", true, "Number of agents in simulation");
+		agents.setArgName("int");
+		opts.addOption(agents);
+		
 		opts.addOption(new Option("p", "pretty-print", false, "Enables JSON pretty printing"));
 		
 		CommandLineParser parser = new DefaultParser();
@@ -83,6 +87,12 @@ public class PoliticRun {
 			maxTicksValue = Integer.valueOf(cmd.getOptionValue("t"));
 		} else {
 			maxTicksValue = 3600 * 24;
+		}
+		
+		if (cmd.hasOption("a")) {
+			DeliveriesScenario.nbAgents = Integer.valueOf(cmd.getOptionValue("a"));
+		} else {
+			DeliveriesScenario.nbAgents = Integer.MAX_VALUE;
 		}
 		
 		LezContext ctxt = new LezContext(configFile);

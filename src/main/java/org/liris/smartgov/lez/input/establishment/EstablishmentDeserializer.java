@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.ST8;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
+import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
 import org.liris.smartgov.lez.input.establishment.EstablishmentLoader.TemporaryRound;
 import org.liris.smartgov.simulator.core.simulation.time.Date;
 import org.liris.smartgov.simulator.core.simulation.time.WeekDay;
@@ -50,6 +51,8 @@ public class EstablishmentDeserializer extends StdDeserializer<EstablishmentLoad
 	public EstablishmentLoader deserialize(JsonParser p, DeserializationContext ctxt)
 			throws IOException, JsonProcessingException {
 		EstablishmentLoader loader = new EstablishmentLoader(random);
+		
+		int nbRounds = 0;
 		
 		// Load establishment data
 		JsonNode establishmentArray = p.getCodec().readTree(p);
@@ -95,22 +98,25 @@ public class EstablishmentDeserializer extends StdDeserializer<EstablishmentLoad
 			JsonNode roundsArray = establishmentNode.get("rounds");
 			
 			for(int j = 0; j < roundsArray.size(); j++) {
-				JsonNode roundNode = roundsArray.get(j);
-				double weight = 0;
-				if(roundNode.has("weight")) {
-					weight = roundNode.get("weight").asDouble();
+				if ( nbRounds < DeliveriesScenario.nbAgents ) {
+					JsonNode roundNode = roundsArray.get(j);
+					double weight = 0;
+					if(roundNode.has("weight")) {
+						weight = roundNode.get("weight").asDouble();
+					}
+					
+					List<String> establishmentIds = new ArrayList<>();
+					JsonNode establishmentIdsNode = roundNode.get("ids");
+					for(int k = 0; k < establishmentIdsNode.size(); k++) {
+						establishmentIds.add(establishmentIdsNode.get(k).asText());
+					}
+					
+					Double departure = roundNode.get("departure").asDouble();
+					int hour = (int) Math.floor(departure);
+					int minutes = (int) Math.round(60 * (departure - hour));
+					temporaryRounds.add(new TemporaryRound(establishmentIds, new Date(0, WeekDay.MONDAY, hour, minutes), weight));
+					nbRounds++;
 				}
-				
-				List<String> establishmentIds = new ArrayList<>();
-				JsonNode establishmentIdsNode = roundNode.get("ids");
-				for(int k = 0; k < establishmentIdsNode.size(); k++) {
-					establishmentIds.add(establishmentIdsNode.get(k).asText());
-				}
-				
-				Double departure = roundNode.get("departure").asDouble();
-				int hour = (int) Math.floor(departure);
-				int minutes = (int) Math.round(60 * (departure - hour));
-				temporaryRounds.add(new TemporaryRound(establishmentIds, new Date(0, WeekDay.MONDAY, hour, minutes), weight));
 			}
 			loader._loadTemporaryRounds(establishment.getId(), temporaryRounds);
 		}
