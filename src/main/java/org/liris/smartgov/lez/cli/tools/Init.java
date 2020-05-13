@@ -59,7 +59,7 @@ public class Init {
 			configFile = cmd.getOptionValue("c");
 		}
 			
-		LezContext context = new LezContext(configFile);
+		LezContext context = new LezContext(configFile, false);
 
 		SmartGov smartGov = new SmartGov(context);
 		

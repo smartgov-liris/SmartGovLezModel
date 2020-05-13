@@ -1,15 +1,11 @@
 #Policy
 initialization_bandit:0
-iterateThroughPrices:0
 learning:1
 validation:0
 #Simulation
 actions_per_scenario:1
 simulations_per_action:1
-total_number_of_simulations:1
 simulation_before_restart:15
-simulation_before_split:500
-indicators:price,priceBus,distanceBus,timeBus
 #Scenario - Visualization, ScenarioSplitMerge, LowerLayer, ScenarioBasicLearning
 scenario:ScenarioSplitMerge
 scenarioID:1
@@ -22,16 +18,16 @@ strategy:neuralnet
 batch_size:64
 initNN:1
 epsilon:1.0
-epsilon_decay:0.9
-epsilon_min:0.12
+epsilon_decay:0.98
+epsilon_min:0.01
 consensus:none
 model_folder:-
 agent_file:-
 buffer_trust_area_min:-7
 buffer_trust_area_max:7
 trust_stability:3
-iterations_to_check_split:15
-iterations_to_check_merge:15
+iterations_to_check_split:10
+iterations_to_check_merge:10
 highest_gain_reached:5
 identical_action_sequences:1
 iteration_to_be_highest_gain:1
@@ -40,11 +36,10 @@ aggregate_function:average
 #CDQNSpecific
 positive_trust_score:1
 negative_trust_score:-1
-#-Available_actions (increase;decrease;do_nothing;add;remove), seperate by ';'
-localagent_action:increase;decrease;do_nothing;add;remove
 #Debug_option
 server_debug:0
 simulation_debug:0
 split:0
 callbacks:1
-nb_epoch:30
+nb_epoch:60
+distinct_criterias:1

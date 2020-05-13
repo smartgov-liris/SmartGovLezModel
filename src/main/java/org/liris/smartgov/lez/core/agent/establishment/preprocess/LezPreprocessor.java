@@ -36,13 +36,58 @@ public class LezPreprocessor {
 		this.parser = parser;
 	}
 
-	public Map<String, Integer> preprocess(Establishment establishment) {
+	public Map<String, Integer> applyCases(Establishment establishment) {
 		
 		int replacedVehicles = 0;
 		int mobilityChanged = 0;
 		int nbFrauds = 0;
 		
 		Map<String, Integer> indicators = new HashMap<>();
+		for(Vehicle vehicle : establishment.getFleet().values()) {
+			
+			Personality personality = establishment.getPersonalities().get(vehicle.getId());
+			Decision decision = personality.getDecision();
+			if(decision == Decision.CHANGE_VEHICLE) {
+				CopertSelector selector = new CopertSelector();
+				selector.put(CopertHeader.CATEGORY, vehicle.getCategory());
+				if (vehicle.getCategory() == VehicleCategory.HEAVY_DUTY_TRUCK) {
+					//only Diesel is available for heavy duty trucks
+					selector.put(CopertHeader.FUEL, Fuel.DIESEL);
+				} else {
+					selector.put(CopertHeader.FUEL, Fuel.PETROL);
+				}
+				
+				selector.put(CopertHeader.EURO_STANDARD, EuroNorm.EURO6);
+				
+				Vehicle newVehicle =
+					DeliveryVehicleFactory.generateVehicle(
+						selector,
+						parser,
+						vehicle.getId()
+						);
+				
+				establishment.replaceVehicle(newVehicle.getId(), newVehicle);
+				personality.changeVehicle();
+				replacedVehicles++;
+			}
+			else if (decision == Decision.CHANGE_MOBILITY) {
+				establishment.replaceVehicle(vehicle.getId(), null);
+				personality.changeMobility();
+				mobilityChanged ++;
+			}
+			else if (decision == Decision.DO_NOTHING && personality.getCase().ordinal() >= Cases.FORBIDDEN_NO_SURVEILLANCE.ordinal()) {
+				personality.fraud();
+				nbFrauds++;
+			}
+		}
+	
+		indicators.put("Replaced", replacedVehicles);
+		indicators.put("Mobility", mobilityChanged);
+		indicators.put("Fraud", nbFrauds);
+		return indicators;
+	}
+	
+	public void fillCases(Establishment establishment) {
 
 
 		for(Vehicle vehicle : establishment.getFleet().values()) {
@@ -95,46 +140,10 @@ public class LezPreprocessor {
 			if ( causeNeighborhoods.isEmpty() ) {
 				causeNeighborhoods.add(environment.getNeighborhood(establishment.getClosestOsmNode()));
 			}
+			establishment.getPersonalities().get(vehicle.getId()).setCauseNeighborhoods(causeNeighborhoods);
+			establishment.getPersonalities().get(vehicle.getId()).setCase(CasesManager.getCase(surveillance, placesVehicleForbidden > 0));
+			CasesManager.addCase(surveillance, placesVehicleForbidden > 0, false, establishment.getActivity());
 			
-			Personality personality = establishment.getPersonalities().get(vehicle.getId());
-			Decision decision = personality.getDecision(surveillance, placesVehicleForbidden, causeNeighborhoods);
-			if(decision == Decision.CHANGE_VEHICLE) {
-				CopertSelector selector = new CopertSelector();
-				selector.put(CopertHeader.CATEGORY, vehicle.getCategory());
-				if (vehicle.getCategory() == VehicleCategory.HEAVY_DUTY_TRUCK) {
-					//only Diesel is available for heavy duty trucks
-					selector.put(CopertHeader.FUEL, Fuel.DIESEL);
-				} else {
-					selector.put(CopertHeader.FUEL, Fuel.PETROL);
-				}
-				
-				selector.put(CopertHeader.EURO_STANDARD, EuroNorm.EURO6);
-				
-				Vehicle newVehicle =
-					DeliveryVehicleFactory.generateVehicle(
-						selector,
-						parser,
-						vehicle.getId()
-						);
-				
-				establishment.replaceVehicle(newVehicle.getId(), newVehicle);
-				personality.changeVehicle();
-				replacedVehicles++;
-			}
-			else if (decision == Decision.CHANGE_MOBILITY) {
-				establishment.replaceVehicle(vehicle.getId(), null);
-				personality.changeMobility();
-				mobilityChanged ++;
-			}
-			else if (decision == Decision.DO_NOTHING && placesVehicleForbidden > 0) {
-				personality.fraud();
-				nbFrauds++;
-			}
-		}
-		indicators.put("Replaced", replacedVehicles);
-		indicators.put("Mobility", mobilityChanged);
-		indicators.put("Fraud", nbFrauds);
-		return indicators;
-		
 	}
+}
 }

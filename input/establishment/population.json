@@ -5,9 +5,9 @@
             "Neighborhoods" : [0, 4, 6, 8, 11, 17, 23, 24],
             "population" :
             {
-                "Poor" : 0.5,
-                "Medium" : 0.3,
-                "Rich" : 0.2
+                "Poor" : 0.3,
+                "Medium" : 0.4,
+                "Rich" : 0.3
             }
         },
         {
@@ -23,9 +23,9 @@
             "Neighborhoods" : [2, 9, 10, 13, 14, 15, 21],
             "population" :
             {
-                "Poor" : 0.3,
+                "Poor" : 0.1,
                 "Medium" : 0.4,
-                "Rich" : 0.3
+                "Rich" : 0.5
             }
         }
     ]

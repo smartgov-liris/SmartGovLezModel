@@ -26,6 +26,7 @@ import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.agent.establishment.ST8;
+import org.liris.smartgov.lez.core.agent.establishment.preprocess.CasesManager;
 import org.liris.smartgov.lez.core.agent.establishment.preprocess.LezPreprocessor;
 import org.liris.smartgov.lez.core.copert.fields.EuroNorm;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
@@ -182,8 +183,10 @@ public class DeliveriesScenario extends PollutionScenario {
 				establishment.setPersonality(vehicleId, new Personality(establishment.getActivity(), vehicleId, personality));
 			}
 		}
-		PoliticalVar pv = new PoliticalVar(context);
-		PoliticalCreator.createPoliticalLayer(getEnvironment());
+		if ( ((LezContext)context).getPolitic() ) {
+			PoliticalVar pv = new PoliticalVar(context);
+			PoliticalCreator.createPoliticalLayer(getEnvironment());
+		}
 		
 		return establishments;
 	}
@@ -209,9 +212,15 @@ public class DeliveriesScenario extends PollutionScenario {
 		int totalVehiclesReplaced = 0;
 		int totalMobilityChanged = 0;
 		int totalFrauds = 0;
+		CasesManager.init();
 		
 		for( Establishment establishment : establishments.values() ) {
-			Map<String, Integer> indicators =  preprocessor.preprocess(establishment);
+			preprocessor.fillCases(establishment);
+		}
+		
+		
+		for( Establishment establishment : establishments.values() ) {
+			Map<String, Integer> indicators =  preprocessor.applyCases(establishment);
 			totalVehiclesReplaced += indicators.get("Replaced");
 			totalMobilityChanged += indicators.get("Mobility");
 			totalFrauds += indicators.get("Fraud");
@@ -238,6 +247,11 @@ public class DeliveriesScenario extends PollutionScenario {
 							vehicleId, establishment, (LezContext) context, rand);
 					threads.add(thread);
 					thread.start();
+				}
+				else {
+					//if he changed mobility, he directly give the satisfaction
+					//other agents will give their satisfaction at the end of their simulation
+					establishment.getPersonalities().get(vehicleId).giveSatisfactionToNeighborhoods();
 				}
 			}
 		}

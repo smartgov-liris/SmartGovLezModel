@@ -91,7 +91,6 @@ public abstract class AbstractManager {
 		NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES = Integer.parseInt(PoliticalVar.variables.get("simulations_per_action"));
 		NUMBER_OF_ITERATIONS_BEFORE_RESTART = NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES * Integer.parseInt(PoliticalVar.variables.get("actions_per_scenario"));
 		NUMBER_OF_ITERATIONS_BEFORE_SAVE = NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES;
-		TOTAL_NUMBER_OF_SIMULATIONS = Integer.parseInt(PoliticalVar.variables.get("total_number_of_simulations"));
 		NUMBER_OF_SIMULATIONS_BEFORE_RESTART = Integer.parseInt(PoliticalVar.variables.get("simulation_before_restart"));
 	}
 	
@@ -140,6 +139,10 @@ public abstract class AbstractManager {
 	
 	public int getCurrentIteration() {
 		return currentIteration;
+	}
+	
+	public int getRestartCounter() {
+		return restartCounter;
 	}
 	
 	public void setCurrentIteration(int currentIteration) {

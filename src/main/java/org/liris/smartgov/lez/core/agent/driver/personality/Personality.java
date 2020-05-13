@@ -8,9 +8,12 @@ import org.liris.smartgov.lez.core.agent.driver.personality.choice.PrivateChoice
 import org.liris.smartgov.lez.core.agent.driver.personality.satisfaction.CompanySatisfaction;
 import org.liris.smartgov.lez.core.agent.driver.personality.satisfaction.MediumSatisfaction;
 import org.liris.smartgov.lez.core.agent.driver.personality.satisfaction.PoorSatisfaction;
+import org.liris.smartgov.lez.core.agent.driver.personality.satisfaction.PrivateSatisfaction;
 import org.liris.smartgov.lez.core.agent.driver.personality.satisfaction.RichSatisfaction;
 import org.liris.smartgov.lez.core.agent.driver.personality.satisfaction.Satisfaction;
 import org.liris.smartgov.lez.core.agent.establishment.ST8;
+import org.liris.smartgov.lez.core.agent.establishment.preprocess.Cases;
+import org.liris.smartgov.lez.core.agent.establishment.preprocess.CasesManager;
 import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 
@@ -26,12 +29,15 @@ public class Personality {
 	private double satisfactionScore;
 	private String vehicleId;
 	private List<Neighborhood> causeNeighborhoods;
+	private Cases cases;
+	ST8 activity;
 	
 	
 	public Personality (ST8 activity, String vehicleId, PersonalityType type) {
-		if (activity != ST8.PRIVATE_HABITATION) {
+		this.activity = activity;
+		if (activity == ST8.PRIVATE_HABITATION) {
 			choice = new PrivateChoice();
-			if (type == PersonalityType.POOR) {
+			/*if (type == PersonalityType.POOR) {
 				satisfaction = new PoorSatisfaction();
 			}
 			else if (type == PersonalityType.MEDIUM) {
@@ -39,7 +45,8 @@ public class Personality {
 			}
 			else {
 				satisfaction = new RichSatisfaction();
-			}
+			}*/
+			satisfaction = new PrivateSatisfaction();
 		}
 		else {
 			choice = new CompanyChoice();
@@ -63,17 +70,25 @@ public class Personality {
 		satisfactionScore = 0;
 	}
 	
-	public Decision getDecision(Surveillance surveillance, int placesVehicleForbidden, List<Neighborhood> causeNeighborhoods) {
-		this.causeNeighborhoods = causeNeighborhoods; 
-		Decision decision = choice.getDecision(surveillance, placesVehicleForbidden);
+	public void setCase(Cases c) {
+		cases = c;
+	}
+	
+	public Cases getCase() {
+		return cases;
+	}
+	
+	public Decision getDecision() {
+		int[] counters = CasesManager.getCounters(activity, cases);
+		CasesManager.addCase(cases, true, activity);
+		double proportion = ((double)counters[1]) / ((double)counters[0]);
+		
+		Decision decision = choice.getDecision(cases, proportion);
 		if (decision != Decision.CHANGE_MOBILITY) {
-			if (surveillance == Surveillance.CHEAP_TOLL) {
+			if (cases == Cases.ALLOWED_CHEAP_TOLL || cases == Cases.FORBIDDEN_CHEAP_TOLL) {
 				price = 1;
 			}
-			if (surveillance == Surveillance.MEDIUM_TOLL) {
-				price = 2;
-			}
-			if (surveillance == Surveillance.EXPENSIVE_TOLL) {
+			if (cases == Cases.ALLOWED_EXPENSIVE_TOLL || cases == Cases.FORBIDDEN_EXPENSIVE_TOLL) {
 				price = 3;
 			}
 		}
@@ -94,6 +109,10 @@ public class Personality {
 	
 	public void fraud() {
 		hasFrauded = true;
+	}
+	
+	public void setCauseNeighborhoods ( List<Neighborhood> causeNeighborhoods ) {
+		this.causeNeighborhoods = causeNeighborhoods;
 	}
 	
 	public void giveTime(int time) {

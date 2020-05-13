@@ -17,6 +17,7 @@ import org.liris.smartgov.lez.cli.tools.PoliticRun;
 import org.liris.smartgov.lez.cli.tools.Roads;
 import org.liris.smartgov.lez.cli.tools.Run;
 import org.liris.smartgov.lez.cli.tools.Tile;
+import org.liris.smartgov.lez.cli.tools.ResultGeneratorRun;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -53,6 +54,9 @@ public class Cli {
 			return;
 		case "prun":
 			PoliticRun.main(Arrays.copyOfRange(args, 1, args.length));
+			return;
+		case "rgrun":
+			ResultGeneratorRun.main(Arrays.copyOfRange(args, 1, args.length));
 			return;
 		default:
 			Options opts = new Options();

@@ -10,8 +10,10 @@ import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.liris.smartgov.lez.core.agent.driver.vehicle.Vehicle;
 import org.liris.smartgov.lez.core.copert.fields.Pollutant;
@@ -54,6 +56,9 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 	private int nbFraud;
 	private int nbChangedMobilities;
 	private int nbChangedVehicles;
+	private double highestGain = Double.MIN_VALUE;
+	private double lastGain = 0.0;
+	private int[] highestConfig;
 	
 	/**
 	 * Lez constructor.
@@ -75,6 +80,8 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		nbFraud = 0;
 		nbChangedMobilities = 0;
 		nbChangedVehicles = 0;
+		highestConfig = new int[3];
+		setCurrentConfigTheHighest();
 		
 		GeometryFactory factory = new GeometryFactory();
 		
@@ -111,6 +118,18 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 	
 	public LatLon[] getPerimeter() {
 		return perimeter;
+	}
+	
+	public void setCurrentConfigTheHighest() {
+		highestConfig[0] = ((CritAirCriteria)deliveryLezCriteria).getCritAir().ordinal();
+		highestConfig[1] = ((CritAirCriteria)privateLezCriteria).getCritAir().ordinal();
+		highestConfig[2] = surveillance.getSurveillance().ordinal();
+	}
+	
+	public boolean isCurrentConfig(int[] config) {
+		return config[0] == ((CritAirCriteria)deliveryLezCriteria).getCritAir().ordinal() &&
+				config[1] == ((CritAirCriteria)privateLezCriteria).getCritAir().ordinal() &&
+				config[2] == surveillance.getSurveillance().ordinal();
 	}
 	
 	public Surveillance getSurveillance() {
@@ -201,7 +220,6 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		nbFraud = 0;
 		nbChangedMobilities = 0;
 		nbChangedVehicles = 0;
-		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "");
 	}
 
 	/*
@@ -239,6 +257,14 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		return new NoLez();
 	}
 	
+	public int[] getConfigAsArray() {
+		int[] config = new int[3];
+		config[0] = ((CritAirCriteria)deliveryLezCriteria).getCritAir().ordinal();
+		config[1] = ((CritAirCriteria)privateLezCriteria).getCritAir().ordinal();
+		config[2] = surveillance.getSurveillance().ordinal();
+		return config;
+	}
+	
 	private static class NoLez extends Neighborhood {
 		
 		/*
@@ -262,12 +288,22 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 	public String getClassName() {
 		return this.getClass().getName();
 	}
+	
+	public Map<Pollutant, Double> getMainPollutions() {
+		Map<Pollutant, Double> map = new HashMap<>();
+		map.put(Pollutant.CO, pollution.get(Pollutant.CO).getAbsValue());
+		map.put(Pollutant.N2O, pollution.get(Pollutant.N2O).getAbsValue());
+		map.put(Pollutant.PM, pollution.get(Pollutant.PM).getAbsValue());
+		return map;
+	}
 
 	public double getAbsPollution() {
-		double pollution = this.pollution.get(Pollutant.N2O).getAbsValue() + 
-				this.pollution.get(Pollutant.CO).getAbsValue() +
-				this.pollution.get(Pollutant.PM).getAbsValue();
+		double pollution = this.pollution.get(Pollutant.CO).getAbsValue();
 		return pollution;
+	}
+	
+	private double getDifferencePollution() {
+		return referencePollution.get(Pollutant.CO).getAbsValue() - this.pollution.get(Pollutant.CO).getAbsValue();
 	}
 	
 	public double getAbsSatisfaction() {
@@ -278,17 +314,27 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		return satisfaction;
 	}
 	
+	public double getGain() {
+		//compute pollution
+		double pollution = getDifferencePollution();
+		pollution = pollution/3.5;
+		//compute satisfaction
+		double satisfaction = 0.0;
+		for ( double satisfactionScore : satisfactions ) {
+			satisfaction += satisfactionScore;
+		}
+		satisfaction = satisfaction/1;
+		return pollution + satisfaction;
+	}
+	
 	@Override
 	public FeaturesDouble getLocalPerformances(List<String> labels) {
-		List<Double> features = new ArrayList<>();
+		FeaturesDouble features = new FeaturesDouble();
 		
 		for ( String label : labels ) {
 			if ( label.equals("Pollution") ) {
 				//compute pollution
-				double pollution = referencePollution.get(Pollutant.N2O).getAbsValue() - this.pollution.get(Pollutant.N2O).getAbsValue() +
-						referencePollution.get(Pollutant.CO).getAbsValue() - this.pollution.get(Pollutant.CO).getAbsValue() +
-						referencePollution.get(Pollutant.PM).getAbsValue() - this.pollution.get(Pollutant.PM).getAbsValue();
-				features.add(pollution);
+				features.addFeature(getDifferencePollution());
 			}
 			else if ( label.equals("Satisfaction") ) {
 				double satisfaction = 0;
@@ -296,38 +342,52 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 					satisfaction += satisfactionScore;
 				}
 				
-				features.add(satisfaction);
+				features.addFeature(satisfaction);
 			}
 			else if ( label.equals("ChangedVehicles") ) {
-				features.add((double)nbChangedVehicles);
+				features.addFeature((double)nbChangedVehicles);
 			}
 			else if ( label.equals("changedMobilities") ) {
-				features.add((double)nbChangedMobilities);
+				features.addFeature((double)nbChangedMobilities);
 			}
 			else if ( label.equals("frauded") ) {
-				features.add((double)nbFraud);
+				features.addFeature((double)nbFraud);
 			}
-			else if (label.equals("gain")) {
-				//compute pollution
-				double pollution = (referencePollution.get(Pollutant.N2O).getAbsValue() - this.pollution.get(Pollutant.N2O).getAbsValue()) +
-						(referencePollution.get(Pollutant.CO).getAbsValue() - this.pollution.get(Pollutant.CO).getAbsValue()) +
-						(referencePollution.get(Pollutant.PM).getAbsValue() - this.pollution.get(Pollutant.PM).getAbsValue());
-				pollution = pollution/700;
-				//compute satisfaction
-				double satisfaction = 0;
-				for ( double satisfactionScore : satisfactions ) {
-					satisfaction += satisfactionScore;
+			else if ( label.equals("CritAirDelivery") ) {
+				features.addFeature( ((double) ((CritAirCriteria) deliveryLezCriteria).getCritAir().ordinal()) );
+			}
+			else if ( label.equals("CritAirPrivate") ) {
+				features.addFeature( ((double) ((CritAirCriteria) privateLezCriteria).getCritAir().ordinal()) );
+			}
+			else if ( label.equals("Surveillance") ) {
+				features.addFeature ( (double)  surveillance.getSurveillance().ordinal() ) ;
+			}
+			else if ( label.equals("gain") ) {
+				features.addFeature(getGain());
+			}
+			else if ( label.equals("reward") ) {
+				double currentGain = getGain();
+				if (currentGain < 0.1) {
+					features.addFeature(-1.0);
 				}
-				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "Neighborhood " + id);
-				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "   Satisfaction : " + satisfaction);
-				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "   N2O Ref : " + referencePollution.get(Pollutant.N2O).getAbsValue() + ", now : " + this.pollution.get(Pollutant.N2O).getAbsValue());
-				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "   CO Ref : " + referencePollution.get(Pollutant.CO).getAbsValue() + ", now : " + this.pollution.get(Pollutant.CO).getAbsValue());
-				FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "pollution.txt", "   PM Ref : " + referencePollution.get(Pollutant.PM).getAbsValue() + ", now : " + this.pollution.get(Pollutant.PM).getAbsValue());
-				satisfaction = satisfaction/ 1000;
-				features.add(pollution + satisfaction);
+				else if ( isCurrentConfig(highestConfig) ) {
+					features.addFeature(0.5);
+				}
+				else if ( currentGain > highestGain - 0.5 ) {
+					highestGain = currentGain;
+					setCurrentConfigTheHighest();
+					features.addFeature(1.0);
+				}
+				else if ( currentGain > lastGain + 0.1 ) {
+					features.addFeature(1.0);
+				}
+				else {
+					features.addFeature(-1.0);
+				}
+				lastGain = currentGain;
 			}
 		}
-		return new FeaturesDouble(features);
+		return features;
 	}
 
 	@Override
@@ -375,6 +435,14 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 			break;
 		case DECREASE_SURVEILLANCE:
 			surveillance.decreaseSurveillance();
+			break;
+		case INCREASE_ALL_CRITERIA:
+			((CritAirCriteria)deliveryLezCriteria).increaseCriteria();
+			((CritAirCriteria)privateLezCriteria).increaseCriteria();
+			break;
+		case DECREASE_ALL_CRITERIA:
+			((CritAirCriteria)deliveryLezCriteria).decreaseCriteria();
+			((CritAirCriteria)privateLezCriteria).decreaseCriteria();
 			break;
 		default:
 	}

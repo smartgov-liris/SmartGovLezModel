@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class EnvironmentSerializer {
 	
-	public static void SerializeEnvironment(String filePath, Environment environment) {
+	public static void SerializeEnvironment(String filePath, Environment environment, int epoch) {
 		ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         Map<String, Map<String, Object>> mapEnv = new HashMap<>();
         for (Neighborhood n : environment.getNeighborhoods().values()) {
@@ -20,12 +20,12 @@ public class EnvironmentSerializer {
         	mapNei.put("surveillance", n.getSurveillance().toString());
         	mapNei.put("private criteria", ((CritAirCriteria)n.getPrivateLezCriteria()).getCritAir().toString() );
         	mapNei.put("delivery criteria", ((CritAirCriteria)n.getDeliveryLezCriteria()).getCritAir().toString() );
-        	mapNei.put("pollution", n.getAbsPollution());
+        	mapNei.put("pollution", n.getMainPollutions());
         	mapNei.put("satisfaction", n.getAbsSatisfaction());
         	mapNei.put("perimeter", n.getPerimeter());
         	mapEnv.put(n.getID(), mapNei);
         }
-        File envFile = new File(filePath, "environment.json");
+        File envFile = new File(filePath, "environment" + epoch + ".json");
         Cli.writeOutput(mapEnv, envFile, mapper);
     }
 
