@@ -100,23 +100,34 @@ public class PoliticalCreator {
 	
 	public static void createPolicyAgent(Environment environment) {
 		List<PolicyAction> actions = new ArrayList<>();
-		actions.add(PolicyAction.DECREASE_DELIVERIE_CRITERIA);
-		actions.add(PolicyAction.INCREASE_DELIVERIE_CRITERIA);
-		actions.add(PolicyAction.DECREASE_PRIVATE_CRITERIA);
-		actions.add(PolicyAction.INCREASE_PRIVATE_CRITERIA);
+		if (Integer.parseInt(PoliticalVar.variables.get("distinct_criterias")) == 1 ) {
+			actions.add(PolicyAction.INCREASE_DELIVERIE_CRITERIA);
+			actions.add(PolicyAction.INCREASE_PRIVATE_CRITERIA);
+			actions.add(PolicyAction.DECREASE_DELIVERIE_CRITERIA);
+			actions.add(PolicyAction.DECREASE_PRIVATE_CRITERIA);
+		}
+		else {
+			actions.add(PolicyAction.INCREASE_ALL_CRITERIA);
+			actions.add(PolicyAction.DECREASE_ALL_CRITERIA);
+		}
+		
 		actions.add(PolicyAction.DECREASE_SURVEILLANCE);
 		actions.add(PolicyAction.INCREASE_SURVEILLANCE);
 		actions.add(PolicyAction.DO_NOTHING);
 		
 		List<PolicyAction> specialActions = getSpecialPolicyActions() ;
 		List<Structure> structures = new ArrayList<>();
+		int cpt = 0;
 		for(Structure structure : environment.getNeighborhoods().values()) {
 			structures.add(structure);
+			Perimeter perimeter = new Perimeter(structures);
+			PoliticalVar.policyAgents.add(new PolicyAgent(String.valueOf(cpt), perimeter, actions, specialActions));
+			structures = new ArrayList<>();
 		}
 		
-		Perimeter perimeter = new Perimeter(structures);
+		/*Perimeter perimeter = new Perimeter(structures);
 		
-		PoliticalVar.policyAgents.add(new PolicyAgent("0", perimeter, actions, specialActions));
+		PoliticalVar.policyAgents.add(new PolicyAgent("0", perimeter, actions, specialActions));*/
 	}
 	
 	protected static List<PolicyAction> getSpecialPolicyActions() {

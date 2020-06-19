@@ -46,11 +46,6 @@ public class ManagerQLearningScenario extends AbstractManager {
 
 	@Override
 	public void live() {
-		/*List<String> lines = new ArrayList<>();
-		lines.add("");
-		lines.add("--- Nouvelle simulation ---");
-		lines.add("");
-		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "Pollution.txt", lines);*/
 		if(observationPhase) {
 			callPolicyAgents();
 			if(NUMBER_OF_ITERATIONS_BEFORE_APPLYING_POLICIES == currentTrialIndex){
@@ -95,7 +90,13 @@ public class ManagerQLearningScenario extends AbstractManager {
 				gain = policyAgent.getLastGain();
 			}
 		}
-		lines.add(currentIteration + "," + gain);
+		if (NUMBER_OF_SIMULATIONS_BEFORE_RESTART == currentSimulationIndex) {
+			lines.add("EPOCH_END : " + currentIteration + "," + gain);
+			FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "gain_end_epoch.txt", String.valueOf(gain));
+		}
+		else {
+			lines.add(currentIteration + "," + gain);
+		}
 		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, globalGainFile, lines);
 	}
 	
@@ -130,7 +131,7 @@ public class ManagerQLearningScenario extends AbstractManager {
 				else if ( restartCounter == Integer.parseInt(PoliticalVar.variables.get("nb_epoch")) - 1 ) {
 					lastEpoch = true;
 				}
-				currentSimulationIndex = 0;
+				currentSimulationIndex = 1;
 			} else {
 				List<String> actions = new ArrayList<>();
 				List<PolicyAgent> agentsWithSpecificActions = new ArrayList<>();

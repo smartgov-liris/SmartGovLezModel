@@ -24,10 +24,13 @@ public class Server {
 		
 		try {
 			if(OS.indexOf("win")>=0) {
+				System.out.println("Server launched, windows architecture");
 				Runtime.getRuntime().exec("cmd.exe /c start " + command + " " + file);
 			} else if(OS.indexOf("mac") >= 0) {
-				
+				System.out.println("Server launched, mac architecture");
+				Runtime.getRuntime().exec("sh extsrc/server.sh " + String.valueOf(ClientCommunication.port));
 			} else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0) {
+				System.out.println("Server launched, unix architecture");
 				Runtime.getRuntime().exec("sh extsrc/server.sh " + String.valueOf(ClientCommunication.port));
 			} else {
 				System.out.println("Your OS is not supported.");

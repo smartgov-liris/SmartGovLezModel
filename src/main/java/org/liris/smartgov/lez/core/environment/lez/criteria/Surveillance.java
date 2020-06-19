@@ -6,6 +6,5 @@ public enum Surveillance {
 	CAMERA,
 	BARRIER,
 	CHEAP_TOLL,
-	MEDIUM_TOLL,
 	EXPENSIVE_TOLL;
 }

@@ -71,7 +71,7 @@ public class Run {
 		}
 		
         SmartGov smartGov = new SmartGov(
-        		new LezContext(configFile)
+        		new LezContext(configFile, false)
         		);
         
         SmartGov.getRuntime().addSimulationStoppedListener(new EventHandler<SimulationStopped>() {

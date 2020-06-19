@@ -393,14 +393,19 @@ public class PolicyAgent extends AbstractPolicyAgent {
 	 */
 	private double setGlobalPerception() {
 		FeaturesDouble globalReward = new FeaturesDouble();
+		String line = "";
+		line += PoliticalVar.manager.getCurrentIteration() + ")";
 		globalReward.addFeature(0.0);
 		for(int indexOfStructure = 0; indexOfStructure < perimeter.getStructures().size(); indexOfStructure++) {
 			FeaturesDouble position = new FeaturesDouble();
 			List<FeaturesDouble> tempValues = new ArrayList<>();
 			tempValues.add(perimeter.getStructures().get(indexOfStructure).getLocalPerformances(labelsForGlobalPerceptions));
 			position = PolicyAgent.averagePosition(tempValues);
+			line += perimeter.getStructures().get(indexOfStructure).getID() + ":" + position.getFeatures().get(0) + ";";
 			globalReward.addFeaturesDouble(position);
+			
 		}
+		FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "local_gains.txt", line);
 		System.out.println("Global gain is: " + globalReward.getFeatures().get(0));
 		return globalReward.getFeatures().get(0);
 	}
@@ -630,9 +635,10 @@ public class PolicyAgent extends AbstractPolicyAgent {
 		List<String> labels0 = new ArrayList<>();
 		labels0.add("Pollution");
 		labels0.add("Satisfaction");
-		labels0.add("ChangedVehicles");
-		labels0.add("changedMobilities");
-		labels0.add("frauded");
+		labels0.add("CritAirDelivery");
+		labels0.add("CritAirPrivate");
+		labels0.add("Surveillance");
+		labels0.add("reward");
 		
 		allLabels.add(labels0);
 		

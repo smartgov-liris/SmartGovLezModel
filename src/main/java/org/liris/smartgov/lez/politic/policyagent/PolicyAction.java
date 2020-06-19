@@ -11,14 +11,19 @@ import java.util.List;
  */
 public enum PolicyAction {
 
+	//WARNING : ALL AVAILABLE ACTIONS SHOULD BE IN THE FIRST NUMBERS AS IT IS STOCKED IN ARRAYS FOR THE PYTHON LEARNER
+	//(if I choose not to add increase_all_criteria to available actions of my learners,
+	//then I should switch its number to 9 or more, otherwise there might be out of bound exceptions
 	NO_ACTION(-1),
-	INCREASE_DELIVERIE_CRITERIA(0),
-	DECREASE_DELIVERIE_CRITERIA(1),
-	INCREASE_PRIVATE_CRITERIA(2),
-	DECREASE_PRIVATE_CRITERIA(3),
-	INCREASE_SURVEILLANCE(4),
-	DECREASE_SURVEILLANCE(5),
+	INCREASE_SURVEILLANCE(0),
+	DECREASE_SURVEILLANCE(1),
+	INCREASE_DELIVERIE_CRITERIA(2),
+	DECREASE_DELIVERIE_CRITERIA(3),
+	INCREASE_PRIVATE_CRITERIA(4),
+	DECREASE_PRIVATE_CRITERIA(5),
 	DO_NOTHING(6),
+	INCREASE_ALL_CRITERIA(7),
+	DECREASE_ALL_CRITERIA(8),
 	NOTHING(100),
 	SPLIT(101),
 	MERGE(102),
@@ -68,6 +73,10 @@ public enum PolicyAction {
 				return PolicyAction.INCREASE_SURVEILLANCE;
 			case "decrease_surveillance":
 				return PolicyAction.DECREASE_SURVEILLANCE;
+			case "increase_all_c":
+				return PolicyAction.INCREASE_ALL_CRITERIA;
+			case "decrease_all_c":
+				return PolicyAction.DECREASE_ALL_CRITERIA;
 			case "do_nothing":
 				return PolicyAction.DO_NOTHING;
 			default:
