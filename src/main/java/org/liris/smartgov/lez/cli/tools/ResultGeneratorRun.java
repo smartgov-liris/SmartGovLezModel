@@ -66,11 +66,9 @@ public class ResultGeneratorRun {
 		CommandLine cmd = parser.parse(opts, args);
 		
 		if(cmd.hasOption("h")) {
-			String header = "Run the simutation, with the specified configuration.";
+			String header = "Run simulations with random configurations and save results.";
 			String footer = "\n"
-					+ "Raw results are written to the <outputDir>/simulation folder.\n"
-					+ "The simulation runs until max ticks count as been reached (default to 10 days) or "
-					+ "when the last round has ended.";
+					+ "Results are written in output/config.txt file";
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("smartgovlez run", header, opts, footer, true);
 			return;

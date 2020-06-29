@@ -79,6 +79,8 @@ public class Cli {
 				+ "\t roads - preprocess roads to produce json nodes and ways files\n"
 				+ "\t init - load json nodes and ways file, and initialize delivery agents\n"
 				+ "\t run - run simulation\n"
+				+ "\t prun - run simulations and launch optimal policy searching\n"
+				+ "\t rgrun - run simulations with random configuration adns ave their results\n"
 				+ "\t tile - aggregate output results in tiles");
 		System.out.println("Use \"<task> -h\" to get detailed information about each task options.");
 	}

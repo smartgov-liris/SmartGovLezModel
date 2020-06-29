@@ -3,12 +3,8 @@
 A Low Emission Zones model implementation for the
 [SmartGovSimulator](https://github.com/smartgov-liris/SmartGovSimulator).
 
-![LEZ example](lez.png)
-
 # Documentation
-The project is documented in detail in the [wiki of this repository](https://github.com/smartgov-liris/SmartGovLezModel/wiki).
-
-The complete Javadoc is also [available online](https://smartgov-liris.github.io/SmartGovLezModel/).
+The project is documented in detail [here](https://github.com/AlbanFl/SmartGovLezModel/Extended_doc).
 
 # Introduction
 
@@ -17,26 +13,25 @@ not allowed to enter.
 
 Perimeters and permissions of such zones is very variable in the European
 Union, so this project from the [LIRIS](https://liris.cnrs.fr/en) is an attempt
-to evaluate the impact of such zones on pollutant emissions, in the context of
-the Urban Goods Transport.
+to evaluate the impact of such zones on pollutant emissions, and to learn optimal policies
+to help stakeholders.
 
 # Features
 
 The following features have been implemented :
-- Fleet generation from an input establishment set
-- Determination of establishments concerned by the LEZ given 
-  a LEZ perimeter / permissions
-- Vehicle replacements depending on the LEZ 
-- Rounds simulation over a day, and pollutant emissions computation with /
+- Fleet generation from an input establishment set of private agents and delivery agents
+- Creation of neighborhoods with different policies in connection with Low Emission Zones
+- Vehicle replacements depending on the polical choices
+- Agent's satisfaction indicator about the political choices
+- Simulation over a day, and pollutant emissions computation with /
 	without the input LEZ, using the [COPERT
 	model](https://www.emisia.com/utilities/copert/).
-- Pollution tile map generation from the output
+- Module of multi-agent reinforcement learning to predict optimal policies (using 
+[Clustered Deep Q Network](https://europe.naverlabs.com/wp-content/uploads/2019/04/Multi-Agent-Learning-and-Coordination-with-Clustered-Deep-Q-Network.pdf)
 
-The final model is provided as a Command Line Interface wrapped in a [single
-.jar
-file](https://github.com/smartgov-liris/SmartGovLezModel/blob/master/SmartGovLez-MASTER.jar),
+The final model is provided as a Command Line Interface wrapped in a single .jar file
 and takes various input and output parameters. See the
-[wiki](https://github.com/smartgov-liris/SmartGovLezModel/wiki) for detailed
+[full documentation](https://github.com/AlbanFl/SmartGovLezModel/Extended_doc) for detailed
 usage instructions.
 
 # Build from source
@@ -61,7 +56,7 @@ Also :
 	.jar](https://imperceptiblethoughts.com/shadow/introduction/) is built at
 	the root of the project (`SmartGovLez-MASTER.jar`)
 See the
-[wiki](https://github.com/smartgov-liris/SmartGovLezModel/wiki) for
+[full documentation](https://github.com/smartgov-liris/SmartGovLezModel/wiki) for
 usage instructions.
 
 ## IntelliJ IDEA
@@ -83,4 +78,4 @@ SmartGov is developped at the [LIRIS](https://liris.cnrs.fr/en) within the Multi
 
 For any extra information about the project, you may contact :
 - Veronique Deslandres : veronique.deslandres@liris.cnrs.fr
-- Paul Breugnot : paul.breugnot@etu.emse.fr
+- Alban Flandin : alban.flandin@etu.univ-lyon1.fr
