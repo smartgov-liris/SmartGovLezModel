@@ -3,6 +3,9 @@ org.liris.smartgov.lez.cli.tools
 org.liris.smartgov.lez.core.agent.driver
 org.liris.smartgov.lez.core.agent.driver.behavior
 org.liris.smartgov.lez.core.agent.driver.mover
+org.liris.smartgov.lez.core.agent.driver.personality
+org.liris.smartgov.lez.core.agent.driver.personality.choice
+org.liris.smartgov.lez.core.agent.driver.personality.satisfaction
 org.liris.smartgov.lez.core.agent.driver.vehicle
 org.liris.smartgov.lez.core.agent.establishment
 org.liris.smartgov.lez.core.agent.establishment.preprocess
@@ -17,8 +20,16 @@ org.liris.smartgov.lez.core.environment.lez.criteria
 org.liris.smartgov.lez.core.environment.pollution
 org.liris.smartgov.lez.core.output.establishment
 org.liris.smartgov.lez.core.output.pollution
+org.liris.smartgov.lez.core.simulation
+org.liris.smartgov.lez.core.simulation.files
 org.liris.smartgov.lez.core.simulation.scenario
 org.liris.smartgov.lez.input.establishment
 org.liris.smartgov.lez.input.lez
+org.liris.smartgov.lez.politic
+org.liris.smartgov.lez.politic.manager
+org.liris.smartgov.lez.politic.policyagent
+org.liris.smartgov.lez.politic.policyagent.inneragent
+org.liris.smartgov.lez.politic.policyagent.learning.strategy
+org.liris.smartgov.lez.politic.socket
 org.liris.smartgov.lez.process.arcs.build
 org.liris.smartgov.lez.process.arcs.load

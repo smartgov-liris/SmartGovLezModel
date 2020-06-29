@@ -4,28 +4,20 @@ import org.liris.smartgov.lez.core.agent.driver.personality.Decision;
 import org.liris.smartgov.lez.core.agent.establishment.preprocess.Cases;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 
+/**
+ * Compute the choices of delivery drivers considering the deployed policies.
+ * @author alban
+ *
+ */
 public class CompanyChoice extends Choice {
 	
-	
-	/*protected boolean wantToChangeMobility(Surveillance surveillance, boolean hasToChange) {
-		//they cannot change mobility
-		return false;
-	}
-
-	protected boolean wantToFraud(Surveillance surveillance) {
-		if (surveillance == Surveillance.NO_SURVEILLANCE) {
-			return Math.random() < 0.6;
-		}
-		else if (surveillance == Surveillance.PATROL) {
-			return Math.random() < 0.4;
-		}
-		else if (surveillance == Surveillance.CAMERA) {
-			return Math.random() < 0.2;
-		}
-		//there are barriers, he cannot fraud
-		return false;
-	}*/
-	
+	/**
+	 * Returns the decision considering a case and proportion
+	 * @param c case to be considered
+	 * @param proportion proportion of agents in the same case who already have made their choice.
+	 * It is used to stabilise the choices made, and not to use random.
+	 * @return the decision
+	 */
 	public Decision getDecision(Cases c, double proportion) {
 		switch (c) {
 		case ALLOWED_NO_TOLL:

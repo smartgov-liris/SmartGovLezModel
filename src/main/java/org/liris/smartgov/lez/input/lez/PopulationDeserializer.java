@@ -18,6 +18,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
+/**
+ * Not used for now, but allows to create different kinds of population from a file.
+ * @author alban
+ *
+ */
 public class PopulationDeserializer extends StdDeserializer<Map<String, Map<PersonalityType, Double>>> {
 	
 	public PopulationDeserializer() {

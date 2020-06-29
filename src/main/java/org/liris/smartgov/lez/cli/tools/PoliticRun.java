@@ -27,6 +27,12 @@ import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.events.EventHandler;
 import org.liris.smartgov.simulator.core.simulation.events.SimulationStopped;
 
+
+/**
+ * Politic run task, launches simulations and RL algorithms.
+ * @author alban
+ *
+ */
 public class PoliticRun {
 	public static final Logger logger = LogManager.getLogger(PoliticRun.class);
 	static int iterator;

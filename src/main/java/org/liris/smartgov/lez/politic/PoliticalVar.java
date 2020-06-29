@@ -21,7 +21,11 @@ import org.liris.smartgov.simulator.core.environment.SmartGovContext;
 import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
 
 
-
+/**
+ * Global static variables of the political layer inherited from SmartGov main project (repast).
+ * @author alban
+ *
+ */
 public class PoliticalVar {
 	public static Map<String, String> variables = new HashMap<>();
 	public static List<PolicyAgent> policyAgents = new ArrayList<>();
@@ -95,6 +99,10 @@ public class PoliticalVar {
 		}
 	}
 	
+	/**
+	 * Remove the policy agent at the specified index
+	 * @param index
+	 */
 	public static void removePolicyAgentFromList(int index) {
 		policyAgents.set(index, null);
 	}

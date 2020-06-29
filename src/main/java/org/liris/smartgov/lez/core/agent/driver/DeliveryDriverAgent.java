@@ -9,7 +9,7 @@ import org.liris.smartgov.simulator.urban.osm.agent.OsmAgent;
 
 /**
  * An OsmAgent associated to an establishment, that can perform deliveries
- * with a DeliveryDriverBody through a DeliveryDriverBehavior.
+ * with a DriverBody through a DeliveryDriverBehavior.
  */
 public class DeliveryDriverAgent extends OsmAgent {
 	

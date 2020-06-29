@@ -3,6 +3,11 @@ package org.liris.smartgov.lez.core.simulation;
 import org.liris.smartgov.simulator.core.simulation.time.Date;
 import org.liris.smartgov.simulator.core.simulation.time.WeekDay;
 
+/**
+ * Allows to compute time between two dates
+ * @author alban
+ *
+ */
 public class ExtendedDate extends Date {
 
 	public ExtendedDate(int day, WeekDay weekDay, int hour, int minutes, double seconds) {

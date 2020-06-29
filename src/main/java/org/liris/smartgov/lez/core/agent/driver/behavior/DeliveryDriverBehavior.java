@@ -35,6 +35,7 @@ public class DeliveryDriverBehavior extends DriverBehavior {
 	 *
 	 * @param agentBody associated body
 	 * @param round round to perform
+	 * @param personality personality associated to the agent
 	 * @param context currentContext
 	 */
 	public DeliveryDriverBehavior(

@@ -15,13 +15,31 @@ import org.liris.smartgov.simulator.core.environment.SmartGovContext;
 import org.liris.smartgov.simulator.core.simulation.time.Date;
 import org.liris.smartgov.simulator.core.simulation.time.DelayedActionHandler;
 import org.liris.smartgov.simulator.core.simulation.time.WeekDay;
-
+/**
+ * Behavior of worker private agent.
+ * His behavior is : 
+ * <ul>
+ * 	<li> Leaves his origin establishment between 7am and 9am and to go to work.</li>
+ * 	<li> Leaves his work between 4pm and 7pm to go home.</li>
+ * </ul>
+ * @author alban
+ *
+ */
 public class WorkerBehavior extends PrivateDriverBehavior {
 	
 	private int position;
 	private int journeyTime;
 	private Date[] departures;
 	
+	/**
+	 * WorkerBehavior constructor.
+	 *
+	 * @param agentBody associated body
+	 * @param round round to perform
+	 * @param personality personality associated to the agent
+	 * @param context currentContext
+	 * @param random an instantiated random
+	 */
 	public WorkerBehavior(
 			DriverBody agentBody,
 			Round round,

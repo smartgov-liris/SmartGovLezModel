@@ -14,13 +14,24 @@ import org.liris.smartgov.simulator.core.simulation.time.Date;
 import org.liris.smartgov.simulator.core.simulation.time.DelayedActionHandler;
 import org.liris.smartgov.simulator.core.simulation.time.WeekDay;
 
+/**
+ * Generic class of behavior for private agents.
+ * @author alban
+ *
+ */
 public abstract class PrivateDriverBehavior extends DriverBehavior {
-	
-	
 	
 	protected MoverAction nextAction;
 	protected Random random;
 	
+	/**
+	 * 
+	 * @param agentBody body of the agent
+	 * @param round round to be performed
+	 * @param personality personality associated to the agent
+	 * @param context current context
+	 * @param random an instantiated random
+	 */
 	public PrivateDriverBehavior(
 			DriverBody agentBody,
 			Round round,
@@ -32,6 +43,7 @@ public abstract class PrivateDriverBehavior extends DriverBehavior {
 		this.random = random;
 	}
 
+	
 	@Override
 	public MoverAction provideAction() {
 		return nextAction;

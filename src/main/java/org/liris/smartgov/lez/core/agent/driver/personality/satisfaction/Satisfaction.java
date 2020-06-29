@@ -1,5 +1,10 @@
 package org.liris.smartgov.lez.core.agent.driver.personality.satisfaction;
 
+/**
+ * Generic class of satisfaction.
+ * @author alban
+ *
+ */
 public abstract class Satisfaction {
 	public Satisfaction () {
 		

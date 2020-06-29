@@ -9,7 +9,11 @@ import org.liris.smartgov.lez.core.agent.establishment.Round;
 import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
 import org.liris.smartgov.simulator.core.events.EventHandler;
-
+/**
+ * The generic class of driver behaviors.
+ * @author alban
+ *
+ */
 public abstract class DriverBehavior extends LezBehavior {
 	
 	protected Round round;
@@ -17,6 +21,14 @@ public abstract class DriverBehavior extends LezBehavior {
 	protected Collection<EventHandler<RoundEnd>> roundEndListeners;
 	protected Personality personality;
 	
+	/**
+	 * DeliveryDriverBehavior constructor.
+	 *
+	 * @param agentBody associated body
+	 * @param round round to perform
+	 * @param personality personality associated to the agent
+	 * @param context currentContext
+	 */
 	public DriverBehavior(DriverBody agentBody, Round round, Personality personality, SmartGovContext context) {
 		super(
 				agentBody,
@@ -56,7 +68,10 @@ public abstract class DriverBehavior extends LezBehavior {
 		this.roundEndListeners.add(listener);
 	}
 	
-	
+	/**
+	 * return the round to be performed
+	 * @return agent's round
+	 */
 	public Round getRound() {
 		return round;
 	}

@@ -27,6 +27,11 @@ import org.liris.smartgov.simulator.SmartGov;
 import org.liris.smartgov.simulator.core.events.EventHandler;
 import org.liris.smartgov.simulator.core.simulation.events.SimulationStopped;
 
+/**
+ * ResultGeneratorRun task, launches simulations with random configuration.
+ * @author alban
+ *
+ */
 public class ResultGeneratorRun {
 	public static final Logger logger = LogManager.getLogger(ResultGeneratorRun.class);
 	static int iteration;

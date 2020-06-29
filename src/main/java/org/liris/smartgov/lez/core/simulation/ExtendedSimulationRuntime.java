@@ -10,6 +10,11 @@ import org.liris.smartgov.simulator.core.environment.SmartGovContext;
 import org.liris.smartgov.simulator.core.simulation.SimulationRuntime;
 import org.liris.smartgov.simulator.core.simulation.time.Clock;
 
+/**
+ * Customized SimulationRuntime
+ * @author alban
+ *
+ */
 public class ExtendedSimulationRuntime extends SimulationRuntime {
 	private final Logger logger = LogManager.getLogger(ExtendedSimulationRuntime.class);
 	public ExtendedSimulationRuntime (SmartGovContext context) {
@@ -17,7 +22,10 @@ public class ExtendedSimulationRuntime extends SimulationRuntime {
 		clock = new Clock();
 	}
 	
-	@Override
+	/**
+	 * Allows to restart the temporal parts of the simulation.
+	 * @param context current context
+	 */
 	public void restart(SmartGovContext context) {
 		if (isRunning()) {
 			throw new IllegalStateException("A Simulation is already running in this SmartGovRuntime.");

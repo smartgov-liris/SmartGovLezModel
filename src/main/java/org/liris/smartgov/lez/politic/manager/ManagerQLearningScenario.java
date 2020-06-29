@@ -22,6 +22,10 @@ public class ManagerQLearningScenario extends AbstractManager {
 	public boolean lastEpoch;
 	protected String globalGainFile = "global_gain.txt";
 	
+	/**
+	 * Constructor of ManagerQLearning. Defines if we are in validation phase
+	 * or learning phase.
+	 */
 	public ManagerQLearningScenario(){
 		super();
 		
@@ -44,6 +48,9 @@ public class ManagerQLearningScenario extends AbstractManager {
 		}
 	}
 
+	/**
+	 * Function that is called between each simulation to make political actions.
+	 */
 	@Override
 	public void live() {
 		if(observationPhase) {
@@ -68,6 +75,9 @@ public class ManagerQLearningScenario extends AbstractManager {
 		saveManagerCounters();
 	}
 	
+	/**
+	 * Call the policy so they decide the next action.
+	 */
 	private void callPolicyAgents() {
 		for(PolicyAgent policyAgent : PoliticalVar.policyAgents) {
 			if(policyAgent != null) {
@@ -81,7 +91,10 @@ public class ManagerQLearningScenario extends AbstractManager {
 
 		learningPhase = true;
 	}
-
+	
+	/**
+	 * Save the global gain in a file.
+	 */
 	private void saveGlobalGain() {
 		List<String> lines = new ArrayList<>();
 		double gain = 0.0;

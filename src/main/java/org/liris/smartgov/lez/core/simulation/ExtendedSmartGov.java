@@ -18,11 +18,10 @@ public class ExtendedSmartGov extends SmartGov {
 		super(context, smartGovRuntime, simulationBuilder);
 	}
 	
-	@Override
 	public void restart(SmartGovContext context) {
 		this.context = context;
-		this.smartGovRuntime.restart(context);
-		this.simulationBuilder.rebuild();
+		((ExtendedSimulationRuntime)this.smartGovRuntime).restart(context);
+		((ExtendedSimulationBuilder)this.simulationBuilder).rebuild();
 	}
 	
 	

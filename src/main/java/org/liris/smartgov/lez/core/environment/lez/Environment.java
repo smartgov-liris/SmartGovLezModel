@@ -13,7 +13,11 @@ import org.liris.smartgov.lez.core.environment.pollution.Pollution;
 import org.liris.smartgov.simulator.urban.geo.utils.LatLon;
 import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
 
-
+/**
+ * Represents the environment, and contains the neighborhoods.
+ * @author alban
+ *
+ */
 public class Environment {
 	protected Map <String, Neighborhood> neighborhoods = new HashMap<>();
 	
@@ -47,6 +51,11 @@ public class Environment {
 		}
 	}
 	
+	/**
+	 * Returns the neighborhood of a node.
+	 * @param node the OSM node.
+	 * @return the node's neighborhood.
+	 */
 	public Neighborhood getNeighborhood (OsmNode node) {
 		for ( Neighborhood neighborhood : neighborhoods.values()) {
 			if ( neighborhood.contains(node) ) {
@@ -56,6 +65,11 @@ public class Environment {
 		return null;
 	}
 	
+	/**
+	 * Returns the neighborhood with the given id.
+	 * @param id id of the neighborhood.
+	 * @return neighborhood.
+	 */
 	public Neighborhood getNeighborhood (String id) {
 		if (neighborhoods.get(id) == null) {
 			throw new IllegalArgumentException("There is no neighborhood with this id");
@@ -63,10 +77,17 @@ public class Environment {
 		return neighborhoods.get(id);
 	}
 	
+	/**
+	 * Return a map a of all the neighborhoods.
+	 * @return the neighborhoods.
+	 */
 	public Map<String,Neighborhood> getNeighborhoods() {
 		return neighborhoods;
 	}
 	
+	/**
+	 * Reset the variables of the neighborhoods.
+	 */
 	public void resetNeighborhoodVariables() {
 		for (Neighborhood neighborhood : neighborhoods.values()) {
 			neighborhood.resetVariables();
@@ -78,6 +99,10 @@ public class Environment {
 		neighborhoods.put("0", Neighborhood.none());
 	}
 	
+	/**
+	 * Returns a map <Id, Pollution> of the neighborhoods.
+	 * @return pollution for every neightborhood.
+	 */
 	public Map<String, Pollution> getPollutionByNeighborhood() {
 		Map<String, Pollution> pollutions = new HashMap<>();
 		for ( Neighborhood neighborhood : neighborhoods.values() ) {

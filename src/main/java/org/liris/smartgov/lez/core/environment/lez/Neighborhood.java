@@ -39,7 +39,7 @@ import org.liris.smartgov.simulator.urban.geo.utils.lonLat.LonLat;
 import org.liris.smartgov.simulator.urban.osm.environment.graph.OsmNode;
 
 /**
- * A Low Emission Zone representation.
+ * A neightborhood representation.
  *
  */
 public class Neighborhood implements Structure , ActionableByPolicyAgent{
@@ -61,12 +61,16 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 	private int[] highestConfig;
 	
 	/**
-	 * Lez constructor.
+	 * Neighborhood constructor.
 	 * 
-	 * @param perimeter polygon that describes the perimeter of the LEZ.
+	 * @param perimeter polygon that describes the perimeter of the neighborhood.
 	 * If the polygon is not closed, it will be completed automatically.
-	 * @param lezCriteria criteria associated to this lez, that determines which
-	 * vehicles are allowed or not
+	 * @param deliveryLezCriteria criteria associated to this neighborhood that determines which
+	 * delivery vehicles are allowed or not
+	 * @param privateLezCriteria criteria associated to this neighborhood that determines which
+	 * private vehicles are allowed or not
+	 * @param surveillance surveillance deployed in the neighborhood
+	 * @param neighborhood's id
 	 */
 	public Neighborhood(LatLon[] perimeter, LezCriteria deliveryLezCriteria,
 			LezCriteria privateLezCriteria, Surveillance surveillance, String id) {
@@ -116,36 +120,58 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 					));
 	}
 	
+	/**
+	 * Returns neighborhood's perimeter.
+	 * @return perimeter
+	 */
 	public LatLon[] getPerimeter() {
 		return perimeter;
 	}
 	
+	/**
+	 * Save the current configuration as the best for now.
+	 */
 	public void setCurrentConfigTheHighest() {
 		highestConfig[0] = ((CritAirCriteria)deliveryLezCriteria).getCritAir().ordinal();
 		highestConfig[1] = ((CritAirCriteria)privateLezCriteria).getCritAir().ordinal();
 		highestConfig[2] = surveillance.getSurveillance().ordinal();
 	}
 	
+	/**
+	 * Compare a configuration with the current one.
+	 * @param config configuration to be compared
+	 * @return true if they are the same, false otherwise
+	 */
 	public boolean isCurrentConfig(int[] config) {
 		return config[0] == ((CritAirCriteria)deliveryLezCriteria).getCritAir().ordinal() &&
 				config[1] == ((CritAirCriteria)privateLezCriteria).getCritAir().ordinal() &&
 				config[2] == surveillance.getSurveillance().ordinal();
 	}
 	
+	/**
+	 * Returns the current surveillance
+	 * @return surveillance
+	 */
 	public Surveillance getSurveillance() {
 		return surveillance.getSurveillance();
 	}
 	
 	/**
-	 * Return the LEZ criteria associated to this LEZ, that determines
-	 * which vehicles are allowed or not.
+	 * Return the delivery LEZ criteria associated to this neighborhood, that determines
+	 * which delivery vehicles are allowed or not.
 	 * 
-	 * @return lez criteria
+	 * @return delivery lez criteria
 	 */
 	public LezCriteria getDeliveryLezCriteria() {
 		return deliveryLezCriteria;
 	}
 	
+	/**
+	 * Return the private LEZ criteria associated to this neighborhood, that determines
+	 * which private vehicles are allowed or not.
+	 * 
+	 * @return private lez criteria
+	 */
 	public LezCriteria getPrivateLezCriteria() {
 		return privateLezCriteria;
 	}
@@ -162,14 +188,30 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		this.surveillance.setSurveillance(surveillance);
 	}
 	
+	/**
+	 * Increase pollution in this neighborhood.
+	 * @param pollutant the pollutant to be increased
+	 * @param increment increment of the pollutant
+	 */
 	public void increasePollution(Pollutant pollutant, double increment) {
 		pollution.get(pollutant).increasePollution(increment);
 	}
 	
+	/**
+	 * Returns the neighborhood's pollution
+	 * @return pollution
+	 */
 	public Pollution getPollution() {
 		return pollution;
 	}
 	
+	/**
+	 * Allows agents to give their satisfaction to this neighborhood.
+	 * @param satisfaction the satisfaction to be given
+	 * @param changedVehicle whether or not the agent changed his vehicle.
+	 * @param changedMobility whether or not the agent changed mobility.
+	 * @param fraud whether or not the agent frauded.
+	 */
 	public void giveSatisfaction ( double satisfaction, boolean changedVehicle, boolean changedMobility, boolean fraud ) {
 		satisfactions.add(satisfaction);
 		if ( changedVehicle ) {
@@ -289,6 +331,10 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		return this.getClass().getName();
 	}
 	
+	/**
+	 * Returns main pollutions, in CO, N2O and PM
+	 * @return main pollutants rates
+	 */
 	public Map<Pollutant, Double> getMainPollutions() {
 		Map<Pollutant, Double> map = new HashMap<>();
 		map.put(Pollutant.CO, pollution.get(Pollutant.CO).getAbsValue());
@@ -297,15 +343,27 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		return map;
 	}
 
+	/**
+	 * Returns absolute pollution for CO.
+	 * @return absolute pollution for CO
+	 */
 	public double getAbsPollution() {
 		double pollution = this.pollution.get(Pollutant.CO).getAbsValue();
 		return pollution;
 	}
 	
+	/**
+	 * Returns the difference between a reference configuration, and the current configuration in term of CO.
+	 * @return difference of emissions
+	 */
 	private double getDifferencePollution() {
 		return referencePollution.get(Pollutant.CO).getAbsValue() - this.pollution.get(Pollutant.CO).getAbsValue();
 	}
 	
+	/**
+	 * Returns absolute satisfaction given to this neightborhood
+	 * @return absolute satisfaction
+	 */
 	public double getAbsSatisfaction() {
 		double satisfaction = 0.0;
 		for (double s : satisfactions) {
@@ -314,6 +372,10 @@ public class Neighborhood implements Structure , ActionableByPolicyAgent{
 		return satisfaction;
 	}
 	
+	/**
+	 * Returns the gain of this configuration.
+	 * @return gain
+	 */
 	public double getGain() {
 		//compute pollution
 		double pollution = getDifferencePollution();

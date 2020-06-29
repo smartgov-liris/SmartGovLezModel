@@ -4,40 +4,20 @@ import org.liris.smartgov.lez.core.agent.driver.personality.Decision;
 import org.liris.smartgov.lez.core.agent.establishment.preprocess.Cases;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 
+/**
+ * Compute the choices of private drivers considering the deployed policies.
+ * @author alban
+ *
+ */
 public class PrivateChoice extends Choice {
 	
-	/*protected boolean wantToChangeMobility(Surveillance surveillance, boolean hasToChange) {
-		if (hasToChange) {
-			//if he does not want to change vehicle, he changes mobility
-			if (Math.random() < 0.2) {
-				return true;
-			}
-		}
-		
-		//we then check if he accepts to pay tolls
-		if (surveillance == Surveillance.CHEAP_TOLL)
-			return Math.random() < 0.33;
-		else if (surveillance == Surveillance.EXPENSIVE_TOLL){
-			return Math.random() < 0.66;
-		}
-		//if there is no toll he does not need to change mobility
-		return false;
-	}
-	
-	protected boolean wantToFraud(Surveillance surveillance) {
-		if (surveillance == Surveillance.NO_SURVEILLANCE) {
-			return Math.random() < 0.5;
-		}
-		else if (surveillance == Surveillance.PATROL) {
-			return Math.random() < 0.3;
-		}
-		else if (surveillance == Surveillance.CAMERA) {
-			return Math.random() < 0.1;
-		}
-		//there are barriers, he cannot fraud
-		return false;
-	}*/
-	
+	/**
+	 * Returns the decision considering a case and proportion
+	 * @param c case to be considered
+	 * @param proportion proportion of agents in the same case who already have made their choice.
+	 * It is used to stabilise the choices made, and not to use random.
+	 * @return the decision
+	 */
 	public Decision getDecision(Cases c, double proportion) {
 		switch (c) {
 		case ALLOWED_NO_TOLL:

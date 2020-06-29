@@ -4,12 +4,23 @@ import org.liris.smartgov.lez.core.agent.driver.behavior.PrivateDriverBehavior;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.simulator.urban.osm.agent.OsmAgent;
 
-
+/**
+ * An OSM agent associated to an establishment, that can perform journeys
+ * with a DriverBody through a PrivateDriverBehavior.
+ * @author alban
+ *
+ */
 public class PrivateDriverAgent extends OsmAgent {
 	
 	//establishment where the driver goes to work
 	private Establishment establishment;
 	
+	/**
+	 * 
+	 * @param id agent id
+	 * @param body agent body
+	 * @param privateDriverBehavior agent behavior
+	 */
 	public PrivateDriverAgent(
 			String id,
 			DriverBody body,

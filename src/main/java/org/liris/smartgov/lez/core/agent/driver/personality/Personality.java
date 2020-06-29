@@ -17,6 +17,13 @@ import org.liris.smartgov.lez.core.agent.establishment.preprocess.CasesManager;
 import org.liris.smartgov.lez.core.environment.lez.Neighborhood;
 import org.liris.smartgov.lez.core.environment.lez.criteria.Surveillance;
 
+/**
+ * Personality of agents. Two main parts in this personality :
+ * The choice that will be made considering the policies, and the satisfaction
+ * of the agent.
+ * @author alban
+ *
+ */
 public class Personality {
 	private Choice choice;
 	private Satisfaction satisfaction;
@@ -32,20 +39,15 @@ public class Personality {
 	private Cases cases;
 	ST8 activity;
 	
-	
-	public Personality (ST8 activity, String vehicleId, PersonalityType type) {
+	/**
+	 * Constructor of Personality
+	 * @param activity activity of the agent, delivery or private.
+	 * @param vehicleId id of the vehicle
+	 */
+	public Personality (ST8 activity, String vehicleId) {
 		this.activity = activity;
 		if (activity == ST8.PRIVATE_HABITATION) {
 			choice = new PrivateChoice();
-			/*if (type == PersonalityType.POOR) {
-				satisfaction = new PoorSatisfaction();
-			}
-			else if (type == PersonalityType.MEDIUM) {
-				satisfaction = new MediumSatisfaction();
-			}
-			else {
-				satisfaction = new RichSatisfaction();
-			}*/
 			satisfaction = new PrivateSatisfaction();
 		}
 		else {
@@ -61,6 +63,9 @@ public class Personality {
 		price = 0;
 	}
 	
+	/**
+	 * Reset all the variables that compute satisfaction.
+	 */
 	public void resetPersonality() {
 		hasFrauded = false;
 		changedMobility = false;
@@ -70,16 +75,28 @@ public class Personality {
 		satisfactionScore = 0;
 	}
 	
+	/**
+	 * Gives the agent's perception of the policy.
+	 * @param c case perceived by the agent to make his choice.
+	 */
 	public void setCase(Cases c) {
 		cases = c;
 	}
 	
+	/**
+	 * Returns the case perceived by the agent of the policy.
+	 * @return case.
+	 */
 	public Cases getCase() {
 		return cases;
 	}
 	
+	/**
+	 * Gives the decision of the agent, made by his choice object.
+	 * @return the decision.
+	 */
 	public Decision getDecision() {
-		int[] counters = CasesManager.getCounters(activity, cases);
+		int[] counters = CasesManager.getCounter(activity, cases);
 		CasesManager.addCase(cases, true, activity);
 		double proportion = ((double)counters[1]) / ((double)counters[0]);
 		
@@ -95,22 +112,38 @@ public class Personality {
 		return decision;
 	}
 	
+	/**
+	 * Returns the vehicle id.
+	 * @return vehicle id.
+	 */
 	public String getVehicleId() {
 		return vehicleId;
 	}
 	
+	/**
+	 * Inform the personality that the agent changed his vehicle.
+	 */
 	public void changeVehicle() {
 		changedVehicle = true;
 	}
 	
+	/**
+	 * Inform the personality that the agent changed mobility.
+	 */
 	public void changeMobility() {
 		changedMobility = true;
 	}
 	
+	/**
+	 * Inform the personality that the agent frauded.
+	 */
 	public void fraud() {
 		hasFrauded = true;
 	}
 	
+	/**
+	 * Set the neighborhoods that caused the decision, and then will receive the satisfaction.
+	 */
 	public void setCauseNeighborhoods ( List<Neighborhood> causeNeighborhoods ) {
 		this.causeNeighborhoods = causeNeighborhoods;
 	}
@@ -125,10 +158,16 @@ public class Personality {
 		}
 	}
 	
+	/**
+	 * Compute satisfaction considering the choices made.
+	 */
 	public void computeSatisfactionOfAgent() {
 		satisfactionScore = satisfaction.getSatisfaction(changedMobility, hasFrauded, changedVehicle, timeLost, price);
 	}
 	
+	/**
+	 * Give the satisfaction to the neighborhoods that caused the decision.
+	 */
 	public void giveSatisfactionToNeighborhoods() {
 		for ( Neighborhood neighborhood : causeNeighborhoods) {
 			neighborhood.giveSatisfaction( (double) satisfactionScore / causeNeighborhoods.size(), changedVehicle, changedMobility, hasFrauded );

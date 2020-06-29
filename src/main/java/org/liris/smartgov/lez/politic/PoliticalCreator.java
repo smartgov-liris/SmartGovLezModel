@@ -20,6 +20,11 @@ import org.liris.smartgov.lez.politic.socket.Server;
 
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 
+/**
+ * Creates the main parts of the political layer.
+ * @author alban
+ *
+ */
 public class PoliticalCreator {
 	static int simulationIndex = 1;
 	
@@ -70,6 +75,9 @@ public class PoliticalCreator {
 		
 	}
 	
+	/**
+	 * Start the server to communicate with python learning scripts.
+	 */
 	protected static void startServer() {
 		//create folder for current simulation
 		//createFolder();
@@ -98,6 +106,10 @@ public class PoliticalCreator {
 		//*/
 	}
 	
+	/**
+	 * Create policy agents in charge of political decisions
+	 * @param environment environment of the the simulation
+	 */
 	public static void createPolicyAgent(Environment environment) {
 		List<PolicyAction> actions = new ArrayList<>();
 		if (Integer.parseInt(PoliticalVar.variables.get("distinct_criterias")) == 1 ) {
@@ -130,6 +142,10 @@ public class PoliticalCreator {
 		PoliticalVar.policyAgents.add(new PolicyAgent("0", perimeter, actions, specialActions));*/
 	}
 	
+	/**
+	 * Returns the available special actions
+	 * @return special actions
+	 */
 	protected static List<PolicyAction> getSpecialPolicyActions() {
 		List<PolicyAction> policyActions = new ArrayList<>();
 		policyActions.add(PolicyAction.MERGE);

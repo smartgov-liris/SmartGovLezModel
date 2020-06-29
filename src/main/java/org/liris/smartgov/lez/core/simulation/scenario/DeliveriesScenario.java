@@ -50,7 +50,7 @@ import org.liris.smartgov.simulator.urban.osm.environment.graph.tags.Highway;
 import org.liris.smartgov.simulator.urban.osm.utils.OsmArcsBuilder;
 
 /**
- * Scenario used to model deliveries between establishments with
+ * Scenario used to model deliveries and private journeys between establishments with
  * pollutant emissions.
  *
  */
@@ -97,7 +97,7 @@ public class DeliveriesScenario extends PollutionScenario {
 	/**
 	 * DeliveriesScenario constructor.
 	 * 
-	 * @param lez LEZ used in this scenario
+	 * @param environment the whole environment for this scenario
 	 */
 	public DeliveriesScenario(Environment environment) {
 		super(environment);
@@ -111,6 +111,12 @@ public class DeliveriesScenario extends PollutionScenario {
 		}
 	}
 	
+	/**
+	 * Load the establishments : the closest OSM node, the vehicles, the personalities of the agents
+	 * @param context current context
+	 * @param parser parser to load vehicle features
+	 * @return map of establishments
+	 */
 	public Map<String, Establishment> loadEstablishments(SmartGovContext context, CopertParser parser) {
 		
 		int deadEnds = 0;
@@ -180,7 +186,7 @@ public class DeliveriesScenario extends PollutionScenario {
 			
 			//we create personalities of agents
 			for (String vehicleId : establishment.getRounds().keySet()) {
-				establishment.setPersonality(vehicleId, new Personality(establishment.getActivity(), vehicleId, personality));
+				establishment.setPersonality(vehicleId, new Personality(establishment.getActivity(), vehicleId));
 			}
 		}
 		if ( ((LezContext)context).getPolitic() ) {
@@ -191,7 +197,12 @@ public class DeliveriesScenario extends PollutionScenario {
 		return establishments;
 	}
 	
-
+	/**
+	 * Build all the agents of the simulation
+	 * @param context current context
+	 * @param reload says if it is the first time they are built
+	 * @return collection of agents
+	 */
 	public Collection<? extends Agent<?>> buildAgents(SmartGovContext context, boolean reload) {
 		CopertParser parser = loadParser(context);
 		
@@ -270,6 +281,11 @@ public class DeliveriesScenario extends PollutionScenario {
 		return agents;
 	}
 	
+	/**
+	 * Build agents in separated threads
+	 * @author alban
+	 *
+	 */
 	private static class BuildAgentThread extends Thread {
 		
 		private int agentId;

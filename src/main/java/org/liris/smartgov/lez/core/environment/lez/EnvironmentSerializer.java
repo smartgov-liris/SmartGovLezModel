@@ -10,8 +10,19 @@ import org.liris.smartgov.lez.core.environment.lez.criteria.CritAirCriteria;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+/**
+ * Creates a json file with the important informations of the environment.
+ * @author alban
+ *
+ */
 public class EnvironmentSerializer {
 	
+	/**
+	 * Serialize the environment in a json file.
+	 * @param filePath the directory.
+	 * @param environment the environment to be serialized.
+	 * @param epoch an id for the file name.
+	 */
 	public static void SerializeEnvironment(String filePath, Environment environment, int epoch) {
 		ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         Map<String, Map<String, Object>> mapEnv = new HashMap<>();
