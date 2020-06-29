@@ -4,7 +4,7 @@ A Low Emission Zones model implementation for the
 [SmartGovSimulator](https://github.com/smartgov-liris/SmartGovSimulator).
 
 # Documentation
-The project is documented in detail [here](https://github.com/AlbanFl/SmartGovLezModel/Extended_doc).
+The project is documented in detail [here](Extended_doc/README.md).
 
 # Introduction
 
@@ -26,18 +26,18 @@ The following features have been implemented :
 - Simulation over a day, and pollutant emissions computation with /
 	without the input LEZ, using the [COPERT
 	model](https://www.emisia.com/utilities/copert/).
-- Module of multi-agent reinforcement learning to predict optimal policies (using 
+- Module of multi-agent reinforcement learning to predict optimal policies using 
 [Clustered Deep Q Network](https://europe.naverlabs.com/wp-content/uploads/2019/04/Multi-Agent-Learning-and-Coordination-with-Clustered-Deep-Q-Network.pdf)
 
 The final model is provided as a Command Line Interface wrapped in a single .jar file
 and takes various input and output parameters. See the
-[full documentation](https://github.com/AlbanFl/SmartGovLezModel/Extended_doc) for detailed
+[full documentation](Extended_doc/README.md) for detailed
 usage instructions.
 
 # Build from source
 
 From the repository where you want to install the source code, run :
-`git clone https://github.com/smartgov-liris/SmartGovLezModel`
+`git clone https://github.com/AlbanFl/SmartGovLezModel`
 
 `cd SmartGovSimulator`
 
@@ -56,7 +56,7 @@ Also :
 	.jar](https://imperceptiblethoughts.com/shadow/introduction/) is built at
 	the root of the project (`SmartGovLez-MASTER.jar`)
 See the
-[full documentation](https://github.com/smartgov-liris/SmartGovLezModel/wiki) for
+[full documentation](Extended_doc/README.md) for
 usage instructions.
 
 ## IntelliJ IDEA
@@ -70,6 +70,15 @@ To import the project in the IntelliJ IDEA :
 To import the project in the Eclipse Java IDE :
 
 `File` -> `Import...` -> `Gradle` -> `Existing Gradle Project` ->  select the `SmartGovLezModel` folder -> `Finish`<Paste> 
+
+## Learning modules
+
+The `PoliticRun` task of the project is using python libraries to learn relevant policies.
+To launch this task, it is necessary to have :
+- Python
+- Tensorflow
+- Keras
+
 
 
 # Contacts

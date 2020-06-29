@@ -60,7 +60,7 @@ public class DeliveriesScenario extends PollutionScenario {
 	/**
 	 * LezDeliveries
 	 */
-	public static final String name = "LezDeliveries";
+	public static final String name = "LezSimulation";
 	private Map<String, Establishment> establishments;
 	private Map<String, Integer> simpleIds;
 	public static int nbAgents;
