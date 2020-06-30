@@ -268,7 +268,7 @@ A file created by COPERT software. If you want to download your own file instead
 - `Segment`
 - `Technology`
 
-This table is used to define vehicles, thanks to the [Fleet profiles](#Fleet_profiles) file.
+This table is used to define vehicles, thanks to the [Fleet profiles](#fleet-profiles) file.
 
 ## Dimensions
 
@@ -293,13 +293,13 @@ Here is the syntax :
 
 - `nb_squares` is the number of squares on a line (or a column). Precisely, `nb_squares = 4` will create a `4*4` grid, then 16 neighborhoods will be created.
 - `dimensions` gives the bounds of the space we consider in our simulation
-- `deliveryRestriction` gives the restriction for delivery vehicles for the first simulation. It uses [Crit'air](https://www.certificat-air.gouv.fr/) to define this restriction. Values can be `CRITAIR_1`, `CRITAIR_2`, `CRITAIR_3`, `CRITAIR_4`, `CRITAIR_5` or `NONE`. The value can change for every neighborhood during learning of relevant policies while using [prun task](#Politic_Run).
+- `deliveryRestriction` gives the restriction for delivery vehicles for the first simulation. It uses [Crit'air](https://www.certificat-air.gouv.fr/) to define this restriction. Values can be `CRITAIR_1`, `CRITAIR_2`, `CRITAIR_3`, `CRITAIR_4`, `CRITAIR_5` or `NONE`. The value can change for every neighborhood during learning of relevant policies while using [prun task](#politic-run).
 - `privateRestriction`gives the restriction for private vehicles. It uses the same values, and can also change while learning relevant policies.
 - `surveillance`gives the surveillance in the neighborhoods. Values can be `NO_SURVEILLANCE`, `PATROL`, `CAMERA`, `BARRIER`, `CHEAP_TOLL`, `EXPENSIVE_TOLL`. Values can change during learning of relevant policies.
 
 ## Political Layer
 
-This file is used for the configuration of the political layer, used by [prun task](#Politic_Run).
+This file is used for the configuration of the political layer, used by [prun task](#politic-run).
 Here are the most important parameters of this file :
 
 - `simulations_per_action` is the number of simulation we launch for one policy, applying new political choices.
