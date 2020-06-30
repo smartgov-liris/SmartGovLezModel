@@ -18,7 +18,7 @@ import org.liris.smartgov.lez.politic.policyagent.PolicyAgent;
 import org.liris.smartgov.lez.politic.policyagent.inneragent.DeepLocalLearner;
 import org.liris.smartgov.lez.politic.policyagent.inneragent.InnerAgent;
 import org.liris.smartgov.simulator.core.environment.SmartGovContext;
-import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
+import org.liris.smartgov.lez.core.simulation.scenario.LezScenario;
 
 
 /**

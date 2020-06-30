@@ -20,7 +20,7 @@ import org.liris.smartgov.lez.core.simulation.ExtendedSimulationRuntime;
 import org.liris.smartgov.lez.core.simulation.ExtendedSmartGov;
 import org.liris.smartgov.lez.core.simulation.files.FilePath;
 import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
-import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
+import org.liris.smartgov.lez.core.simulation.scenario.LezScenario;
 import org.liris.smartgov.lez.politic.PoliticalVar;
 import org.liris.smartgov.lez.politic.manager.ManagerQLearningScenario;
 import org.liris.smartgov.simulator.SmartGov;
@@ -98,9 +98,9 @@ public class ResultGeneratorRun {
 		}
 		
 		if (cmd.hasOption("a")) {
-			DeliveriesScenario.nbAgents = Integer.valueOf(cmd.getOptionValue("a"));
+			LezScenario.setNbAgents(Integer.valueOf(cmd.getOptionValue("a")));
 		} else {
-			DeliveriesScenario.nbAgents = Integer.MAX_VALUE;
+			LezScenario.setNbAgents(Integer.MAX_VALUE);
 		}
 		
 		LezContext ctxt = new LezContext(configFile, false);
@@ -139,8 +139,8 @@ public class ResultGeneratorRun {
 					double cpt_pollution = 0.0;
 					double cpt_satisfaction = 0.0;
 					String config = "";
-					for (int i = 0 ; i < ((DeliveriesScenario) ctxt.getScenario()).getEnvironment().getNeighborhoods().size() ; i ++) {
-						Neighborhood n = ((DeliveriesScenario) ctxt.getScenario()).getEnvironment().getNeighborhoods().get(String.valueOf(i));
+					for (int i = 0 ; i < ((LezScenario) ctxt.getScenario()).getEnvironment().getNeighborhoods().size() ; i ++) {
+						Neighborhood n = ((LezScenario) ctxt.getScenario()).getEnvironment().getNeighborhoods().get(String.valueOf(i));
 						int[] configs = n.getConfigAsArray();
 						if (i == 0) {
 							config += configs[0] + "_" + configs[1] + "_" + configs[2];

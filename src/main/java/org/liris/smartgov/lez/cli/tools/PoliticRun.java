@@ -20,7 +20,7 @@ import org.liris.smartgov.lez.core.simulation.ExtendedSimulationRuntime;
 import org.liris.smartgov.lez.core.simulation.ExtendedSmartGov;
 import org.liris.smartgov.lez.core.simulation.files.FilePath;
 import org.liris.smartgov.lez.core.simulation.files.FilesManagement;
-import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
+import org.liris.smartgov.lez.core.simulation.scenario.LezScenario;
 import org.liris.smartgov.lez.politic.PoliticalVar;
 import org.liris.smartgov.lez.politic.manager.ManagerQLearningScenario;
 import org.liris.smartgov.simulator.SmartGov;
@@ -100,9 +100,9 @@ public class PoliticRun {
 		}
 		
 		if (cmd.hasOption("a")) {
-			DeliveriesScenario.nbAgents = Integer.valueOf(cmd.getOptionValue("a"));
+			LezScenario.setNbAgents(Integer.valueOf(cmd.getOptionValue("a")));
 		} else {
-			DeliveriesScenario.nbAgents = Integer.MAX_VALUE;
+			LezScenario.setNbAgents(Integer.MAX_VALUE);
 		}
 		
 		LezContext ctxt = new LezContext(configFile, true);
@@ -133,6 +133,7 @@ public class PoliticRun {
         	
 			@Override
 			public void handle(SimulationStopped event) {
+				//Event when simulation stop. Calls political layer, then relaunch a new simulation.
 				
 				long simulationEnd = System.nanoTime();
 				logger.info("It took " + (int)((simulationEnd - simulationStart) / 1E9) + " seconds to play the simulation" );
@@ -141,34 +142,18 @@ public class PoliticRun {
 				
 				if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).needToStop || 
 						PoliticalVar.manager.getCurrentIteration() + 1 >= nb_iterations ) {
+					//if it is the last simulation, does not relaunch a new one
 					
 					EnvironmentSerializer.SerializeEnvironment(FilePath.outputFolder,
-							((DeliveriesScenario) ctxt.getScenario()).getEnvironment(), 999);
+							((LezScenario) ctxt.getScenario()).getEnvironment(), 999);
 				}
 				
 
 				else {
+					//if we have to relaunch a new simulation
 					if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).isRecentlyReset() ) {
-						EnvironmentSerializer.SerializeEnvironment(FilePath.outputFolder,
-								((DeliveriesScenario) ctxt.getScenario()).getEnvironment(), PoliticalVar.manager.getRestartCounter());
-						double cpt = 0.0;
-						for (Neighborhood n : ((DeliveriesScenario) ctxt.getScenario()).getEnvironment().getNeighborhoods().values()) {
-							List<String> l = new ArrayList<>();
-							l.add("gain");
-							cpt += n.getLocalPerformances(l).getFeatures().get(0);
-						}
-						FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "gain.txt", PoliticalVar.manager.getRestartCounter() 
-								+ " " + cpt);
-						
-						if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).getRestartCounter() >= 
-								Integer.parseInt(PoliticalVar.variables.get("nb_epoch")) - 5  || 
-								 ((ManagerQLearningScenario)(PoliticalVar.manager)).getRestartCounter() % 5 == 0) {
-							//for the last 5 epochs, we start from the base configuration
-							ctxt.resetConfiguration();
-						}
-						else {
-							ctxt.setPartiallyRandomConfiguration();
-						}
+						//if it's the end a sequence, we reset the configuration
+						ctxt.resetConfiguration();
 					}
 					
 					logger.info("\n\n\n"
@@ -179,67 +164,14 @@ public class PoliticRun {
 							+ "|_______________________________| \n"
 							+ "Iteration " + PoliticalVar.manager.getCurrentIteration());
 					
-					if ( ((ManagerQLearningScenario)(PoliticalVar.manager)).getRestartCounter() % 80 == 0 ) {
-						//every 80 iterations we make a slow reset
-						ctxt.resetVariables(false);
-					}
-					else {
-						ctxt.resetVariables(true);
-					}
-					
-					ctxt.reload();
-			        smartGov.restart(ctxt);
-					
-				
-				/*if (iterator < 6) {
-					if (iterator != 0) {
-						double cpt = 0.0;
-						for ( Neighborhood n : ((DeliveriesScenario) ctxt.getScenario()).getEnvironment().getNeighborhoods().values()) {
-							List<String> l = new ArrayList<>();
-							l.add("gain");
-							cpt+= n.getLocalPerformances(l).getFeatures().get(0);
-						}
-					FilesManagement.appendToFile(FilePath.currentLocalLearnerFolder, "gagain.txt", iterator
-							+ " " + cpt);
-					}
-					iterator ++;
-					ctxt.changeConfiguration(iterator);
+					//then we restart simulation
 					ctxt.resetVariables(false);
 					ctxt.reload();
-			        smartGov.restart(ctxt);*/
+			        smartGov.restart(ctxt);
 				}
 					
 				}
 				
-			        
-			        /*else {
-					File outputFolder = new File(
-							smartGov.getContext().getFileLoader().load("outputDir"),
-							"simulation"
-							);
-					File agentOutput = new File(outputFolder, "agents_" + SmartGov.getRuntime().getTickCount() +".json");
-					File arcsOutput = new File(outputFolder, "arcs_" + SmartGov.getRuntime().getTickCount() +".json");
-					File pollutionPeeksOutput = new File(outputFolder, "pollution_peeks_" + SmartGov.getRuntime().getTickCount() +".json");
-					
-					
-					ObjectMapper mapper;
-	
-					if(cmd.hasOption("p")) {
-						mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-					}
-					else {
-						mapper = new ObjectMapper();
-					}
-					
-					// logger.info("Saving agents state to " + agentOutput.getPath());
-					// objectMapper.writeValue(agentOutput, smartGov.getContext().agents.values());
-					
-					logger.info("Saving arcs state to " + arcsOutput.getPath());
-					Cli.writeOutput(smartGov.getContext().arcs.values(), arcsOutput, mapper);
-					
-					logger.info("Saving pollution peeks to " + pollutionPeeksOutput.getPath());
-					Cli.writeOutput(Pollution.pollutionRatePeeks, pollutionPeeksOutput, mapper);
-				}*/
         };
         
         SmartGov.getRuntime().addSimulationStoppedListener(relaunchSimulation);

@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import org.liris.smartgov.lez.core.agent.establishment.Establishment;
 import org.liris.smartgov.lez.core.agent.establishment.ST8;
 import org.liris.smartgov.lez.core.copert.tableParser.CopertParser;
-import org.liris.smartgov.lez.core.simulation.scenario.DeliveriesScenario;
+import org.liris.smartgov.lez.core.simulation.scenario.LezScenario;
 import org.liris.smartgov.lez.input.establishment.EstablishmentLoader.TemporaryRound;
 import org.liris.smartgov.simulator.core.simulation.time.Date;
 import org.liris.smartgov.simulator.core.simulation.time.WeekDay;
@@ -98,7 +98,7 @@ public class EstablishmentDeserializer extends StdDeserializer<EstablishmentLoad
 			JsonNode roundsArray = establishmentNode.get("rounds");
 			
 			for(int j = 0; j < roundsArray.size(); j++) {
-				if ( nbRounds < DeliveriesScenario.nbAgents ) {
+				if ( nbRounds < LezScenario.getNbAgents() ) {
 					JsonNode roundNode = roundsArray.get(j);
 					double weight = 0;
 					if(roundNode.has("weight")) {
