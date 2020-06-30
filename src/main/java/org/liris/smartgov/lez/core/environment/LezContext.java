@@ -89,7 +89,6 @@ public class LezContext extends OsmContext {
 			neighborhood.setDeliveryLezCriteria(new CritAirCriteria(CritAir.NONE));
 			neighborhood.setPrivateLezCriteria(new CritAirCriteria(CritAir.NONE));
 			neighborhood.setSurveillance(Surveillance.NO_SURVEILLANCE);
-			
 		}
 	}
 	

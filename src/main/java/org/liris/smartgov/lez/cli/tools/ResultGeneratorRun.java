@@ -133,9 +133,11 @@ public class ResultGeneratorRun {
 			public void handle(SimulationStopped event) {
 				
 				if (iteration < nb_iterations) {
+					//if it is not the last iteration
 					long simulationEnd = System.nanoTime();
 					logger.info("It took " + (int)((simulationEnd - simulationStart) / 1E9) + " seconds to play the simulation" );
-	
+					
+					//compute pollution and satisfaction
 					double cpt_pollution = 0.0;
 					double cpt_satisfaction = 0.0;
 					String config = "";
@@ -155,6 +157,7 @@ public class ResultGeneratorRun {
 					
 					config += ":" + cpt_pollution + "_" + cpt_satisfaction;
 					
+					//Save configuration and results in a file
 					FilesManagement.appendToFile("output/", "config.txt", config);
 	
 					ctxt.setCompletelyRandomConfiguration();
@@ -168,14 +171,8 @@ public class ResultGeneratorRun {
 							+ "|_______________________________| \n"
 							+ "Iteration " + iteration);
 					
-					if ( iteration % 80 == 0 ) {
-						//every 80 iterations we make a slow reset
-						ctxt.resetVariables(false);
-					}
-					else {
-						ctxt.resetVariables(true);
-					}
-					
+
+					ctxt.resetVariables(false);
 					ctxt.reload();
 			        smartGov.restart(ctxt);
 				}
