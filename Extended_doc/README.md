@@ -1,15 +1,13 @@
 # Launch
-The .jar can be run using the following command (make sure you have a JRE 8+ installed on 
-your system) :
+The .jar can be run using the following command (make sure you have a JRE 8+ installed on your system) :
 `java -jar SmartGovLez-MASTER.jar`
 
-An important option to use is the maximum memory allocated to the JVM. If your model has relatively 
-heavy inputs (especially because of OSM data), you might need to increase this memory size, 
-otherwise the JVM will crash with memory errors. To to so, add the `-Xmx<size>` option to the Java command, depending on your system resources. For example, to allow 6GB RAM usage :
+An important option to use is the maximum memory allocated to the JVM. If your model has relatively heavy inputs (especially because of OSM data), you might need to increase this memory size, otherwise the JVM will crash with memory errors. To do so, add the `-Xmx<size>` option to the Java command, depending on your system resources. For example, to allow 6GB RAM usage :
+
 `java -Xmx6g -jar SmartGovLez-MASTER.jar`
 
 From now, the command above will be mentionned simply as smartgovlez.
-So running `smartgovlez`, `smartgovlez -h` or `smartgovlez --help` will display an help message about available tasks.
+So running `smartgovlez`, `smartgovlez -h` or `smartgovlez --help` will display a help message about available tasks.
 
 # Tasks
 
@@ -145,7 +143,7 @@ usage : smartgovlez prun [-c <file>] [-h] [-t <int>] [-i <int>] [-a <int>]
 ```
 
 Default value for the number of iterations is 1000.
-The `Result Generator Run` task will launch many simulations with random configuration in order to save their result. They are saved in the file `output/config.txt`. This file can then be used by [NN_SmartGov](https://github.com/AlbanFl/NN_SmartGov) to train a neural network in order to predict results of simulations.
+The `Result Generator Run` task will launch many simulations with random configuration in order to save their result. They are saved in the file `output/config.txt`. This file can then be used by [SmartGovNN](https://github.com/AlbanFl/SmartGovNN) to train a neural network in order to predict results of simulations.
 
 # Inputs
 
