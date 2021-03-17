@@ -34,30 +34,37 @@ and takes various input and output parameters. See the
 [full documentation](documentation/README.md) for detailed
 usage instructions.
 
-# Build from source
+# Building the simulator from source
 
-From the repository where you want to install the source code, run :
-`git clone https://github.com/AlbanFl/SmartGovLezModel`
+## Pre-requisites
+Building the simulator from sources will require you to install
+ - a [git client](https://en.wikipedia.org/wiki/Git#Implementations)
+ - [openjdk 8](https://openjdk.java.net/install/)
+ - the [Osmosis](https://github.com/openstreetmap/osmosis) tool
 
-`cd SmartGovSimulator`
+## Building the simulator
+First, clone this repository where you want to install the source code:
+```
+git clone https://github.com/smartgov-liris/SmartGovLezModel
+cd SmartGovLezModel
+```
 
-## Command line build
+Then build the java project with the help of [Gradle CLI](https://docs.gradle.org/current/userguide/command_line_interface.html):
+```
+Unix: ./gradlew build
+Windows: gradlew.bat build
+```
 
-To build the project using the [Gradle CLI](https://docs.gradle.org/current/userguide/command_line_interface.html), run :
+The above command will
+ - compile the Java classes,
+ - build a simple `.jar` java archive file of the project classes that will
+   be placed in the `build/libs` sub-directory
+ - build `SmartGovLez-MASTER.jar`, a [shadow runnable archive](https://imperceptiblethoughts.com/shadow/introduction/), that will be placed at the
+ root of the repository.
+ - run all the unit tests.
 
-- `./gradlew build` (UNIX)
-- `gradlew.bat build` (Windows)
-
-This will compile the Java classes, and run all the unit tests.
-
-Also :
-- a simple .jar file of the project classes is built in the `build/libs` subfolder
-- a [Shadow runnable
-	.jar](https://imperceptiblethoughts.com/shadow/introduction/) is built at
-	the root of the project (`SmartGovLez-MASTER.jar`)
-See the
-[full documentation](documentation/README.md) for
-usage instructions.
+## Simulator usage
+Refer to the [full documentation](documentation/README.md) for usage instructions.
 
 ## IntelliJ IDEA
 
