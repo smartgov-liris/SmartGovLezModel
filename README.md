@@ -4,7 +4,7 @@ A Low Emission Zones model implementation for the
 [SmartGovSimulator](https://github.com/smartgov-liris/SmartGovSimulator).
 
 # Documentation
-The project is documented in detail [here](Extended_doc/README.md).
+The project is documented in detail [here](documentation/README.md).
 
 # Introduction
 
@@ -31,7 +31,7 @@ The following features have been implemented :
 
 The final model is provided as a Command Line Interface wrapped in a single .jar file
 and takes various input and output parameters. See the
-[full documentation](Extended_doc/README.md) for detailed
+[full documentation](documentation/README.md) for detailed
 usage instructions.
 
 # Build from source
@@ -56,7 +56,7 @@ Also :
 	.jar](https://imperceptiblethoughts.com/shadow/introduction/) is built at
 	the root of the project (`SmartGovLez-MASTER.jar`)
 See the
-[full documentation](Extended_doc/README.md) for
+[full documentation](documentation/README.md) for
 usage instructions.
 
 ## IntelliJ IDEA
