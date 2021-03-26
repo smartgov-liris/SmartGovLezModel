@@ -204,7 +204,7 @@ Establishments are described using the following format :
 ]
 ```
 
-- `ST8` : The establishment ST8 category. Can be specified using the enum names, or the corresponding code (see the [associated javadoc](docs/org/liris/smartgov/lez/core/agent/establishment/ST8.html))
+- `ST8` : The establishment ST8 category. Can be specified using the enum names, or the corresponding code (see the [associated javadoc](../docs/org/liris/smartgov/lez/core/agent/establishment/ST8.html))
 - `id` : An arbitrary id. For France, the SIRET is a good choice.
 - `name` : Establishment name
 - `rounds` : A list of rounds the establishment should perform.
