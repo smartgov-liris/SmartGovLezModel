@@ -180,6 +180,7 @@ public class NNBest extends Strategy {
 							currentState);
 			lastAnswer = answer;
 		}
+		System.out.println("TF server answer=" + answer);
 		try {
 			if(answer.split("_")[2].equals("0")) {
 				stillExploration = true;
