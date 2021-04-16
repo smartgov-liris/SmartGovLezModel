@@ -97,9 +97,11 @@ public class PoliticalCreator {
 				e2.printStackTrace();
 			}
 		}
-		//*/ Add 5 seconds delay to load Tensorflow in server
+		//*/ Add some delay to load Tensorflow in server
 		try {
-			TimeUnit.SECONDS.sleep(5);
+			System.out.print("Waiting for Tensorflow server to start... ");
+			TimeUnit.SECONDS.sleep(20); // in seconds
+			System.out.println("Done.");
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
