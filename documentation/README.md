@@ -134,7 +134,7 @@ As the simulation is mainly mono-core, it takes a long time to learn optimal pol
 ## Result Generator Run
 
 ```
-usage : smartgovlez prun [-c <file>] [-h] [-t <int>] [-i <int>] [-a <int>]
+usage : smartgovlez rgrun [-c <file>] [-h] [-t <int>] [-i <int>] [-a <int>]
  -c,--config-file <file>    Input configuration file
  -h,--help                  Displays help message
  -t,--max-ticks <int>       Max ticks (1 tick = 1 second)
