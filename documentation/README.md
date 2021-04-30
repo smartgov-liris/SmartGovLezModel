@@ -143,7 +143,7 @@ usage : smartgovlez rgrun [-c <file>] [-h] [-t <int>] [-i <int>] [-a <int>]
 ```
 
 Default value for the number of iterations is 1000.
-The `Result Generator Run` task will launch many simulations with random configuration in order to save their result. They are saved in the file `output/config.txt`. This file can then be used by [SmartGovNN](https://github.com/AlbanFl/SmartGovNN) to train a neural network in order to predict results of simulations.
+The `Result Generator Run` task will launch many simulations with random configuration in order to save their result. They are saved in the file `output/config.txt`. This file can then be used by [SmartGovNN](https://github.com/smartgov-liris/SmartGovNN) to train a neural network in order to predict results of simulations.
 
 # Inputs
 
