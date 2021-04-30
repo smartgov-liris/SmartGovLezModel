@@ -134,7 +134,7 @@ As the simulation is mainly mono-core, it takes a long time to learn optimal pol
 ## Result Generator Run
 
 ```
-usage : smartgovlez prun [-c <file>] [-h] [-t <int>] [-i <int>] [-a <int>]
+usage : smartgovlez rgrun [-c <file>] [-h] [-t <int>] [-i <int>] [-a <int>]
  -c,--config-file <file>    Input configuration file
  -h,--help                  Displays help message
  -t,--max-ticks <int>       Max ticks (1 tick = 1 second)
@@ -143,7 +143,7 @@ usage : smartgovlez prun [-c <file>] [-h] [-t <int>] [-i <int>] [-a <int>]
 ```
 
 Default value for the number of iterations is 1000.
-The `Result Generator Run` task will launch many simulations with random configuration in order to save their result. They are saved in the file `output/config.txt`. This file can then be used by [SmartGovNN](https://github.com/AlbanFl/SmartGovNN) to train a neural network in order to predict results of simulations.
+The `Result Generator Run` task will launch many simulations with random configuration in order to save their result. They are saved in the file `output/config.txt`. This file can then be used by [SmartGovNN](https://github.com/smartgov-liris/SmartGovNN) to train a neural network in order to predict results of simulations.
 
 # Inputs
 
