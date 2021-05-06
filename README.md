@@ -1,7 +1,7 @@
 # SmartGovLezModel
 
-SmartGovLezModel is simulation model dedicated to the study of [Low Emission Zones (LEZ)](https://en.wikipedia.org/wiki/Low-emission_zone) in an urban context.
-SmartGovLezModel is based on [SmartGovSimulator](https://github.com/smartgov-liris/SmartGovSimulator) a generic agent based simulator dedicated to urban problems.
+SmartGovLezModel is a simulation model dedicated to the study of [Low Emission Zones (LEZ)](https://en.wikipedia.org/wiki/Low-emission_zone) in an urban context.
+SmartGovLezModel is based on [SmartGovSimulator](https://github.com/smartgov-liris/SmartGovSimulator), a generic agent based simulator dedicated to urban problems.
 
 ## General description of the model
 
