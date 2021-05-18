@@ -42,6 +42,7 @@ See the [OSM documentation](https://wiki.openstreetmap.org/wiki/Highways) for mo
 
 The generated files might then be used as an input for the following processes.
 
+
 ## Init
 
 ```
@@ -130,6 +131,7 @@ usage : smartgovlez prun [-c <file>] [-h] [-t <int>] [-i <int>] [-a <int>]
 
 The `politic run` task will launch simulations and reinforcement learning module in order to learn optimal policy thanks to simulation results. Environments created will be saved in json files, in the `output_political` folder. These files can be visualised by a [lez-viewer](https://github.com/smartgov-liris/lez-viewer-Thomas).
 As the simulation is mainly mono-core, it takes a long time to learn optimal policies.
+This is the main task of the project. Its only prerequisite is the [Roads task](#Roads) task.
 
 ## Result Generator Run
 
